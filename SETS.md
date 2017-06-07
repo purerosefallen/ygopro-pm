@@ -1,0 +1,82 @@
+# Pokémon Trading Card Game Sets
+
+## Expansions [(In order of EN set release date)](http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_Trading_Card_Game_expansions)
+
+### Not Yet Scripted
+- Base Set | Expansion Pack : `26001001-26001102`
+- Jungle | Pokémon Jungle : `26002001-26002064` (48 cards in JP set)
+- Fossil | The Mystery of the Fossils : `26003001-26003062` (48 cards in JP set)
+- Base Set 2 | *Not released in Japanese* : `26004001-26004130`
+- Team Rocket | Rocket Gang : `26005001-26005083*` (65 cards in JP set)
+- Gym Heroes | Gym Booster 1: Leaders' Stadium : `26006001-26006132` (96 cards in JP set)
+- Gym Challenge | Gym Booster 2: Challenge from the Darkness : `26007001-26007132` (98 cards in JP set)
+- Neo Genesis | Gold, Silver, to a New World... : `26008001-26008111` (96 cards in JP set)
+- Neo Discovery | Crossing the Ruins... : `26009001-26009075` (56 cards in JP set)
+- Neo Revelation | Awakening Legends : `26010001-26010066*` (57 cards in JP set)
+- Neo Destiny | Darkness, and to Light... : `26011001-26011113*` (113 cards in JP set)
+- Legendary Collection | *Not released in Japanese* : `26012001-26012110`
+- Expedition Base Set | Base Expansion Pack : `26013001-26013165` (128 cards in JP set)
+- Aquapolis | The Town on No Map & Wind from the Sea : `26014001-26014186*` (92 & 90 cards in JP sets)
+- Skyridge | Split Earth & Mysterious Mountains : `26015001-26015182*` (91 & 91 cards in JP sets)
+- EX Ruby & Sapphire | Expansion Pack  : `26016001-26016109` (130 cards in JP set)
+- EX Sandstorm | Miracle of the Desert : `26017001-26016100` (53 cards in JP set)
+- EX Dragon | Rulers of the Heavens : `26018001-26018100*` (54 cards in JP set)
+- EX Team Magma vs Team Aqua | Magma VS Aqua: Two Ambitions : `26019001-26019097*` (89 cards in JP set)
+- EX Hidden Legends | Undone Seal : `26020001-26020102*` (83 cards in JP set)
+- EX FireRed & LeafGreen | Flight of Legends : `26021001-26021116*` (83 cards in JP set)
+- EX Team Rocket Returns |  Rocket Gang Strikes Back  : `26022001-26022111*` (85 cards in JP set)
+- EX Deoxys | Clash of the Blue Sky : `26023001-26023108*` (82 cards in JP set)
+- EX Emerald | *Not Released in Japanese* : `26024001-26024107*`
+- EX Unseen Forces | Golden Sky, Silvery Ocean : `26025001-26025145*` (106 cards in JP set)
+- EX Delta Species | Holon Research Tower : `26026001-26026114*` (86 cards in JP set)
+- EX Legend Maker | Mirage Forest : `26027001-26027093*` (86 cards in JP set)
+- EX Holon Phantoms | Holon Phantom : `26028001-26028111*` (52 cards in JP set)
+- EX Crystal Guardians | Miracle Crystal : `26029001-26029100` (75 cards in JP set)
+- EX Dragon Frontiers | Offense and Defense of the Furthest Ends : `26030001-26030101` (68 cards in JP set)
+- EX Power Keepers | World Champions Pack : `26031001-26031008`
+- Diamond & Pearl | Space-Time Creation : `26032001-26032130`
+- Mysterious Treasures | Secret of the Lakes : `26033001-26033124*` (131 cards in JP set)
+- Secret Wonders | Shining Darkness : `26034001-26034132` (127 cards in JP set)
+- Great Encounters | Moonlit Pursuit : `26035001-26035106` (143 cards in JP set)
+- Majestic Dawn | Dawn Dash : `26036001-26036100` (143 cards in JP set)
+- Legends Awakened | Cry from the Mysterious/Temple of Anger : `26037001-26037146` (138 cards in JP set)
+- Stormfront | Intense Fight in the Destroyed Sky : `26038001-26038106*` (92 cards in JP set)
+- Platinum | Galactic's Conquest : `26039001-26039133*` (96 cards in JP set)
+- Rising Rivals | Bonds to the End of Time : `26040001-26040120*` (90 cards in JP set)
+- Supreme Victors | Beat of the Frontier : `26041001-26041153*` (100 cards in JP set)
+- Arceus | Advent of Arceus : `26042001-26042111*` (90 cards in JP set)
+- HeartGold & SoulSilver | HeartGold Collection/SoulSilver Collection : `26043001-26043124*` (150* cards in JP set)
+- Unleashed | *Not Released in Japanese* : `26044001-26044096*`
+- Undaunted | Reviving Legends : `26045001-26045091*` (81* cards in JP set)
+- Triumphant | Clash at the Summit : `26046001-26046103*` (81* cards in JP set)
+- Call of Legends | *Not Released in Japanese* : `26047001-26047106*`
+- Black & White | Black Collection/White Collection : `26048001-26048115*` (112* cards in JP set)
+- Emerging Powers | *Not Released in Japanese* : `26049001-26049098`
+- Noble Victories | Red Collection : 26050001-26050102*`` (72 cards in JP set)
+- Next Destinies | Psycho Drive/Hail Blizzard : `26051001-26051103*` (114* cards in JP set)
+- Dark Explorers | Dark Rush : `26052001-26052111*` (76 cards in JP set)
+- Dragons Exalted | Dragon Blast/Dragon Blade  : `26053001-26053128*` (110* cards in JP set)
+- Boundaries Crossed | Freeze Bolt/Cold Flare  : `26054001-26054153*` (130* cards in JP set)
+- Plasma Storm | Plasma Gale : `26055001-26055138*` (79 cards in JP set)
+- Plasma Freeze | Spiral Force/Thunder Knuckle : `26056001-26056122*` (116* cards in JP set)
+- Plasma Blast | Megalo Cannon : `26057001-26057105*` (86 cards in JP set)
+- Legendary Treasures EX Battle Boost | : `26058001-26058138*` (99 cards in JP set)
+- XY | Collection X/Collection Y : `26059001-26059146` (126* cards in JP set)
+- Flashfire | Wild Blaze : `26060001-26060109*` (90 cards in JP set)
+- Furious Fists | Rising Fist : `26061001-26061113*` (105 cards in JP set)
+- Phantom Forces | Phantom Gate : `26062001-26062122*` (97 cards in JP set)
+- Primal Clash | Gaia Volcano/Tidal Storm : `26063001-26063164*` (160* cards in JP set)
+- Roaring Skies |  Emerald Break  : `26064001-26064110*` (91 cards in JP set)
+- Ancient Origins | Bandit Ring : `26065001-26065100*` (97 cards in JP set)
+- BREAKthrough | Blue Shock/Red Flash : `26066001-26066164*` (130* cards in JP set)
+- BREAKpoint | Rage of the Broken Heavens : `26067001-26067123*` (89 cards in JP set)
+- Generations | Starter Pack  : `26068001-26068115*` (72 cards in JP set)
+- Fates Collide | Awakening Psychic King : `26069001-26069125*` (88 cards in JP set)
+- Steam Siege | Fever-Burst Fighter/Cruel Traitor : `26070001-26070116*` (113* cards in JP set)
+- Evolutions | Expansion Pack 20th Anniversary : `26071001-26071113*` (103 cards in JP set)
+- Sun & Moon | Collection Sun/Collection Moon : `26072001-26072163*` (143* cards in JP set)
+- Guardians Rising | Islands Await You/Alolan Moonlight : `26073001-26073140+` (124 cards in JP set)
+- Burning Shadows | To Have Seen the Battle Rainbow/Darkness that Consumes Light : `26074001-26074140+` (102+ cards in JP set)
+
+### Archived
+- **TBA**
