@@ -1,23 +1,29 @@
-# ygopro-pokemon-tcg
-⚠️ (Work In Progress) An amateur add-on to play the Pokémon Trading Card Game on YGOPro
+# ygopro-pm
+⚠️ Work In Progress
 
 ### How To Play
 1.
 
-**Card Types:**
-- `Pokémon = Effect Monster Card (Level=Retreat Cost, ATK=DEF=HP (scard.HP=N)`
+<details>
+<summary>Card Types</summary>
+
+- `Pokémon = Effect Monster Card (Level=Retreat Cost, ATK=DEF=HP (scard.hit_points=N)`
 - `Trainer = Normal Spell Card`
 - `Trainer-Stadium = Field Spell Card`
 - `Energy = Normal Spell Card`
+</details>
+<details>
+<summary>Locations</summary>
 
-**Locations:**
 - `Active Pokémon (In Play) = Middle Main Monster Zone`
 - `Bench (In Play) = Spell & Trap Zone`
 - `Discard Pile = Graveyard`
-- `Lost Zone = Face-up banished cards, except *Pokémon Rules*` (text color = blue)
+- `Lost Zone = Face-up banished cards (text color = blue)`
 - `Prize Cards = Face-down banished cards (text color = black)`
+</details>
+<details>
+<summary>Glossary</summary>
 
-**Keywords:**
 - `Ability/Pokémon Power = A monster effect`
 - `Attach = Attach a card to a Pokémon monster as a material/Place a card underneath a Pokémon card in the Spell & Trap Zone as a material`
 - `Between-Turns Step = End Phase`
@@ -39,12 +45,14 @@
 - `Special Condition = Continuous Effect ("Asleep", "Burned", "Confused", "Paralyzed" and "Poisoned")`
 - `Sudden Death = *TBA*`
 - `Weakness = A Pokémon card that specifically lists "Weakness" ... in its text... (use scard.weakness...)`
+</details>
+<details>
+<summary>Categories</summary>
 
-**Categories:**
 - `0x1	Destroy Spell/Trap` = *TBA*
 - `0x2	Destroy Monster` = *TBA*
 - `0x4	Banish` = *TBA*
-- `0x8	Send to Graveyard` = *Put a card into the discard pile*
+- `0x8	Send to Graveyard` = Discard a card
 - `0x10	Return to Hand` = *TBA*
 - `0x20	Return to Deck` = *TBA*
 - `0x40	Hand Destruction` = *TBA*
@@ -68,10 +76,12 @@
 - `0x1000000	Cannot Destroy` = *TBA*
 - `0x2000000	Cannot Target` = *TBA*
 - `0x4000000	Counter` = **N/A**
-- `0x8000000	Gamble` = *Pokémon Trading Card Game*
+- `0x8000000	Gamble` = Pokémon Trading Card Game
 - `0x10000000	Fusion` = **N/A**
 - `0x20000000	Synchro` = **N/A**
-- `0x40000000	Xyz` = *Attach/discard cards underneath other cards*
+- `0x40000000	Xyz` = Attach/discard a card underneath another card
 - `0x80000000	Cancel out Effect` = *TBA*
+</details>
+
 #
 © 2017 Pokémon. © 1995–2017 Nintendo/Creatures Inc./GAME FREAK inc.
