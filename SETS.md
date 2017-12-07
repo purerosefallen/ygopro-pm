@@ -123,11 +123,15 @@
 - Sun & Moon (SUM) | Collection Sun/Collection Moon : `26072001-26072172*` (143* cards in JP set)
 - Guardians Rising (GRI) | Islands Await You/Alolan Moonlight : `26073001-26073169*` (124 cards in JP set)
 - Burning Shadows (BUS) | To Have Seen the Battle Rainbow/Darkness that Consumes Light : `26074001-26074169*` (128 cards in JP set)
-- Shining Legends (-) | - : `-` (-)
-- Crimson Invasion (-) | - : `-` (-)
+- Shining Legends (SLG) | Strength Expansion Pack Shining Legends : `26075001-26075078` (82 cards in JP set)
+- Crimson Invasion (CRI) | Awakened Heroes/Ultradimensional Beasts : `26076001-26076124*`
+- **February 2, 2018** : Ultra Prism (...) | Ultra Sun/Ultra Moon : `-` (156+ cards in JP set)
 - *= official count may vary
 
-### Unsorted
+### Unnumbered
+- [Miscellaneous Promotional cards (TCG) (1999-2004)](https://bulbapedia.bulbagarden.net/wiki/Miscellaneous_Promotional_cards_(TCG)/1999-2004)
+- [Miscellaneous Promotional cards (TCG) (2005-2010)] (https://bulbapedia.bulbagarden.net/wiki/Miscellaneous_Promotional_cards_(TCG)/2005-2010)
+- [Miscellaneous Promotional cards] (TCG) (2011-2016)](https://bulbapedia.bulbagarden.net/wiki/Miscellaneous_Promotional_cards_(TCG))
 - Victory Medals 2007-2011
 
 ### Archived

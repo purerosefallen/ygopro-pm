@@ -8,10 +8,9 @@ Optional: If you have card pics, put them in a `pics` folder and put it in the `
 4. Put `lflist.conf` in the main folder. (Make a backup of the original file(s), if you do not want to overwrite them.)
 5. Optional: Put the `deck` folder in the main folder.
 6. Optional: Put all `fieldX.png` and `field-transparentX.png` files in the `textures` folder. (Make a backup of the original file(s), if you do not want to overwrite them.)
-7. Optional: In the YGOPro main folder, open `strings.conf` with a [text editor](https://en.wikipedia.org/wiki/Text_editor).<br>
-Open `strings.conf` here with a text editor and copy its text to the `strings.conf` file in YGOPro accordingly. (Make a backup of the original file(s), if you do not want to overwrite them.)
 
 ### How to Play
+In Yugioh terms:
 1. Start YGOPro.
 2. Optional: Disable `Auto chain order` in the Settings tab in Deck Editor.<br>
 If enabled, always choose the chain order from left to right.
@@ -21,7 +20,7 @@ If enabled, always choose the chain order from left to right.
 	-Add 1 *Pokemon Rules* to the extra deck.<br>
 	-If there is at least 1 non-Pokémon card in your deck, you will lose the duel.
 4. Begin the duel by drawing 7 cards, then place 1 "Basic Pokémon" monster from your hand in an extra monster zone face-down as your [Active Pokémon](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Active_Pok.C3.A9mon).<br>
-If you do not have a "Basic Pokémon" monster in your hand, reveal your hand, shuffle it into the deck, then draw 7 cards. Repeat this until you have a "Basic Pokémon" monster in your hand.<br>
+If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuffle it into the deck, then draw 7 cards. Repeat this until you have a "Basic Pokémon" monster in your hand.<br>
 5. Optional: Place any number of "Basic Pokémon" monsters from your hand in your main monster zones face-down as Pokémon on the [Bench](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Bench).<br>
 6. Set aside the top 6 cards of your deck as [Prize cards](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Prize_Card), then your life points become 6.<br>
 7. Optional: Your opponent draws a number of cards, up to the number of times you shuffled your hand into the deck because you did not have a "Basic Pokémon" monster in your hand.<br>
@@ -29,7 +28,7 @@ If you do not have a "Basic Pokémon" monster in your hand, reveal your hand, sh
 9. During your draw phase, draw 1 card, regardless if it is the first turn of the duel. If you cannot, you lose the duel. (There is no limit to the number of cards in your hand.)
 10. Nothing happens during your standby phase.
 11. Optional: During your main phase 1, do any of the following:<br>
-	-Normal summon any number of "Basic Pokémon" monsters from your hand in your main monster zones.<br>
+	-Special summon any number of "Basic Pokémon" monsters from your hand in your main monster zones.<br>
 	-Special summon any number of ["Evolution"](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Evolution_card) monsters from your hand, by placing them on top of a card in the main monster zone or extra monster zone that has its name listed in its text, except if that card was summoned this turn, or if it is the first turn of the duel. (This is treated as an evolution summon.)<br>
 	-Attach an ["Energy"](https://bulbapedia.bulbagarden.net/wiki/Energy_card_(TCG)) card from your hand to 1 of your monsters as a material. (You can only do this once per turn.)<br>
 	-Activate any number of ["Trainer"](https://bulbapedia.bulbagarden.net/wiki/Trainer_card_(TCG)) cards from your hand. (You can only activate 1 "Supporter" and 1 "Stadium" card per turn.)<br>
@@ -41,7 +40,7 @@ If you do not have a "Basic Pokémon" monster in your hand, reveal your hand, sh
 
 ### How to Win
 1. Take all your Prize cards. (Your opponent's life points are reduced to 0.)
-2. At any time, if your opponent controls no monsters.
+2. At any time, if your opponent controls no monsters. (If their only monster is destroyed.)
 3. If your opponent cannot draw a card for their normal draw during their draw phase.
 4. [Some cards](https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/?cardName=&cardText=win+this+game&evolvesFrom=&simpleSubmit=&format=unlimited&particularArtist=&sort=number&sort=number) will allow you to win by other means.
 
@@ -64,10 +63,10 @@ If you do not have a "Basic Pokémon" monster in your hand, reveal your hand, sh
 - `Psychic = LIGHT Attribute`
 - `Fighting = DARK Attribute`
 - `Darkness = DIVINE Attribute`
-- `Metal = 0x080`
-- `Colorless = 0x100`
-- `Fairy = 0x200`
-- `Dragon = 0x400`
+- `Metal = 0x080` (unlisted in YGOPro's tabs)
+- `Colorless = 0x100` (unlisted in YGOPro's tabs)
+- `Fairy = 0x200` (unlisted in YGOPro's tabs)
+- `Dragon = 0x400` (unlisted in YGOPro's tabs)
 </details>
 <details>
 <summary>Locations</summary>
@@ -77,7 +76,7 @@ If you do not have a "Basic Pokémon" monster in your hand, reveal your hand, sh
 	- [Increased Bench](https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/xy-series/xy6/89/) `(In Play) = Spell & Trap Zones #1-4` (Not fully supported by YGOPro.)
 - `Discard Pile = Graveyard`
 - `Lost Zone = Face-up banished cards` (text color = black)
-- `Prize Cards = Cards placed underneath "Prize Cards" in left-most Spell & Trap Zone` (Your opponent's life poitns are equal to your total number of Prize cards.)
+- `Prize Cards = Cards placed underneath "Prize Cards" in left-most Spell & Trap Zone` (Your opponent's life points are equal to your total number of Prize cards.)
 </details>
 <details>
 <summary>Glossary</summary>
@@ -157,17 +156,17 @@ If you do not have a "Basic Pokémon" monster in your hand, reveal your hand, sh
 - `0x1	Destroy Spell/Trap` = *TBA*
 - `0x2	Destroy Monster` = Knock Out a Pokémon
 - `0x4	Banish` = *TBA*
-- `0x8	Send to Graveyard` = Discard a card from anywhere
-- `0x10	Return to Hand` = Put a card from anywhere, except the discard pile, into a player's hand
+- `0x8	Send to Graveyard` = Put a card into the discard pile
+- `0x10	Return to Hand` = Put a card from anywhere, except the discard pile or deck, into a player's hand
 - `0x20	Return to Deck` = Put a card into a player's deck
-- `0x40	Hand Destruction` = Cause the total number of cards in your opponent's hand to decrease for any reason
-- `0x80	Deck Destruction` = Cause the total number of cards in your opponent's deck to decrease for any reason
-- `0x100	Increase Draw` = Draw a card
-- `0x200	Search Deck` = Search a player's deck for any reason
-- `0x400	Recover from Graveyard` = Put a card from the discard pile into a player's hand, deck, or in play
+- `0x40	Hand Destruction` = Decrease your opponent's hand size
+- `0x80	Deck Destruction` = Decrease your opponent's deck size
+- `0x100	Increase Draw` = Put a card from the top of the deck into a player's hand
+- `0x200	Search Deck` = Look at a player's deck
+- `0x400	Recover from Graveyard` = Put a card from the discard pile into a player's hand, or in play
 - `0x800	Change Card Position` = Switch an Active Pokémon with a Benched Pokémon, or vice-versa
 - `0x1000	Get Control` = *TBA*
-- `0x2000	Increase/Decrease ATK/DEF` = Increase or decrease a Pokémon's HP by directly stating it
+- `0x2000	Increase/Decrease ATK/DEF` = Increase or decrease a Pokémon's HP
 - `0x4000	Piercing` = *TBA*
 - `0x8000	Multiple Attack` = *TBA*
 - `0x10000	Restrict Attack` = Paralyze a Pokémon
@@ -175,7 +174,7 @@ If you do not have a "Basic Pokémon" monster in your hand, reveal your hand, sh
 - `0x40000	Special Summon` = Put a Pokémon in play, play a non-Pokémon card as if it were a Pokémon
 - `0x80000	Token` = *TBA*
 - `0x100000	Type` = *TBA*
-- `0x200000	Attribute` = Specifically lists a type of Energy in the card's text
+- `0x200000	Attribute` = Lists a type of Energy
 - `0x400000	Reduce LP` = *TBA*
 - `0x800000	Recover LP` = *TBA*
 - `0x1000000	Cannot Destroy` = *TBA*
