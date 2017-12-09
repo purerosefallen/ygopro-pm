@@ -5,6 +5,8 @@
 	
 	Include the following code in your script
 	
+	local PTCG=require "expansions.constant_ptcg"
+	
 ]]
 
 local PTCG={}
@@ -12,6 +14,7 @@ local PTCG={}
 --Card ID
 --↑Rules
 CARD_PTCG_RULES						=26000000	--Pokémon Rules
+CARD_PTCG_PRIZE						=26000999	--Prize cards are attached to this card (may be temporary)
 --Counters/Markers
 PM_DAMAGE_COUNTER					=0x1600		--A Pokémon loses 10 HP for each Damage Counter on it
 PM_BURN_MARKER						=0x1601		--When a Pokémon is Burned, put a Burn marker on it
