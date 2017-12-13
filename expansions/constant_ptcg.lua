@@ -15,6 +15,17 @@ local PTCG={}
 --↑Rules
 CARD_PTCG_RULES						=26000000	--Pokémon Rules
 CARD_PTCG_PRIZE						=26000999	--Prize cards are attached to this card (may be temporary)
+--↑Energy cards
+CARD_GRASS_ENERGY					=26001099	--Base Set 99/102
+CARD_FIRE_ENERGY					=26001098	--Base Set 98/102
+CARD_WATER_ENERGY					=26001102	--Base Set 102/102
+CARD_LIGHTNING_ENERGY				=26001100	--Base Set 100/102
+CARD_PSYCHIC_ENERGY					=26001101	--Base Set 101/102
+CARD_FIGHTING_ENERGY				=26001097	--Base Set 97/102
+CARD_DARKNESS_ENERGY				=26032129	--Diamond & Pearl 29/130
+CARD_METAL_ENERGY					=26032130	--Diamond & Pearl 30/130
+CARD_COLORLESS_ENERGY				=nil		--energy=CARD_COLORLESS_ENERGY in Card.IsEnergy (c, energy)
+CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 --Counters/Markers
 PM_DAMAGE_COUNTER					=0x1600		--A Pokémon loses 10 HP for each Damage Counter on it
 PM_BURN_MARKER						=0x1601		--When a Pokémon is Burned, put a Burn marker on it
@@ -40,6 +51,7 @@ PM_LOCATION_RULES					=LOCATION_EXTRA		--Location for Pokémon Rules
 PM_LOCATION_ACTIVE_POKEMON			=LOCATION_MZONE		--Location for Active Pokémon
 PM_LOCATION_BENCH					=LOCATION_MZONE		--Location for Benched Pokémon
 PM_LOCATION_PRIZE_CARDS				=LOCATION_SZONE		--Location for Prize cards
+PM_LOCATION_ADJACENT_ACTIVE_POKEMON	=LOCATION_SZONE
 PM_LOCATION_DISCARD_PILE			=LOCATION_GRAVE		--Location for cards taken out of play
 PM_LOCATION_LOST_ZONE				=LOCATION_REMOVED	--Location for cards no longer playable
 PM_LOCATION_IN_PLAY					=LOCATION_MZONE+LOCATION_SZONE	--Location for Active and Benched Pokémon
@@ -70,7 +82,7 @@ PM_TYPE_SP							=0x9			--"Champion's Room" (Supreme Victors 135/147)
 PM_TYPE_LEGEND						=0xa			--"Legend Box" (Undaunted 75/91)
 PM_TYPE_RESTORED					=0xb			--"Twist Mountain" (Dark Explorers 101/108)
 PM_TYPE_MEGA						=0xc			--"M Venusaur-EX" (XY 2/146) (+PM_TYPE_EVOLUTION)
-PM_TYPE_BREAK						=0xd			--"Giratina" (XY Promos XY184) (+PM_TYPE_EVOLUTION)
+PM_TYPE_BREAK						=0xd			--"Giratina" (XY Promo XY184) (+PM_TYPE_EVOLUTION)
 PM_TYPE_GX							=0xe			--"Decidueye-GX" (Sun & Moon 12/149)
 --↑Trainer
 PM_TYPE_TRAINER						=TYPE_SPELL		--Trainer=Spell
@@ -87,6 +99,7 @@ PM_TYPE_ENERGY						=TYPE_TRAP		--Energy=Trap
 PM_TYPE_BASIC_ENERGY				=0x16			--"Mewtwo" (Wizards Promo 12/53)
 PM_TYPE_SPECIAL_ENERGY				=0x17			--"Smoochum" (Neo Revelation 54/64)
 PM_TYPE_HOLON_ENERGY					=0x1018		--"Flareon δ" (EX Delta Species 5/113) (+PM_TYPE_SPECIAL_ENERGY)
+--new special energy goes here
 --Pokémon/Energy Type (color)
 PM_ENERGY_ALL						=0xfff			--Include all 11 Energy types
 PM_ENERGY_GRASS						=0x001			--EARTH
@@ -102,29 +115,29 @@ PM_ENERGY_FAIRY						=0x200			--???
 PM_ENERGY_DRAGON					=0x400			--???
 --Setname
 PM_SETNAME_DARK						=0x100			--"The Boss's Way" (Team Rocket 73/82)
-PM_SETNAME_MISTY						=0x101		--"Misty" (Gym Heroes 18/132) (+PM_SETNAME_OWNERS_POKEMON)
-PM_SETNAME_BROCK						=0x102		--"Brock’s Geodude" (Gym Heroes 66/132) (+PM_SETNAME_OWNERS_POKEMON)
-PM_SETNAME_ERIKA						=0x103		--"Celadon City Gym" (Gym Heroes 107/132) (+PM_SETNAME_OWNERS_POKEMON)
-PM_SETNAME_SABRINA						=0x104		--"Sabrina's ESP" (Gym Heroes 117/132) (+PM_SETNAME_OWNERS_POKEMON)
-PM_SETNAME_LT_SURGE						=0x105		--"Vermilion City Gym" (Gym Heroes 120/132) (+PM_SETNAME_OWNERS_POKEMON)
-PM_SETNAME_BLAINE						=0x106		--"Blaine" (Gym Challenge 17/132) (+PM_SETNAME_OWNERS_POKEMON)
-PM_SETNAME_GIOVANNI						=0x107		--"Giovanni" (Gym Challenge 18/132) (+PM_SETNAME_OWNERS_POKEMON)
-PM_SETNAME_KOGA							=0x108		--"Koga" (Gym Challenge 19/132) (+PM_SETNAME_OWNERS_POKEMON)
+PM_SETNAME_MISTY						=0x101		--"Misty" (Gym Heroes 18/132) (+PM_SETNAME_OWNER)
+PM_SETNAME_BROCK						=0x102		--"Brock's Geodude" (Gym Heroes 66/132) (+PM_SETNAME_OWNER)
+PM_SETNAME_ERIKA						=0x103		--"Celadon City Gym" (Gym Heroes 107/132) (+PM_SETNAME_OWNER)
+PM_SETNAME_SABRINA						=0x104		--"Sabrina's ESP" (Gym Heroes 117/132) (+PM_SETNAME_OWNER)
+PM_SETNAME_LT_SURGE						=0x105		--"Vermilion City Gym" (Gym Heroes 120/132) (+PM_SETNAME_OWNER)
+PM_SETNAME_BLAINE						=0x106		--"Blaine" (Gym Challenge 17/132) (+PM_SETNAME_OWNER)
+PM_SETNAME_GIOVANNI						=0x107		--"Giovanni" (Gym Challenge 18/132) (+PM_SETNAME_OWNER)
+PM_SETNAME_KOGA							=0x108		--"Koga" (Gym Challenge 19/132) (+PM_SETNAME_OWNER)
 PM_SETNAME_UNOWN					=0x109			--"Unown [A]" (Neo Discovery 14/75)
 PM_SETNAME_SHINING					=0x10a			--"Miracle Energy" (Neo Destiny 16/105)
 PM_SETNAME_LIGHT					=0x10b			--"Miracle Energy" (Neo Destiny 16/105)
 PM_SETNAME_BALL						=0x10c			--"Apricorn Maker" (Skyridge 121/144)
-PM_SETNAME_TEAM_MAGMA					=0x10d		--"Team Aqua's Crawdaunt" (EX Team Magma vs Team Aqua 2/95) (+PM_SETNAME_OWNERS_POKEMON)
-PM_SETNAME_TEAM_AQUA					=0x10e		--"Team Aqua's Kyogre" (EX Team Magma vs Team Aqua 3/95) (+PM_SETNAME_OWNERS_POKEMON)
-PM_SETNAME_OWNERS_POKEMON			=0x10f			--"Ancient Technical Machine [Ice]" (EX Hidden Legends 84/101)
-PM_SETNAME_ROCKETS						=0x110		--"Rocket's Hideout" (EX Team Rocket Returns 87/109) (+PM_SETNAME_OWNERS_POKEMON)
+PM_SETNAME_TEAM_MAGMA					=0x10d		--"Team Aqua's Crawdaunt" (EX Team Magma vs Team Aqua 2/95) (+PM_SETNAME_OWNER)
+PM_SETNAME_TEAM_AQUA					=0x10e		--"Team Aqua's Kyogre" (EX Team Magma vs Team Aqua 3/95) (+PM_SETNAME_OWNER)
+PM_SETNAME_OWNER					=0x10f			--"Ancient Technical Machine [Ice]" (EX Hidden Legends 84/101)
+PM_SETNAME_ROCKETS						=0x110		--"Rocket's Hideout" (EX Team Rocket Returns 87/109) (+PM_SETNAME_OWNER)
 PM_SETNAME_DELTA					=0x111			--"Espeon δ" (EX Delta Species 4/113), "Delta Rainbow Energy" (POP Series 5 9/17)
 PM_SETNAME_HOLON					=0x18			--"Holon Transceiver" (EX Delta Species 98/113)
 PM_SETNAME_FOSSIL					=0x112			--"Fossil Excavator" (Mysterious Treasures 111/123)
 PM_SETNAME_TEAM_GALACTICS_INVENTION	=0x113			--"Honchkrow G" (Platinum 77/127)
-PM_SETNAME_TEAM_PLASMA					=0x114		--"Skarmory" (Plasma Storm 87/135) (+PM_SETNAME_OWNERS_POKEMON)
+PM_SETNAME_TEAM_PLASMA					=0x114		--"Skarmory" (Plasma Storm 87/135)
 --Reason
-PM_REASON_KNOCKED_OUT				=REASON_DESTROY		--KO=Destroy
+PM_REASON_KNOCKED_OUT				=REASON_DESTROY		--Knocked Out=Destroy
 --Summon Type
 PM_SUMMON_TYPE_EVOLVE				=SUMMON_TYPE_XYZ	--Evolve=Xyz
 --Status

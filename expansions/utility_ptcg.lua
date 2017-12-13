@@ -11,6 +11,8 @@
 --CONTENTS
 --[+UniversalFunctions]......................................functions that are included on every script
 --[+RuleFunctions]...........................................functions that are included on the rules card
+--[+Conditions]..............................................condition functions
+--[+Targets].................................................target functions
 --[+Filters].................................................filter functions
 
 local Auxiliary={}
@@ -18,8 +20,9 @@ local PTCG=require "expansions.constant_ptcg"
 PM_LOCATION_ACTIVE=PM_LOCATION_ACTIVE_POKEMON
 PM_LOCATION_DPILE=PM_LOCATION_DISCARD_PILE
 PM_LOCATION_PRIZE=PM_LOCATION_PRIZE_CARDS
+PM_LOCATION_ADJACENT_ACTIVE=PM_LOCATION_ADJACENT_ACTIVE_POKEMON
 PM_LOCATION_LOST=PM_LOCATION_LOST_ZONE
-PM_REASON_KO=PM_REASON_KNOCKED_OUT
+PM_EVENT_TO_DPILE=PM_EVENT_TO_DISCARDPILE
 
 --==========[+UniversalFunctions]==========
 --functions that are included on every script
@@ -107,6 +110,14 @@ end
 function Card.IsPokemonGX(c)
 	return c:IsPokemon() and c:IsSubType(PM_TYPE_GX)
 end
+--check if a pokémon has an owner
+function Card.IsOwnerPokemon(c)
+	return c:IsPokemon() and (c:IsSetCard(PM_SETNAME_MISTY)
+		or c:IsSetCard(PM_SETNAME_BROCK) or c:IsSetCard(PM_SETNAME_ERIKA) or c:IsSetCard(PM_SETNAME_SABRINA)
+		or c:IsSetCard(PM_SETNAME_LT_SURGE) or c:IsSetCard(PM_SETNAME_BLAINE) or c:IsSetCard(PM_SETNAME_GIOVANNI)
+		or c:IsSetCard(PM_SETNAME_KOGA) or c:IsSetCard(PM_SETNAME_TEAM_MAGMA) or c:IsSetCard(PM_SETNAME_TEAM_AQUA)
+		or c:IsSetCard(PM_SETNAME_ROCKETS)) --add new owners here
+end
 --check if a card is a Stadium
 function Card.IsStadium(c)
 	return c:IsTrainer() and c:IsType(PM_TYPE_STADIUM)
@@ -139,9 +150,58 @@ end
 function Card.IsRocketsSecretMachine(c)
 	return c:IsTrainer() and c:IsSubType(PM_TYPE_ROCKETS_SECRET_MACHINE)
 end
---check if a card is a Basic Energy
+--check if a card is a basic Energy
 function Card.IsBasicEnergy(c)
 	return c:IsEnergy() and c:IsSubType(PM_TYPE_BASIC_ENERGY)
+end
+--check what type of basic Energy a card is 
+function Card.IsEnergy(c,energy)
+	if energy then
+		return c:IsEnergy() and c:IsCode(energy)
+	else
+		return c:IsEnergy() and c:IsCode(CARD_GRASS_ENERGY,CARD_FIRE_ENERGY,CARD_WATER_ENERGY,CARD_LIGHTNING_ENERGY,
+		CARD_PSYCHIC_ENERGY,CARD_FIGHTING_ENERGY,CARD_DARKNESS_ENERGY,CARD_METAL_ENERGY,CARD_FAIRY_ENERGY)
+	end
+end
+--check if a card is a [G] Energy
+function Card.IsGrassEnergy(c)
+	return c:IsEnergy() and c:IsCode(CARD_GRASS_ENERGY)
+end
+--check if a card is a [R] Energy
+function Card.IsFireEnergy(c)
+	return c:IsEnergy() and c:IsCode(CARD_FIRE_ENERGY)
+end
+--check if a card is a [W] Energy
+function Card.IsWaterEnergy(c)
+	return c:IsEnergy() and c:IsCode(CARD_WATER_ENERGY)
+end
+--check if a card is a [L] Energy
+function Card.IsLightningEnergy(c)
+	return c:IsEnergy() and c:IsCode(CARD_LIGHTNING_ENERGY)
+end
+--check if a card is a [P] Energy
+function Card.IsPsychicEnergy(c)
+	return c:IsEnergy() and c:IsCode(CARD_PSYCHIC_ENERGY)
+end
+--check if a card is a [F] Energy
+function Card.IsFightingEnergy(c)
+	return c:IsEnergy() and c:IsCode(CARD_FIGHTING_ENERGY)
+end
+--check if a card is a [D] Energy
+function Card.IsDarknessEnergy(c)
+	return c:IsEnergy() and c:IsCode(CARD_DARKNESS_ENERGY)
+end
+--check if a card is a [M] Energy
+function Card.IsMetalEnergy(c)
+	return c:IsEnergy() and c:IsCode(CARD_METAL_ENERGY)
+end
+--check if a card is a [C] Energy
+function Card.IsColorlessEnergy(c)
+	return c:IsEnergy() and c:IsCode(CARD_COLORLESS_ENERGY)
+end
+--check if a card is a [F] Energy
+function Card.IsFairyEnergy(c)
+	return c:IsEnergy() and c:IsCode(CARD_FAIRY_ENERGY)
 end
 --check if a card is a Special Energy
 function Card.IsSpecialEnergy(c)
@@ -296,6 +356,7 @@ end
 --let a player draw cards equal to or less than count with a reason and return the number of cards drawn
 local dr=Duel.Draw
 function Duel.Draw(player,count,reason)
+	local count=count or 1
 	local ct=Duel.GetFieldGroupCount(player,LOCATION_DECK,0)
 	if count>ct then count=ct end
 	return dr(player,count,reason)
@@ -303,6 +364,7 @@ end
 --check if a player can draw cards according to the pokémon trading card game's rules
 local ipcd=Duel.IsPlayerCanDraw
 function Duel.IsPlayerCanDraw(player,count)
+	local count=count or 1
 	local ct=Duel.GetFieldGroupCount(player,LOCATION_DECK,0)
 	if ct==0 then return end
 	if count>ct then count=ct end
@@ -572,6 +634,33 @@ function Auxiliary.EnableCannotSSet(c)
 	e1:SetTargetRange(1,0)
 	c:RegisterEffect(e1)
 end
+
+--==========[+Conditions]==========
+--condition for a player's turn
+function Auxiliary.TurnPlayerCondition(p)
+	return	function(e)
+				local tp=e:GetHandlerPlayer()
+				local player=nil
+				if p==PLAYER_PLAYER or p==tp then player=tp
+				elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
+				return Duel.GetTurnPlayer()==player
+			end
+end
+Auxiliary.turnpcon=Auxiliary.TurnPlayerCondition
+
+--==========[+Targets]==========
+--target for Duel.Hint(hint,player,desc) only
+function Auxiliary.HintTarget(e,tp,eg,ep,ev,re,r,rp,chk,hint,p,desc)
+	hint=hint or HINT_OPSELECTED
+	p=p or 1-tp
+	desc=desc or e:GetDescription()
+	local player=nil
+	if p==PLAYER_PLAYER or p==tp then player=tp
+	elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
+	if chk==0 then return true end
+	Duel.Hint(hint,player,desc)
+end
+Auxiliary.hinttg=Auxiliary.HintTarget
 
 --==========[+Filters]==========
 --filter for the prize cards + PM_LOCATION_PRIZE
