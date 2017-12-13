@@ -34,7 +34,7 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 	-Activate any number of ["Trainer"](https://bulbapedia.bulbagarden.net/wiki/Trainer_card_(TCG)) cards from your hand. (You can only activate 1 "Supporter" and 1 "Stadium" card per turn.)<br>
 	-Retreat your Active Pokémon, by switching its place with 1 monster on the Bench, and detaching "Energy" cards equal to its Level [(Retreat Cost)](https://bulbapedia.bulbagarden.net/wiki/Retreat_cost). (You can only do this once per turn.)<br>
 	-Activate or apply any monster effects.<br>
-	-If it is not the first turn of the duel and you have the "Energy" cards attached to your Active Pokémon that are listed in its text, you can activate its effect to [attack](https://bulbapedia.bulbagarden.net/wiki/Attack_(TCG)) the opponent's Active Pokémon. Place [Damage Counters](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Damage) on that opponent's monster, equal to the number listed in your monster's text, divide by 10. (Monsters with a Damage Counter lose 10 ATK and DEF for each Damage Counter on it, also are destroyed when their ATK and DEF become 0 as a result.) If that opponent's monster is destroyed, add 1 Prize card to your hand. (At any time, if an opponent's monster(s) is destroyed, add 1 Prize card to your hand for each destroyed monster.) Your main phase 1 ends.
+	-If it is not the first turn of the duel and you have the "Energy" cards attached to your Active Pokémon that are listed in its text, you can activate its effect to [attack](https://bulbapedia.bulbagarden.net/wiki/Attack_(TCG)) the opponent's Active Pokémon. Place [Damage Counters](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Damage) on that opponent's monster, equal to the number listed in your monster's text, divide by 10. (Monsters with a Damage Counter lose 10 ATK for each Damage Counter on it, also are destroyed when their ATK become 0 as a result.) If that opponent's monster is destroyed, add 1 Prize card to your hand. (At any time, if an opponent's monster(s) is destroyed, add 1 Prize card to your hand for each destroyed monster.) Your main phase 1 ends.
 12. Skip your battle phase and main phase 2.
 13. During your end phase, activate or apply any [Special Condition](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)) effects, then your turn ends.
 
@@ -47,7 +47,7 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 <details>
 <summary>Card Types</summary>
 
-- `Pokémon = Monster (Level=Retreat Cost, ATK=DEF=HP)`
+- `Pokémon = Monster (Level=Retreat Cost, ATK=current HP, DEF=original HP)`
 	- `Pokémon with "Poké-Power", "Poké-Body", "Ability", etc. in their text = Monster + Effect`
 - `Trainer = Spell`
 	- `Stadium = Spell + Field`
@@ -79,17 +79,55 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 - `Prize Cards = Cards placed underneath "Prize Cards" in left-most Spell & Trap Zone` (Your opponent's life points are equal to your total number of Prize cards.)
 </details>
 <details>
+<summary>Card Search</summary>
+
+You can search for the following specific card information in YGOPro:
+- Attack Damage: Type `N damage` or ` N damage" for a more norrower search
+- Card Type: Search by `Type`
+- Energy Type (Pokémon Type): Search by `Attribute` (only until `Darkness`), or type `Pokemon Type: Energy`
+- Expansions (what set the card appears in): **N/A**
+- Format (what tournament format the card is legally playable in): **N/A**
+- HP (Hit Points): Search by `ATK`
+- Pokémon that have an Ability: Search by `Effect` or `Has Ability`
+- Pokémon Evolution: Type `Stage 1`, `Stage 2`, or `Evolves from Pokémon name`
+- Rarity: **N/A**
+- Resistance: Type `Resistance: Energy -N`, or `Resistance: none` for Pokémon that have no Resistance
+- Retreat Cost: Search by `Level/Rank`
+- Total Attack Cost: **N/A** (You can type `[P] ` for Pokémon attacks that require only 1 Psychic Energy, etc.)
+- Weakness: Type `Weakness: Energy x2`, `Weakness: Energy +N`, or `Weakness: none` for Pokémon that have no Weakness
+
+Note - Energy. The following abbreviations are used for each Energy Type:<br>
+- [G] = Grass
+- [R] = Fire (R is short for 'Red')
+- [W] = Water
+- [L] = Lightning
+- [P] = Psychic
+- [F] = Fighting
+- [D] = Darkness
+- [M] = Metal
+- [C] = Colorless
+- [Y] = Fairy (Y is the last letter in 'Fairy')
+- [N] = Dragon (N is the last letter in 'Dragon')
+
+Note - missing information. Text that appears on the card that is not essential to gameplay is not searchable in the database:<br>
+- Card Illustrator (artist who illustrated the image on the card)
+- Pokédex Number - No. 125
+- Pokémon Category (Species) - Electric Pokémon
+- Pokémon Length/Height - Ht:3'07''
+- Pokémon Weight - WT 66.1 lbs
+</details>
+<details>
 <summary>Glossary</summary>
 
 - `Ability/Pokémon Power =` [Monster effect](http://yugioh.wikia.com/wiki/Monster_effect)
 - `Active Pokémon = Monster in the Extra Monster Zone`
 - `Ancient Trait` = *TBA*
 - `Attach = Attach a card to a monster as a material`
-- `Attack` = *TBA*
+- `Attack = During your Main Phase, if this card has [...] attached to it: You can activate this effect; (attack goes here).`
 - `Between-Turns Step = End Phase`
 - `Break Evolution` = *TBA*
 - `Burn Marker = Burn Counter`
-- `Damage = Place a Damage Counter on a monster at the end of the Damage Step. (Monsters with a Damage Counter lose 10 ATK and DEF for each Damage Counter on it, also are destroyed when their ATK and DEF become 0 as a result.)`
+- `Damage = Place a Damage Counter on a monster at the end of the Damage Step. (Monsters with a Damage Counter lose 10 ATK for each Damage Counter on it, also are destroyed when their ATK become 0 as a result.)`
 - `Damage Counter = Damage Counter`
 - `Defending Pokémon = Attack target`
 - `Devolve` = *TBA*
@@ -98,8 +136,8 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 - `Evolved Pokémon = "Evolution" monster with a material whose name is included on it`
 - `GX Marker` = *TBA*
 - `Game = Duel`
-- `Hit Points (HP) = ATK = DEF`
-- `In Play = Cards in the Extra Monster Zones and Main Monster Zones`
+- `Hit Points (HP) = ATK`
+- `In Play = Cards in the Extra Monster Zones and Main Monster Zones [or Spell & Trap Zone as an extended Bench]`
 - `Knocked Out = Destroy a monster on the field`
 - `Match = Duel`
 - `Poké-Body =` [Continuous](http://yugioh.wikia.com/wiki/Continuous_Effect) `monster effect [while that monster is in a Monster Zone or Spell & Trap Zone]`
@@ -108,8 +146,8 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 - `Pokémon Legend` = *TBA*
 - `Poison Marker = Poison Counter`
 - `Resistance` = *TBA*
-- `Retreat = Once per turn: You can switch the locations of 1 monster in your Extra Monster Zone with 1 monster in your Main Monster Zone [or Spell & Trap Zone], by detaching "Energy" cards from the monster in the Extra Monster Zone equal to its Level.`
-- `Special Condition = Continuous Effect` (["Asleep"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Asleep), ["Burned"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Burned), ["Confused"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Confused), ["Paralyzed"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Paralyzed) `and` ["Poisoned"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Poisoned))
+- `Retreat = Once per turn: You can switch the locations of 1 monster in your Extra Monster Zone with 1 monster in your Main Monster Zone [or Spell & Trap Zone as an extended Bench], by detaching "Energy" cards from the monster in the Extra Monster Zone equal to its Level.`
+- `Special Condition = Continuous Effect` (["Asleep"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Asleep), ["Burned"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Burned), ["Confused"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Confused), ["Paralyzed"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Paralyzed) and ["Poisoned"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Poisoned))
 - `Sudden Death` = *TBA*
 - `Weakness` = *TBA*
 </details>
@@ -127,7 +165,7 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 - `0x2	Spellcaster` = Magical, etc.
 - `0x4	Fairy` = Fairy, Balloon, Transform(†), Starshape(†), Happiness, Playhouse, Intertwining, Life, Cotton Candy, Fragrance, Perfume, etc.
 - `0x8	Fiend` = Gas(†), Shadow, Dark(ness), Sharp Claw(†), Moonlight, Pitch-Black, Wicked, Big Boss, Disaster, Savage(†), Brutal, Scarecrow(†), etc.
-- `0x10	Zombie` = *TBA*
+- `0x10	Zombie` = **N/A**
 - `0x20	Machine` = Magnet (Area), Armor (Bird), Iron (Snake, Will), Scissors, Temporal(†), Shield, Bronze (Bell), Sword (Blade), etc.
 - `0x40	Aqua` = Aquamouse, Sea Lion, Tadpole, (Tiny) Turtle, Mysterious(†), Starshape, Bubble Jet, Freeze, Sludge(†), (River) Crab, etc.
 - `0x80	Pyro` = Volcano, Spitfire, Flame, Fire (Horse, Mouse), Live Coal, Blast, High Temp, Lava, Ember, Scorching, etc.
@@ -138,25 +176,25 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 - `0x1000	Thunder` = Electric, Ball(†), Light, Angler(†), Wool(†), Thunder(bolt), EleSquirrel, Flash, Spark, Gleam Eyes, Discharge, Plasma, etc.
 - `0x2000	Dragon` = Dragon, Humming(†), Boundary, Cave(†), Axe Jaw(†), etc.
 - `0x4000	Beast` = Mouse, (Scratch, Classy, Tiger) Cat(ty), Puppy, Drill(†) Poison Pin(†), Fox, Rat, Parent, (Pig) Monkey, Lonely, Bonekeeper, etc.
-- `0x8000	Beast-Warrior` = *TBA*
+- `0x8000	Beast-Warrior` = **N/A**
 - `0x10000	Dinosaur` = Fossil, Spiral(†), Head Butt, Tundra(†), Sea Lily(†), Barnacle(†), Plate, Old Shrimp(†), etc.
 - `0x20000	Fish` = (Shell, Gold, Water)Fish, Neon(†), etc.
 - `0x40000	Sea Serpent` = Atrocious(†), etc.
 - `0x80000	Reptile` = Lizard, Cobra, (Land) Snake, etc.
 - `0x100000	Psychic` = Genetic, Psi, Hypnosis, Human Shape(†), Barrier(†), Dopey, Royal(†), Mystic, Sun, Patient(†), New Species(†), Symbol, Bright, etc.
 - `0x200000	Divine-Beast` = Legendary, Timetravel, Rainbow(†), Aurora, Alpha, etc.
-- `0x400000	Creator God` = *TBA* 
-- `0x800000	Wyrm` = *TBA*
+- `0x400000	Creator God` = **N/A**
+- `0x800000	Wyrm` = **N/A**
 - `0x1000000	Cyberse` = Virtual, etc.
 - (†) = Subject to change
 </details>
 <details>
 <summary>Categories</summary>
 
-- `0x1	Destroy Spell/Trap` = *TBA*
+- `0x1	Destroy Spell/Trap` = Put a Stadium or non-Pokémon card that is In Play into the discard pile
 - `0x2	Destroy Monster` = Knock Out a Pokémon
-- `0x4	Banish` = *TBA*
-- `0x8	Send to Graveyard` = Put a card into the discard pile
+- `0x4	Banish` = Put a card in the Lost Zone
+- `0x8	Send to Graveyard` = Put a card into the discard pile, discard a card
 - `0x10	Return to Hand` = Put a card from anywhere, except the discard pile or deck, into a player's hand
 - `0x20	Return to Deck` = Put a card into a player's deck
 - `0x40	Hand Destruction` = Decrease your opponent's hand size
@@ -165,25 +203,25 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 - `0x200	Search Deck` = Look at a player's deck
 - `0x400	Recover from Graveyard` = Put a card from the discard pile into a player's hand, or in play
 - `0x800	Change Card Position` = Switch an Active Pokémon with a Benched Pokémon, or vice-versa
-- `0x1000	Get Control` = *TBA*
+- `0x1000	Get Control` = Add a Special Condition to a Pokémon
 - `0x2000	Increase/Decrease ATK/DEF` = Increase or decrease a Pokémon's HP
-- `0x4000	Piercing` = *TBA*
-- `0x8000	Multiple Attack` = *TBA*
-- `0x10000	Restrict Attack` = Paralyze a Pokémon
-- `0x20000	Direct Attack` = *TBA*
+- `0x4000	Pierce` = Make a Pokémon do more damage, have a Pokémon take less damage, or prevent damage done to a Pokémon
+- `0x8000	Multiple Attacks` = Make a Pokémon able to attack more than once per turn
+- `0x10000	Restrict Attack` = Make a Pokémon unable to use its attacks, Mega Evolution, end a player's turn before that player can attack
+- `0x20000	Direct Attack` = **N/A**
 - `0x40000	Special Summon` = Put a Pokémon in play, play a non-Pokémon card as if it were a Pokémon
-- `0x80000	Token` = *TBA*
-- `0x100000	Type` = *TBA*
-- `0x200000	Attribute` = Lists a type of Energy
-- `0x400000	Reduce LP` = *TBA*
-- `0x800000	Recover LP` = *TBA*
-- `0x1000000	Cannot Destroy` = *TBA*
-- `0x2000000	Cannot Target` = *TBA*
-- `0x4000000	Counter` = Put a Poison or Burn Pokémon on a Pokémon, remove damage counters from a Pokémon, put any other counters/markers on a card, or remove them
-- `0x8000000	Gamble` = Flip a coin, guess information
-- `0x10000000	Fusion` = *TBA*
-- `0x20000000	Synchro` = *TBA*
-- `0x40000000	Xyz` = Attach/discard a card that is underneath another card
+- `0x80000	Token` = **N/A**
+- `0x100000	Type` = Lists a Pokémon category (species) in the text box
+- `0x200000	Attribute` = Lists a non-Attack Cost Energy Type in the text box
+- `0x400000	Reduce LP` = Put a Damage Counter on a Pokémon, except due to a Pokémon's attack
+- `0x800000	Recover LP` = Remove a Damage Counter from a Pokémon
+- `0x1000000	Cannot Destroy` = Make a Pokémon unable to be Knocked Out, doesn't count as a Knocked Out Pokémon
+- `0x2000000	Cannot Target` = Remove a Special Condition from a Pokémon
+- `0x4000000	Counter` = Put any counters/markers on a card, or remove them
+- `0x8000000	Gamble` = Flip a coin, rock-paper-scissors, guess information
+- `0x10000000	Fusion` = **N/A**
+- `0x20000000	Synchro` = **N/A**
+- `0x40000000	Xyz` = Evolution card, evolve or devolve a Pokémon, lists an Evolution card in the text box
 - `0x80000000	Cancel out Effect` = Cause a Poké-Body, Poké-Power, or ability to stop working
 </details>
 

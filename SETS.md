@@ -130,8 +130,8 @@
 
 ### Unnumbered
 - [Miscellaneous Promotional cards (TCG) (1999-2004)](https://bulbapedia.bulbagarden.net/wiki/Miscellaneous_Promotional_cards_(TCG)/1999-2004)
-- [Miscellaneous Promotional cards (TCG) (2005-2010)] (https://bulbapedia.bulbagarden.net/wiki/Miscellaneous_Promotional_cards_(TCG)/2005-2010)
-- [Miscellaneous Promotional cards] (TCG) (2011-2016)](https://bulbapedia.bulbagarden.net/wiki/Miscellaneous_Promotional_cards_(TCG))
+- [Miscellaneous Promotional cards (TCG) (2005-2010)](https://bulbapedia.bulbagarden.net/wiki/Miscellaneous_Promotional_cards_(TCG)/2005-2010)
+- [Miscellaneous Promotional cards (TCG) (2011-2016)](https://bulbapedia.bulbagarden.net/wiki/Miscellaneous_Promotional_cards_(TCG))
 - Victory Medals 2007-2011
 
 ### Archived
