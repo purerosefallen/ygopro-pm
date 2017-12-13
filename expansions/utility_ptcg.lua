@@ -155,7 +155,7 @@ function Card.IsBasicEnergy(c)
 	return c:IsEnergy() and c:IsSubType(PM_TYPE_BASIC_ENERGY)
 end
 --check what type of basic Energy a card is 
-function Card.IsEnergy(c,energy)
+function Card.IsEnergyCard(c,energy)
 	if energy then
 		return c:IsEnergy() and c:IsCode(energy)
 	else

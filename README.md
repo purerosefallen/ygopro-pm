@@ -82,7 +82,7 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 <summary>Card Search</summary>
 
 You can search for the following specific card information in YGOPro:
-- Attack Damage: Type `N damage` or ` N damage" for a more norrower search
+- Attack Damage: Type `N damage` or ` N damage` for a more norrower search
 - Card Type: Search by `Type`
 - Energy Type (Pokémon Type): Search by `Attribute` (only until `Darkness`), or type `Pokemon Type: Energy`
 - Expansions (what set the card appears in): **N/A**
