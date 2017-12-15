@@ -11,6 +11,7 @@
 --CONTENTS
 --[+UniversalFunctions]......................................functions that are included on every script
 --[+RuleFunctions]...........................................functions that are included on the rules card
+--[+Trainer].................................................functions that are included on every Trainer card
 --[+Conditions]..............................................condition functions
 --[+Targets].................................................target functions
 --[+Filters].................................................filter functions
@@ -199,7 +200,7 @@ end
 function Card.IsColorlessEnergy(c)
 	return c:IsEnergy() and c:IsCode(CARD_COLORLESS_ENERGY)
 end
---check if a card is a [F] Energy
+--check if a card is a [Y] Energy
 function Card.IsFairyEnergy(c)
 	return c:IsEnergy() and c:IsCode(CARD_FAIRY_ENERGY)
 end
@@ -221,16 +222,14 @@ Card.IsEnergyType=Card.IsAttribute
 function Card.IsActive(c)
 	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()>=SEQUENCE_EXTRA_MZONE
 end
-Card.IsFaceupActive=aux.AND(Card.IsFaceup,Card.IsActive)
-Card.IsFacedownActive=aux.AND(Card.IsFacedown,Card.IsActive)
 --check if a pokémon is on the bench
 function Card.IsBench(c)
 	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<SEQUENCE_EXTRA_MZONE
 end
-Card.IsFaceupBench=aux.AND(Card.IsFaceup,Card.IsBench)
-Card.IsFacedownBench=aux.AND(Card.IsFacedown,Card.IsBench)
 --check if a card is vertical
 Card.IsUpside=Card.IsAttackPos
+Card.IsFaceupUpside=aux.AND(Card.IsFaceup,Card.IsAttackPos)
+Card.IsFacedownUpside=aux.AND(Card.IsFacedown,Card.IsAttackPos)
 --check if a card is horizontal
 Card.IsCounterclockwise=Card.IsDefensePos
 Card.IsFaceupCounterclockwise=aux.AND(Card.IsFaceup,Card.IsDefensePos)
@@ -259,32 +258,18 @@ Card.GetPreviousHPOnField=Card.GetPreviousAttackOnField
 Card.IsHPBelow=Card.IsAttackBelow
 --check if a card's hit points is n or more
 Card.IsHPAbove=Card.IsAttackAbove
---put a counter on a card
-Card.AddCounter=Card.AddCounter
 --put a marker on a card
 Card.AddMarker=Card.AddCounter
---remove a counter from a card
-Card.RemoveCounter=Card.RemoveCounter
 --remove a marker from a card
 Card.RemoveMarker=Card.RemoveCounter
---check if a card has a counter on it
-Card.GetCounter=Card.GetCounter
 --check if a card has a marker on it
 Card.GetMarker=Card.GetCounter
---allow a card to have a counter put on it
-Card.EnableCounterPermit=Card.EnableCounterPermit
 --allow a card to have a marker put on it
 Card.EnableMarkerPermit=Card.EnableCounterPermit
---limit the number of counters that can be put on a card
-Card.SetCounterLimit=Card.SetCounterLimit
 --limit the number of markers that can be put on a card
 Card.SetMarkerLimit=Card.SetCounterLimit
---check if a counter can be put on a card
-Card.IsCanAddCounter=Card.IsCanAddCounter
 --check if a marker can be put on a card
 Card.IsCanAddMarker=Card.IsCanAddCounter
---check if a counter can be removed from a card
-Card.IsCanRemoveCounter=Card.IsCanRemoveCounter
 --check if a marker can be removed from a card
 Card.IsCanRemoveMarker=Card.IsCanRemoveCounter
 --check if a pokémon can be put in play
@@ -313,20 +298,12 @@ Duel.PDiscard=Duel.SendtoGrave
 --send targets to the discard pile
 Duel.SendtoDiscardPile=Duel.SendtoGrave
 Duel.SendtoDPile=Duel.SendtoDiscardPile
---check if a player can put a counter on a card
-Duel.IsCanAddCounter=Duel.IsCanAddCounter
 --check if a player can put a marker on a card
 Duel.IsCanAddMarker=Duel.IsCanAddCounter
---a player removes a counter from cards in play
-Duel.RemoveCounter=Duel.RemoveCounter
 --a player removes a marker from cards in play
 Duel.RemoveMarker=Duel.RemoveCounter
---check if a player can remove a counter from cards in play
-Duel.IsCanRemoveCounter=Duel.IsCanRemoveCounter
 --check if a player can remove a marker from cards in play
 Duel.IsCanRemoveMarker=Duel.IsCanRemoveCounter
---get the number of counters that are on cards in play
-Duel.GetCounter=Duel.GetCounter
 --get the number of markers that are on cards in play
 Duel.GetMarker=Duel.GetCounter
 --evolve a pokémon by playing it on top of another pokémon
@@ -352,6 +329,10 @@ function Duel.GetPrizeGroup(tp,player)
 	local lc=Duel.GetMatchingGroup(Auxiliary.PrizeCardsFilter,player,PM_LOCATION_PRIZE,0,nil):GetFirst()
 	if not lc then return end
 	return lc:GetAttachmentGroup()
+end
+--return the number of prize cards a player has
+function Duel.GetPrizeGroupCount(tp,player)
+	return Duel.GetPrizeGroup(tp,player):GetCount()
 end
 --let a player draw cards equal to or less than count with a reason and return the number of cards drawn
 local dr=Duel.Draw
@@ -633,6 +614,43 @@ function Auxiliary.EnableCannotSSet(c)
 	e1:SetRange(PM_LOCATION_RULES)
 	e1:SetTargetRange(1,0)
 	c:RegisterEffect(e1)
+end
+
+--==========[+Trainer]==========
+--Trainer card
+function Auxiliary.EnableTrainerActivate(c,cate,targ_func,op_func,con_func,cost_func,prop)
+	--activate
+	local e1=Effect.CreateEffect(c)
+	if cate then e1:SetCategory(cate) end
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	if prop then e1:SetProperty(prop) end
+	if con_func then e1:SetCondition(con_func) end
+	if cost_func then e1:SetCost(cost_func) end
+	if targ_func then e1:SetTarget(targ_func) end
+	e1:SetOperation(op_func)
+	c:RegisterEffect(e1)
+	if not c.old_supporter then return end
+	--remain field
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_REMAIN_FIELD)
+	c:RegisterEffect(e2)
+	--discard self
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_PHASE+PHASE_END)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e3:SetRange(PM_LOCATION_ADJACENT_ACTIVE)
+	e3:SetCondition(Auxiliary.TrainerDiscardCondition)
+	e3:SetOperation(Auxiliary.TrainerDiscardOperation)
+	c:RegisterEffect(e3)
+end
+function Auxiliary.TrainerDiscardCondition(e)
+	return e:GetHandler():IsOnField() and Duel.GetTurnPlayer()==e:GetHandlerPlayer()
+end
+function Auxiliary.TrainerDiscardOperation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.SendtoDPile(e:GetHandler(),REASON_RULE)
 end
 
 --==========[+Conditions]==========
