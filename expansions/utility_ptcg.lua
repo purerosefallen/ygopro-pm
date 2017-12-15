@@ -12,6 +12,7 @@
 --[+UniversalFunctions]......................................functions that are included on every script
 --[+RuleFunctions]...........................................functions that are included on the rules card
 --[+Trainer].................................................functions that are included on every Trainer card
+--[+Attack]..................................................attacks that are shared by many pokémon
 --[+Conditions]..............................................condition functions
 --[+Targets].................................................target functions
 --[+Filters].................................................filter functions
@@ -230,12 +231,14 @@ end
 Card.IsUpside=Card.IsAttackPos
 Card.IsFaceupUpside=aux.AND(Card.IsFaceup,Card.IsAttackPos)
 Card.IsFacedownUpside=aux.AND(Card.IsFacedown,Card.IsAttackPos)
---check if a card is horizontal
+--check if a card is clockwise
+Card.IsClockwise=Card.IsDefensePos
+Card.IsFaceupClockwise=aux.AND(Card.IsFaceup,Card.IsDefensePos)
+Card.IsFacedownClockwise=aux.AND(Card.IsFacedown,Card.IsDefensePos)
+--check if a card is counter-clockwise
 Card.IsCounterclockwise=Card.IsDefensePos
 Card.IsFaceupCounterclockwise=aux.AND(Card.IsFaceup,Card.IsDefensePos)
 Card.IsFacedownCounterclockwise=aux.AND(Card.IsFacedown,Card.IsDefensePos)
-Card.IsFaceupDefense=aux.AND(Card.IsFaceup,Card.IsDefensePos)
-Card.IsFacedownDefense=aux.AND(Card.IsFacedown,Card.IsDefensePos)
 --check if a pokémon's retreat cost is n or less
 Card.IsRetreatCostBelow=Card.IsLevelBelow
 --check if a pokémon's retreat cost is n or more
@@ -290,6 +293,11 @@ Card.IsSecret=aux.NOT(Card.IsPublic)
 --add the pokémon value to the non-pokémon card
 Card.AddPokemonAttribute=Card.AddMonsterAttribute
 Card.AddPokemonAttributeComplete=Card.AddMonsterAttributeComplete
+--check if a pokémon can attack
+function Card.IsCanAttack(c)
+	return not (Duel.IsFirstTurn() or c:IsHasEffect(PM_EFFECT_CANNOT_ATTACK))
+end
+
 --========== Duel ==========
 --get all attached cards in a specified location
 Duel.GetAttachmentGroup=Duel.GetOverlayGroup
@@ -324,6 +332,10 @@ Duel.PutOnBenchComplete=Duel.SpecialSummonComplete
 Duel.IsPlayerCanPlayPokemon=Duel.IsPlayerCanSpecialSummonMonster
 --check if a player can put a pokémon onto their bench
 Duel.IsPlayerCanPutPokemonOnBench=Duel.IsPlayerCanSpecialSummonMonster
+--check if it is the first turn of the game
+function Duel.IsFirstTurn()
+	return Duel.GetTurnCount()==1 --add a possible sudden death turn counter fix
+end
 --get a player's current prize cards
 function Duel.GetPrizeGroup(tp,player)
 	local lc=Duel.GetMatchingGroup(Auxiliary.PrizeCardsFilter,player,PM_LOCATION_PRIZE,0,nil):GetFirst()
@@ -651,6 +663,28 @@ function Auxiliary.TrainerDiscardCondition(e)
 end
 function Auxiliary.TrainerDiscardOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDPile(e:GetHandler(),REASON_RULE)
+end
+
+--==========[+Attack]==========
+--Pokémon attack
+function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func,cost_func,prop)
+	--con_func: include Card.IsActive and Card.IsCanAttack
+	--targ_func: include Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(c:GetOriginalCode(),desc_id))
+	if cate then e1:SetCategory(cate) end
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	if prop then
+		e1:SetProperty(PM_EFFECT_FLAG_POKEMON_ATTACK+prop)
+	else
+		e1:SetProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
+	end
+	e1:SetRange(PM_LOCATION_ACTIVE)
+	if con_func then e1:SetCondition(con_func) end
+	if cost_func then e1:SetCost(cost_func) end
+	if targ_func then e1:SetTarget(targ_func) end
+	e1:SetOperation(op_func)
+	c:RegisterEffect(e1)
 end
 
 --==========[+Conditions]==========

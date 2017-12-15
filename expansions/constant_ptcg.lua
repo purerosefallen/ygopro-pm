@@ -50,11 +50,11 @@ PM_LOCATION_STADIUM					=LOCATION_FZONE		--Location for Stadium cards
 PM_LOCATION_RULES					=LOCATION_EXTRA		--Location for Pokémon Rules
 PM_LOCATION_ACTIVE_POKEMON			=LOCATION_MZONE		--Location for Active Pokémon
 PM_LOCATION_BENCH					=LOCATION_MZONE		--Location for Benched Pokémon
+PM_LOCATION_IN_PLAY					=LOCATION_MZONE+LOCATION_SZONE	--Location for Active and Benched Pokémon
 PM_LOCATION_PRIZE_CARDS				=LOCATION_SZONE		--Location for Prize cards
-PM_LOCATION_ADJACENT_ACTIVE_POKEMON	=LOCATION_SZONE
+PM_LOCATION_ADJACENT_ACTIVE_POKEMON	=LOCATION_SZONE		--Location for Trainer cards that temporarily stay in play
 PM_LOCATION_DISCARD_PILE			=LOCATION_GRAVE		--Location for cards taken out of play
 PM_LOCATION_LOST_ZONE				=LOCATION_REMOVED	--Location for cards no longer playable
-PM_LOCATION_IN_PLAY					=LOCATION_MZONE+LOCATION_SZONE	--Location for Active and Benched Pokémon
 --↑Location combinations
 LOCATIONS_ALL						=0xff		--All locations
 --Positions
@@ -146,10 +146,12 @@ PM_STATUS_NO_RETREAT_COST			=STATUS_NO_LEVEL	--Pokémon with no Retreat Cost
 PLAYER_OWNER						=nil	--player=PLAYER_OWNER in Duel.Sendto.. (targets, player, reason)
 PLAYER_PLAYER						=0		--player=PLAYER_PLAYER in Effect.SetCondition (Auxiliary.turnpcon(player)), etc.
 PLAYER_OPPONENT						=1		--player=PLAYER_OPPONENT in Effect.SetCondition (Auxiliary.turnpcon(player)), etc.
---Descriptions
+--Reset
 --↑Reset combinations
 RESETS_STANDARD						=0x1fe0000	--RESET_TURN_SET+RESET_TOGRAVE+RESET_REMOVE+RESET_TEMP_REMOVE+RESET_TOHAND+RESET_TODECK+RESET_LEAVE+RESET_TOFIELD
 RESETS_STANDARD_DISABLE				=0x1ff0000	--0x1fe0000+RESET_DISABLE
+--Flags
+PM_EFFECT_FLAG_POKEMON_ATTACK		=0x100000000				--Included on all Pokémon attacks
 --Codes
 PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+1	--"You can play only one Supporter card each turn."
 PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+2	--"You can play only one Stadium card each turn."
