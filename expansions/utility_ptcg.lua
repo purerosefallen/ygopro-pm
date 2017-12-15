@@ -11,6 +11,7 @@
 --CONTENTS
 --[+UniversalFunctions]......................................functions that are included on every script
 --[+RuleFunctions]...........................................functions that are included on the rules card
+--[+Pokémon].................................................functions that are included on every Pokémon card
 --[+Trainer].................................................functions that are included on every Trainer card
 --[+Attack]..................................................attacks that are shared by many pokémon
 --[+Conditions]..............................................condition functions
@@ -24,6 +25,7 @@ PM_LOCATION_DPILE=PM_LOCATION_DISCARD_PILE
 PM_LOCATION_PRIZE=PM_LOCATION_PRIZE_CARDS
 PM_LOCATION_ADJACENT_ACTIVE=PM_LOCATION_ADJACENT_ACTIVE_POKEMON
 PM_LOCATION_LOST=PM_LOCATION_LOST_ZONE
+PM_EFFECT_UPDATE_HP=PM_EFFECT_UPDATE_HIT_POINTS
 PM_EVENT_TO_DPILE=PM_EVENT_TO_DISCARDPILE
 
 --==========[+UniversalFunctions]==========
@@ -297,7 +299,12 @@ Card.AddPokemonAttributeComplete=Card.AddMonsterAttributeComplete
 function Card.IsCanAttack(c)
 	return not (Duel.IsFirstTurn() or c:IsHasEffect(PM_EFFECT_CANNOT_ATTACK))
 end
-
+--check if an active pokémon can be retreated to the bench
+function Card.IsRetreatable(c)
+	local rc=c:GetRetreatCost()
+	local ct=c:GetAttachmentGroup():GetCount()
+	return Auxiliary.ActivePokemonFilter(c) and c:GetAttachmentGroup():IsExists(Card.IsEnergy,ct,nil) and (ct>=rc or rc==0)
+end
 --========== Duel ==========
 --get all attached cards in a specified location
 Duel.GetAttachmentGroup=Duel.GetOverlayGroup
@@ -334,7 +341,7 @@ Duel.IsPlayerCanPlayPokemon=Duel.IsPlayerCanSpecialSummonMonster
 Duel.IsPlayerCanPutPokemonOnBench=Duel.IsPlayerCanSpecialSummonMonster
 --check if it is the first turn of the game
 function Duel.IsFirstTurn()
-	return Duel.GetTurnCount()==1 --add a possible sudden death turn counter fix
+	return Duel.GetTurnCount()==1 --add a possible sudden death turn counter workaround
 end
 --get a player's current prize cards
 function Duel.GetPrizeGroup(tp,player)
@@ -628,6 +635,85 @@ function Auxiliary.EnableCannotSSet(c)
 	c:RegisterEffect(e1)
 end
 
+--==========[+Pokémon]==========
+--Pokémon card
+function Auxiliary.EnablePokemonAttribute(c)
+	c:SetMarkerLimit(PM_BURN_MARKER,1)
+	c:SetMarkerLimit(PM_POISON_MARKER,1)
+	--bench
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(PM_EFFECT_BENCH_PROC)
+	e1:SetProperty(PM_EFFECT_FLAG_BENCH_PARAM+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetTargetRange(PM_POS_FACEUP_UPSIDE,0)
+	e1:SetCondition(Auxiliary.BenchCondition)
+	e1:SetValue(1)
+	c:RegisterEffect(e1)
+	--update hp
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(PM_EFFECT_UPDATE_HP)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(PM_LOCATION_IN_PLAY)
+	e2:SetValue(Auxiliary.HPDamageValue)
+	c:RegisterEffect(e2)
+	--self knock out
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(PM_EFFECT_SELF_KNOCK_OUT)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(PM_LOCATION_IN_PLAY)
+	e3:SetCondition(Auxiliary.KnockOutCondition)
+	c:RegisterEffect(e3)
+	--retreat
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(PM_DESC_RETREAT)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetRange(PM_LOCATION_ACTIVE)
+	e4:SetCondition(Auxiliary.RetreatCondition)
+	e4:SetCost(Auxiliary.RetreatCost)
+	e4:SetTarget(Auxiliary.HintTarget)
+	e4:SetOperation(Auxiliary.RetreatOperation)
+	c:RegisterEffect(e4)
+end
+function Auxiliary.BenchCondition(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0 and c:IsBasicPokemon()
+end
+function Auxiliary.HPDamageValue(e,c)
+	return c:GetCounter(PM_DAMAGE_COUNTER)*-10
+end
+function Auxiliary.KnockOutCondition(e)
+	return e:GetHandler():GetHP()==0
+end
+function Auxiliary.RetreatCondition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFlagEffect(tp,PM_EFFECT_RETREAT)==0 and e:GetHandler():IsRetreatable()
+end
+function Auxiliary.RetreatCost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Auxiliary.BenchPokemonFilter,tp,PM_LOCATION_BENCH,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_PROMOTE)
+	local g=Duel.SelectMatchingCard(tp,Auxiliary.BenchPokemonFilter,tp,PM_LOCATION_BENCH,0,1,1,nil)
+	Duel.HintSelection(g)
+	g:KeepAlive()
+	e:SetLabelObject(g)
+	local c=e:GetHandler()
+	local og=c:GetAttachmentGroup()
+	local rc=c:GetRetreatCost()
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
+	local sog=og:FilterSelect(tp,Card.IsEnergy,rc,rc,nil)
+	Duel.PDiscard(sog,REASON_COST+REASON_DISCARD)
+end
+function Auxiliary.RetreatOperation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local g=e:GetLabelObject()
+	if g:GetCount()==0 then return end
+	Duel.SwapSequence(c,g:GetFirst())
+	Duel.RegisterFlagEffect(tp,PM_EFFECT_RETREAT,RESET_PHASE+PHASE_END,0,1)
+end
+
 --==========[+Trainer]==========
 --Trainer card
 function Auxiliary.EnableTrainerActivate(c,cate,targ_func,op_func,con_func,cost_func,prop)
@@ -718,5 +804,13 @@ Auxiliary.hinttg=Auxiliary.HintTarget
 --filter for the prize cards + PM_LOCATION_PRIZE
 function Auxiliary.PrizeCardsFilter(c)
 	return c:IsFaceup() and c:IsCode(CARD_PTCG_PRIZE) and c:GetSequence()==SEQUENCE_FIRST_SZONE
+end
+--filter for the active pokémon + PM_LOCATION_ACTIVE
+function Auxiliary.ActivePokemonFilter(c)
+	return c:IsFaceup() and c:IsPokemon() and c:IsActive()
+end
+--filter for pokémon on the bench + PM_LOCATION_BENCH
+function Auxiliary.BenchPokemonFilter(c)
+	return c:IsFaceup() and c:IsPokemon() and c:IsBench()
 end
 return Auxiliary

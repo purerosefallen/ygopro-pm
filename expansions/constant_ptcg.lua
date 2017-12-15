@@ -15,6 +15,22 @@ local PTCG={}
 --↑Rules
 CARD_PTCG_RULES						=26000000	--Pokémon Rules
 CARD_PTCG_PRIZE						=26000999	--Prize cards are attached to this card (may be temporary)
+--↑String
+PM_STRING_WIN						=26000001	--Win
+PM_STRING_GAME						=26000002	--Game Progress
+PM_STRING_CONDITION					=26000003	--Special Condition
+PM_STRING_DESC						=26000004	--Action
+PM_STRING_HINTMSG					=26000005	--Hint Message (Pokémon)
+PM_STRING_HINTMSG2					=26000006	--RESERVED
+PM_STRING_HINTMSG3					=26000007	--Hint Message (Trainer)
+PM_STRING_HINTMSG4					=26000008	--RESERVED
+PM_STRING_HINTMSG5					=26000009	--Hint Message (Energy)
+PM_STRING_HINTMSG6					=26000010	--Hint Message (Energy)
+PM_STRING_HINTMSG7					=26000011	--Hint Message
+PM_STRING_HINTMSG8					=26000012	--RESERVED
+PM_STRING_HINTMSG9					=26000013	--RESERVED
+PM_STRING_QHINTMSG					=26000014	--Question Hint Message
+PM_STRING_SELECTMSG					=26000015	--Select Message (Energy)
 --↑Energy cards
 CARD_GRASS_ENERGY					=26001099	--Base Set 99/102
 CARD_FIRE_ENERGY					=26001098	--Base Set 98/102
@@ -151,18 +167,131 @@ PLAYER_OPPONENT						=1		--player=PLAYER_OPPONENT in Effect.SetCondition (Auxili
 RESETS_STANDARD						=0x1fe0000	--RESET_TURN_SET+RESET_TOGRAVE+RESET_REMOVE+RESET_TEMP_REMOVE+RESET_TOHAND+RESET_TODECK+RESET_LEAVE+RESET_TOFIELD
 RESETS_STANDARD_DISABLE				=0x1ff0000	--0x1fe0000+RESET_DISABLE
 --Flags
+PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.EnablePokemonAttribute
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x100000000				--Included on all Pokémon attacks
 --Codes
+PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Pokémon card
+PM_EFFECT_CANNOT_ATTACK				=EFFECT_CANNOT_ATTACK		--Special Condition
+PM_EFFECT_UPDATE_HIT_POINTS			=EFFECT_UPDATE_ATTACK		--Pokémon card
+PM_EFFECT_SELF_KNOCK_OUT			=EFFECT_SELF_DESTROY		--Stadium card
 PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+1	--"You can play only one Supporter card each turn."
 PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+2	--"You can play only one Stadium card each turn."
 PM_EFFECT_LIMIT_BASIC_ENERGY		=CARD_PTCG_RULES+3	--"You can attach Energy just once each turn."
+PM_EFFECT_RETREAT					=700	--"Retreat your Active Pokémon (once per turn)."
 --Categories
-PM_CATEGORY_COIN					=CATEGORY_COIN	--"Sabrina's ESP" (Gym Heroes 117)
+PM_CATEGORY_COIN					=CATEGORY_COIN	--"Sabrina's ESP" (Gym Heroes 117/132)
 PM_CATEGORY_RECYCLE					=0x80000000		--"Pokémon Tower" (Wizards Promo 42)
+--Descriptions
+--↑Win (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)
+PM_DESC_INVALID						=aux.Stringid(PM_STRING_WIN,0)	--"You have an invalid deck."
+PM_DESC_KNOCKOUT					=aux.Stringid(PM_STRING_WIN,1)	--"You have no more Pokémon left in play!"
+PM_DESC_PRIZE						=aux.Stringid(PM_STRING_WIN,2)	--"You collected all the Prize cards to win the game!"
+PM_DESC_LOST_WORLD					=aux.Stringid(PM_STRING_WIN,3)	--"Once during each player's turn, if that player's opponent has 6 or more Pokémon in the Lost Zone, the player may choose to win the game."
+PM_DESC_SLOWBRO						=aux.Stringid(PM_STRING_WIN,4)	--"If you use this attack when you have only 1 Prize card left, you win this game."
+--↑Game Progress (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)
+PM_DESC_MULLIGAN					=aux.Stringid(PM_STRING_GAME,0)	--"Your opening hand has no Basic Pokémon. Select OK to take a mulligan."
+PM_DESC_MULLIGAN_WARN				=aux.Stringid(PM_STRING_GAME,1)	--"Your opponent had no Basic Pokémon in their hand and will redraw after you play your starting Pokémon."
+PM_DESC_EMPTY_BENCH					=aux.Stringid(PM_STRING_GAME,2)	--"You have no additional Basic Pokémon to start on your Bench. Select OK to continue."
+PM_DESC_DAMAGE_INCREASE				=aux.Stringid(PM_STRING_GAME,3)	--"Damage Increased"
+PM_DESC_DAMAGE_DECREASE				=aux.Stringid(PM_STRING_GAME,4)	--"Damage Decreased"
+PM_DESC_NO_TARGETS					=aux.Stringid(PM_STRING_GAME,5)	--"There are no valid targets to select. Click OK to continue."
+--↑Special Condition
+PM_DESC_ASLEEP						=aux.Stringid(PM_STRING_CONDITION,0)	--"Asleep"
+PM_DESC_ASLEEP_DESC					=aux.Stringid(PM_STRING_CONDITION,1)	--"While Asleep, a Pokémon cannot attack or retreat."
+PM_DESC_ASLEEP_CHECK				=aux.Stringid(PM_STRING_CONDITION,2)	--"Between turns, the owner flips a coin. If heads, the Pokémon wakes up."
+PM_DESC_BURNED						=aux.Stringid(PM_STRING_CONDITION,3)	--"Burned"
+PM_DESC_BURNED_DESC					=aux.Stringid(PM_STRING_CONDITION,4)	--"Between turns, the owner flips a coin. If tails, put 2 damage counters on the Burned Pokémon.."
+PM_DESC_BURNED_CHECK				=aux.Stringid(PM_STRING_CONDITION,5)	--"Between turns, the owner flips a coin. If tails, put 2 damage counters on the Burned Pokémon."
+PM_DESC_CONFUSED					=aux.Stringid(PM_STRING_CONDITION,6)	--"Confused"
+PM_DESC_CONFUSED_DESC				=aux.Stringid(PM_STRING_CONDITION,7)	--"If you attack with a Confused Pokémon, flip a coin. If tails, the attack does nothing, and put 3 damage counters on the Confused Pokémon."
+PM_DESC_CONFUSED_CHECK				=aux.Stringid(PM_STRING_CONDITION,8)	--"If you attack with a Confused Pokémon, flip a coin. If tails, the attack does nothing, and put 3 damage counters on the Confused Pokémon."
+PM_DESC_PARALYZED					=aux.Stringid(PM_STRING_CONDITION,9)	--"Paralyzed"
+PM_DESC_PARALYZED_DESC				=aux.Stringid(PM_STRING_CONDITION,10)	--"While Paralyzed, a Pokémon cannot attack or retreat."
+PM_DESC_PARALYZED_CHECK				=aux.Stringid(PM_STRING_CONDITION,11)	--"At the end of your turn, your Pokémon returns to normal."
+PM_DESC_POISONED					=aux.Stringid(PM_STRING_CONDITION,12)	--"Poisoned"
+PM_DESC_POISONED_DESC				=aux.Stringid(PM_STRING_CONDITION,13)	--"When a Pokémon is Poisoned, put 1 damage counter on it between turns."
+PM_DESC_POISONED_CHECK				=aux.Stringid(PM_STRING_CONDITION,14)	--"When a Pokémon is Poisoned, put 1 damage counter on it between turns."
+--↑Action
+PM_DESC_RETREAT						=aux.Stringid(PM_STRING_DESC,0)			--"Retreat"
+PM_DESC_LVX							=aux.Stringid(PM_STRING_DESC,1)			--"Level Up"
+PM_DESC_EVOLVE						=aux.Stringid(PM_STRING_DESC,2)			--"Evolve"
+PM_DESC_ENERGY						=aux.Stringid(PM_STRING_DESC,3)			--"Attach the Energy to your Pokémon."
+PM_DESC_TOOL						=aux.Stringid(PM_STRING_DESC,4)			--"Attach the Pokémon Tool to your Pokémon."
+PM_DESC_SELF_DISCARD				=aux.Stringid(PM_STRING_DESC,5)			--"Discard this card."
+PM_DESC_SELF_DETACH					=aux.Stringid(PM_STRING_DESC,6)			--"Detach this card."
+--Hint Message
+PM_HINTMSG_CARD						=aux.Stringid(PM_STRING_HINTMSG,0)		--"Select a card."
+PM_HINTMSG_POKEMON					=aux.Stringid(PM_STRING_HINTMSG,1)		--"Select a Pokémon."
+PM_HINTMSG_BASICPOKEMON				=aux.Stringid(PM_STRING_HINTMSG,2)		--"Select a Basic Pokémon."
+PM_HINTMSG_POKEMONEX				=aux.Stringid(PM_STRING_HINTMSG,3)		--"Select a Basic Pokémon-EX."
+PM_HINTMSG_POKEMONSP				=aux.Stringid(PM_STRING_HINTMSG,4)		--"Select a Basic Pokémon SP."
+PM_HINTMSG_POKEMONGX				=aux.Stringid(PM_STRING_HINTMSG,5)		--"Select a Basic Pokémon GX."
+PM_HINTMSG_EVOLUTION				=aux.Stringid(PM_STRING_HINTMSG,6)		--"Select an Evolution card."
+PM_HINTMSG_STAGE1					=aux.Stringid(PM_STRING_HINTMSG,7)		--"Select a Stage 1 Pokémon."
+PM_HINTMSG_STAGE2					=aux.Stringid(PM_STRING_HINTMSG,8)		--"Select a Stage 2 Pokémon."
+PM_HINTMSG_MEGA						=aux.Stringid(PM_STRING_HINTMSG,9)		--"Select a Mega Evolution Pokémon."
+PM_HINTMSG_BREAK					=aux.Stringid(PM_STRING_HINTMSG,10)		--"Select a Pokémon BREAK."
+PM_HINTMSG_LVX						=aux.Stringid(PM_STRING_HINTMSG,11)		--"Select a Pokémon LV.X."
+PM_HINTMSG_LEGEND					=aux.Stringid(PM_STRING_HINTMSG,12)		--"Select a Pokémon LEGEND."
+PM_HINTMSG_RESTORED					=aux.Stringid(PM_STRING_HINTMSG,13)		--"Select a Restored Pokémon."
+PM_HINTMSG_BABY						=aux.Stringid(PM_STRING_HINTMSG,14)		--"Select a Baby Pokémon."
+PM_HINTMSG_TRAINER					=aux.Stringid(PM_STRING_HINTMSG3,0)		--"Select a Trainer card."
+PM_HINTMSG_ITEM						=aux.Stringid(PM_STRING_HINTMSG3,1)		--"Select an Item card."
+PM_HINTMSG_POKEMONTOOL				=aux.Stringid(PM_STRING_HINTMSG3,2)		--"Select a Pokémon Tool card."
+PM_HINTMSG_ACESPEC					=aux.Stringid(PM_STRING_HINTMSG3,3)		--"Select an ACE SPEC card."
+PM_HINTMSG_SUPPORTER				=aux.Stringid(PM_STRING_HINTMSG3,4)		--"Select a Supporter card."
+PM_HINTMSG_TECHMACHINE				=aux.Stringid(PM_STRING_HINTMSG3,5)		--"Select a Technical Machine card."
+PM_HINTMSG_ROCKETSMACHINE			=aux.Stringid(PM_STRING_HINTMSG3,6)		--"Select a Rocket's Secret Machine card."
+PM_HINTMSG_ENERGY					=aux.Stringid(PM_STRING_HINTMSG5,0)		--"Select an Energy card."
+PM_HINTMSG_BASICENERGY				=aux.Stringid(PM_STRING_HINTMSG5,1)		--"Select a basic Energy card."
+PM_HINTMSG_SPECIALENERGY			=aux.Stringid(PM_STRING_HINTMSG5,2)		--"Select a Special Energy card."
+PM_HINTMSG_GENERGY					=aux.Stringid(PM_STRING_HINTMSG6,0)		--"Select a GRASS Energy card."
+PM_HINTMSG_RENERGY					=aux.Stringid(PM_STRING_HINTMSG6,1)		--"Select a FIRE Energy card."
+PM_HINTMSG_WENERGY					=aux.Stringid(PM_STRING_HINTMSG6,2)		--"Select a WATER Energy card."
+PM_HINTMSG_LENERGY					=aux.Stringid(PM_STRING_HINTMSG6,3)		--"Select a LIGHTNING Energy card."
+PM_HINTMSG_PENERGY					=aux.Stringid(PM_STRING_HINTMSG6,4)		--"Select a PSYCHIC Energy card."
+PM_HINTMSG_FENERGY					=aux.Stringid(PM_STRING_HINTMSG6,5)		--"Select a FIGHTING Energy card."
+PM_HINTMSG_DENERGY					=aux.Stringid(PM_STRING_HINTMSG6,6)		--"Select a DARKNESS Energy card."
+PM_HINTMSG_MENERGY					=aux.Stringid(PM_STRING_HINTMSG6,7)		--"Select a METAL Energy card."
+PM_HINTMSG_YENERGY					=aux.Stringid(PM_STRING_HINTMSG6,8)		--"Select a FAIRY Energy card."
+PM_HINTMSG_ACTIVE					=aux.Stringid(PM_STRING_HINTMSG7,0)		--"Select a Pokémon to be the Active Pokémon."
+PM_HINTMSG_BENCH					=aux.Stringid(PM_STRING_HINTMSG7,1)		--"Select a Pokémon to be on the Bench."
+PM_HINTMSG_RETREAT					=aux.Stringid(PM_STRING_HINTMSG7,2)		--"Select a Pokémon to retreat."
+PM_HINTMSG_PROMOTE					=aux.Stringid(PM_STRING_HINTMSG7,3)		--"Select a Pokémon to make Active."
+PM_HINTMSG_DISCARDENERGY			=aux.Stringid(PM_STRING_HINTMSG7,4)		--"Select an Energy card to discard."
+PM_HINTMSG_EVOLVE					=aux.Stringid(PM_STRING_HINTMSG7,5)		--"Select a Pokémon to Evolve."
+PM_HINTMSG_LEVELUP					=aux.Stringid(PM_STRING_HINTMSG7,6)		--"Select a Pokémon to Level Up."
+PM_HINTMSG_ATTACHENERGY				=aux.Stringid(PM_STRING_HINTMSG7,7)		--"Select a Pokémon to attach the Energy to."
+PM_HINTMSG_MOVEENERGY				=aux.Stringid(PM_STRING_HINTMSG7,8)		--"Select a Pokémon to move the Energy to."
+PM_HINTMSG_ATTACHTOOL				=aux.Stringid(PM_STRING_HINTMSG7,9)		--"Select a Pokémon to attach the Pokémon Tool to."
+PM_HINTMSG_MOVETOOL					=aux.Stringid(PM_STRING_HINTMSG7,10)	--"Select a Pokémon to move the Pokémon Tool to."
+PM_HINTMSG_ENERGYTYPE				=aux.Stringid(PM_STRING_HINTMSG7,11)	--"Choose a type."
+PM_HINTMSG_TOHAND					=aux.Stringid(PM_STRING_HINTMSG7,12)	--"Select a card to put into your hand."
+PM_HINTMSG_HEAL						=aux.Stringid(PM_STRING_HINTMSG7,13)	--"Select a Pokémon to heal."
+PM_HINTMSG_TOBENCH					=aux.Stringid(PM_STRING_HINTMSG7,14)	--"Select a Pokémon to put onto the Bench."
+PM_HINTMSG_DISCARD					=aux.Stringid(PM_STRING_HINTMSG7,15)	--"Select a card to discard."
+PM_HINTMSG_TODECK					=aux.Stringid(PM_STRING_HINTMSG8,0)		--"Select a card to shuffle into the deck."
+PM_HINTMSG_TODECKTOP				=aux.Stringid(PM_STRING_HINTMSG8,1)		--"Select a card to put on top of the deck."
+PM_HINTMSG_TODECKBOT				=aux.Stringid(PM_STRING_HINTMSG8,2)		--"Select a card to put on the bottom of the deck."
+PM_HINTMSG_TODISCARD				=aux.Stringid(PM_STRING_HINTMSG8,3)		--"Select a card to put into the discard pile."
+--Question Hint Message
+PM_QHINTMSG_DRAW					=aux.Stringid(PM_STRING_QHINTMSG,0)		--"Would you like to draw a card?"
 --Select Message
 --↑Coin
 SELECT_HEADS						=60	--"Heads" coin call
 SELECT_TAILS						=61	--"Tails" coin call
+--↑Energy Type
+PM_SELECT_GRASS						=aux.Stringid(PM_STRING_SELECTMSG,0)	--"Grass"
+PM_SELECT_FIRE						=aux.Stringid(PM_STRING_SELECTMSG,1)	--"Fire"
+PM_SELECT_WATER						=aux.Stringid(PM_STRING_SELECTMSG,2)	--"Water"
+PM_SELECT_LIGHTNING					=aux.Stringid(PM_STRING_SELECTMSG,3)	--"Lightning"
+PM_SELECT_PSYCHIC					=aux.Stringid(PM_STRING_SELECTMSG,4)	--"Psychic"
+PM_SELECT_FIGHTING					=aux.Stringid(PM_STRING_SELECTMSG,5)	--"Fighting"
+PM_SELECT_DARKNESS					=aux.Stringid(PM_STRING_SELECTMSG,6)	--"Darkness"
+PM_SELECT_METAL						=aux.Stringid(PM_STRING_SELECTMSG,7)	--"Metal"
+PM_SELECT_COLORLESS					=aux.Stringid(PM_STRING_SELECTMSG,8)	--"Colorless"
+PM_SELECT_FAIRY						=aux.Stringid(PM_STRING_SELECTMSG,9)	--"Fairy"
+PM_SELECT_DRAGON					=aux.Stringid(PM_STRING_SELECTMSG,10)	--"Dragon"
 --Result
 RESULT_TAILS						=0	--"Tails" coin result
 RESULT_HEADS						=1	--"Heads" coin result
