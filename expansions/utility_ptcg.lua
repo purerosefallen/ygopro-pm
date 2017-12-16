@@ -12,6 +12,7 @@
 --[+UniversalFunctions]......................................functions that are included on every script
 --[+RuleFunctions]...........................................functions that are included on the rules card
 --[+Pokémon].................................................functions that are included on every Pokémon card
+--[+Energy]..................................................functions that are included on every Energy card
 --[+Trainer].................................................functions that are included on every Trainer card
 --[+Attack]..................................................attacks that are shared by many pokémon
 --[+Conditions]..............................................condition functions
@@ -227,7 +228,9 @@ function Card.IsActive(c)
 end
 --check if a pokémon is on the bench
 function Card.IsBench(c)
-	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<SEQUENCE_EXTRA_MZONE
+	return (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<SEQUENCE_EXTRA_MZONE)
+		--bench extended by "Sky Field ROS 89"
+		or (c:IsLocation(LOCATION_SZONE) and c:GetSequence()~=SEQUENCE_FIRST_SZONE and c:GetSequence()~=SEQUENCE_FIELD_ZONE)
 end
 --check if a card is vertical
 Card.IsUpside=Card.IsAttackPos
@@ -712,6 +715,32 @@ function Auxiliary.RetreatOperation(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	Duel.SwapSequence(c,g:GetFirst())
 	Duel.RegisterFlagEffect(tp,PM_EFFECT_RETREAT,RESET_PHASE+PHASE_END,0,1)
+end
+
+--==========[+Energy]==========
+--Energy card
+function Auxiliary.EnableEnergyAttribute(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(PM_DESC_ENERGY)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetTarget(Auxiliary.EnergyTarget)
+	e1:SetOperation(Auxiliary.EnergyOperation)
+	c:RegisterEffect(e1)
+end
+function Auxiliary.EnergyFilter(c)
+	return c:IsFaceup() and c:IsPokemon()
+end
+function Auxiliary.EnergyTarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Auxiliary.EnergyFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil) end
+end
+function Auxiliary.EnergyOperation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_ATTACHENERGY)
+	local g=Duel.SelectMatchingCard(tp,Auxiliary.EnergyFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
+	if g:GetCount()==0 then return end
+	Duel.HintSelection(g)
+	Duel.Attach(g:GetFirst(),Group.FromCards(e:GetHandler()))
 end
 
 --==========[+Trainer]==========
