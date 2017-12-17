@@ -212,6 +212,11 @@ end
 function Card.IsSpecialEnergy(c)
 	return c:IsEnergy() and c:IsSubType(PM_TYPE_SPECIAL)
 end
+--check if a card can only have one copy of itself in a player's deck
+function Card.IsHasDeckRestriction(c)
+	return c:IsHasEffect(PM_EFFECT_RESTRICT_MIRACLE_ENERGY) or c:IsHasEffect(PM_EFFECT_RESTRICT_ACE_SPEC)
+		or c:IsHasEffect(PM_EFFECT_RESTRICT_POKEMON_STAR) --add new effects here
+end
 --get the cards attached underneath another card
 Card.GetAttachmentGroup=Card.GetOverlayGroup
 --get a pokémon's CURRENT type (color)

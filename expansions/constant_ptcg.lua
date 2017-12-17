@@ -31,7 +31,7 @@ PM_STRING_HINTMSG8					=26000012	--RESERVED
 PM_STRING_HINTMSG9					=26000013	--RESERVED
 PM_STRING_QHINTMSG					=26000014	--Question Hint Message
 PM_STRING_SELECTMSG					=26000015	--Select Message (Energy)
---↑Energy cards
+--↑Basic Energy cards
 CARD_GRASS_ENERGY					=26001099	--Base Set 99/102
 CARD_FIRE_ENERGY					=26001098	--Base Set 98/102
 CARD_WATER_ENERGY					=26001102	--Base Set 102/102
@@ -42,6 +42,11 @@ CARD_DARKNESS_ENERGY				=26032129	--Diamond & Pearl 29/130
 CARD_METAL_ENERGY					=26032130	--Diamond & Pearl 30/130
 CARD_COLORLESS_ENERGY				=nil		--energy=CARD_COLORLESS_ENERGY in Card.IsEnergy (c, energy)
 CARD_FAIRY_ENERGY					=26059140	--XY 140/146
+--↑Special Energy cards
+CARD_DOUBLE_COLORLESS_ENERGY		=26001096	--Base Set 96/102
+CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
+--↑You may have as many of the following cards in your deck as you like
+CARD_ARCEUS							=26042103	--"Arceus" (Arceus AR AR1)
 --Counters/Markers
 PM_DAMAGE_COUNTER					=0x1600		--A Pokémon loses 10 HP for each Damage Counter on it
 PM_BURN_MARKER						=0x1601		--When a Pokémon is Burned, put a Burn marker on it
@@ -166,6 +171,7 @@ PLAYER_OPPONENT						=1		--player=PLAYER_OPPONENT in Effect.SetCondition (Auxili
 --↑Reset combinations
 RESETS_STANDARD						=0x1fe0000	--RESET_TURN_SET+RESET_TOGRAVE+RESET_REMOVE+RESET_TEMP_REMOVE+RESET_TOHAND+RESET_TODECK+RESET_LEAVE+RESET_TOFIELD
 RESETS_STANDARD_DISABLE				=0x1ff0000	--0x1fe0000+RESET_DISABLE
+RESETS_STANDARD_DISCONTROL			=0x3ff0000	--0x1ff0000+RESET_CONTROL
 --Flags
 PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.EnablePokemonAttribute
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x100000000				--Included on all Pokémon attacks
@@ -173,11 +179,27 @@ PM_EFFECT_FLAG_POKEMON_ATTACK		=0x100000000				--Included on all Pokémon attack
 PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Pokémon card
 PM_EFFECT_CANNOT_ATTACK				=EFFECT_CANNOT_ATTACK		--Special Condition
 PM_EFFECT_UPDATE_HIT_POINTS			=EFFECT_UPDATE_ATTACK		--Pokémon card
-PM_EFFECT_SELF_KNOCK_OUT			=EFFECT_SELF_DESTROY		--Stadium card
-PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+1	--"You can play only one Supporter card each turn."
-PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+2	--"You can play only one Stadium card each turn."
-PM_EFFECT_LIMIT_BASIC_ENERGY		=CARD_PTCG_RULES+3	--"You can attach Energy just once each turn."
+PM_EFFECT_SELF_KNOCK_OUT			=EFFECT_SELF_DESTROY		--Pokémon card
+PM_EFFECT_MULLIGAN_CHECK			=CARD_PTCG_RULES			--"If either player has no Basic Pokémon in their opening hand, that player must take a mulligan."
+PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+1			--"You can play only one Supporter card each turn."
+PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+2			--"You can play only one Stadium card each turn."
+PM_EFFECT_LIMIT_ENERGY				=CARD_PTCG_RULES+3			--"You can attach Energy just once each turn."
 PM_EFFECT_RETREAT					=700	--"Retreat your Active Pokémon (once per turn)."
+PM_EFFECT_ASLEEP					=701	--"Asleep" Special Condition
+PM_EFFECT_BURNED					=702	--"Burned" Special Condition
+PM_EFFECT_CONFUSED					=703	--"Confused" Special Condition
+PM_EFFECT_PARALYZED					=704	--"Paralyzed" Special Condition
+PM_EFFECT_POISONED					=705	--"Poisoned" Special Condition
+PM_EFFECT_DONOT_TREAT_AS_TRAINER	=706	--"Mysterious Fossil" (Fossil 62/62)
+PM_EFFECT_CANNOT_RETREAT			=707	--"Mysterious Fossil" (Fossil 62/62)
+PM_EFFECT_CANNOT_BE_ASLEEP			=708	--"Mysterious Fossil" (Fossil 62/62)
+PM_EFFECT_CANNOT_BE_CONFUSED		=709	--"Mysterious Fossil" (Fossil 62/62)
+PM_EFFECT_CANNOT_BE_PARALYZED		=710	--"Mysterious Fossil" (Fossil 62/62)
+PM_EFFECT_CANNOT_BE_POISONED		=711	--"Mysterious Fossil" (Fossil 62/62)
+PM_EFFECT_CANNOT_REMOVE_ENERGY_ATTACK_TRAINER	=712	--"Brock's Protection" (Gym Challenge 101/132)
+PM_EFFECT_RESTRICT_MIRACLE_ENERGY	=713	--"Miracle Energy" (Neo Destiny 16/105)
+PM_EFFECT_RESTRICT_POKEMON_STAR		=714	--"Mudkip Star" (Team Rocket Returns 107/109)
+PM_EFFECT_RESTRICT_ACE_SPEC			=715	--"Computer Search" (Boundaries Crossed 137/149)
 --Categories
 PM_CATEGORY_COIN					=CATEGORY_COIN	--"Sabrina's ESP" (Gym Heroes 117/132)
 PM_CATEGORY_RECYCLE					=0x80000000		--"Pokémon Tower" (Wizards Promo 42)
@@ -297,6 +319,7 @@ RESULT_TAILS						=0	--"Tails" coin result
 RESULT_HEADS						=1	--"Heads" coin result
 --Sequence
 SEQUENCE_FIRST_SZONE				=0	--Card.IsLocation(LOCATION_SZONE) and Card.GetSequence()==SEQUENCE_FIRST_SZONE
+SEQUENCE_FIELD_ZONE					=5	--Card.IsLocation(LOCATION_SZONE) and Card.GetSequence()==SEQUENCE_FIELD_ZONE
 SEQUENCE_EXTRA_MZONE				=5	--Card.IsLocation(LOCATION_MZONE) and Card.GetSequence()==SEQUENCE_EXTRA_MZONE
 --Deck Order
 DECK_ORDER_TOP						=0	--seq=DECK_ORDER_TOP in Duel.SendtoDeck (targets, player, seq, reason)

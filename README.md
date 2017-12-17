@@ -82,19 +82,19 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 <summary>Card Search</summary>
 
 You can search for the following specific card information in YGOPro:
-- Attack Damage: Type `N damage` or ` N damage` for a more norrower search
+- Attack Damage: Type `N damage`, or type ` N damage` for a more norrower search
 - Card Type: Search by `Type`
 - Energy Type (Pokémon Type): Search by `Attribute` (only until `Darkness`), or type `Pokemon Type: Energy`
 - Expansions (what set the card appears in): **N/A**
 - Format (what tournament format the card is legally playable in): **N/A**
 - HP (Hit Points): Search by `ATK`
 - Pokémon that have an Ability: Search by `Effect` or `Has Ability`
-- Pokémon Evolution: Type `Stage 1`, `Stage 2`, or `Evolves from Pokémon name`
+- Pokémon Evolution: Type `Stage 1`, `Stage 2`, or type `Stage: Stage 1`, `Stage: Stage 2`, and `Evolves from Pokémon name` for a more norrower search
 - Rarity: **N/A**
-- Resistance: Type `Resistance: Energy -N`, or `Resistance: none` for Pokémon that have no Resistance
+- Resistance: Type `Resistance: Energy -N`, or type `Resistance: none` for Pokémon that have no Resistance
 - Retreat Cost: Search by `Level/Rank`
 - Total Attack Cost: **N/A** (You can type `[P] ` for Pokémon attacks that require only 1 Psychic Energy, etc.)
-- Weakness: Type `Weakness: Energy x2`, `Weakness: Energy +N`, or `Weakness: none` for Pokémon that have no Weakness
+- Weakness: Type `Weakness: Energy x2`, `Weakness: Energy +N`, or type `Weakness: none` for Pokémon that have no Weakness
 
 Note - Energy. The following abbreviations are used for each Energy Type:<br>
 - [G] = Grass
@@ -129,7 +129,7 @@ Note - missing information. Text that appears on the card that is not essential 
 - `Burn Marker = Burn Counter`
 - `Damage = Place a Damage Counter on a monster at the end of the Damage Step. (Monsters with a Damage Counter lose 10 ATK for each Damage Counter on it, also are destroyed when their ATK become 0 as a result.)`
 - `Damage Counter = Damage Counter`
-- `Defending Pokémon = Attack target`
+- `Defending Pokémon = Attack target in an Extra Monster Zone`
 - `Devolve` = *TBA*
 - `Discard = Send a card to the Graveyard or detach a material from a monster.`
 - `Evolve = Special Summon this card (from your hand) in Attack Position, by placing it on a monster that is listed in this card's text. (This is treated as an Evolution Summon.)`
@@ -138,7 +138,7 @@ Note - missing information. Text that appears on the card that is not essential 
 - `Game = Duel`
 - `Hit Points (HP) = ATK`
 - `In Play = Cards in the Extra Monster Zones and Main Monster Zones [or Spell & Trap Zone as an extended Bench]`
-- `Knocked Out = Destroy a monster on the field`
+- `Knocked Out = When a monster on the field is destroyed`
 - `Match = Duel`
 - `Poké-Body =` [Continuous](http://yugioh.wikia.com/wiki/Continuous_Effect) `monster effect [while that monster is in a Monster Zone or Spell & Trap Zone]`
 - `Poké-Power =` [Ignition](http://yugioh.wikia.com/wiki/Ignition_Effect) `monster effect`
@@ -194,34 +194,34 @@ Note - missing information. Text that appears on the card that is not essential 
 - `0x1	Destroy Spell/Trap` = Put a Stadium or non-Pokémon card that is In Play into the discard pile
 - `0x2	Destroy Monster` = Knock Out a Pokémon
 - `0x4	Banish` = Put a card in the Lost Zone
-- `0x8	Send to Graveyard` = Put a card into the discard pile, discard a card
-- `0x10	Return to Hand` = Put a card from anywhere, except the discard pile or deck, into a player's hand
+- `0x8	Send to Graveyard` = Put a card into the discard pile; discard a card
+- `0x10	Return to Hand` = Put a card that is In Play into a player's hand
 - `0x20	Return to Deck` = Put a card into a player's deck
-- `0x40	Hand Destruction` = Decrease your opponent's hand size
-- `0x80	Deck Destruction` = Decrease your opponent's deck size
+- `0x40	Hand Destruction` = Take a card or have your opponent, take a out of their hand; decrease their hand size
+- `0x80	Deck Destruction` = Take a card or have your opponent, take a out of their deck; decrease their deck size
 - `0x100	Increase Draw` = Put a card from the top of the deck into a player's hand
 - `0x200	Search Deck` = Look at a player's deck
-- `0x400	Recover from Graveyard` = Put a card from the discard pile into a player's hand, or in play
+- `0x400	Recover from Graveyard` = Put a card from the discard pile into a player's hand, or In Play
 - `0x800	Change Card Position` = Switch an Active Pokémon with a Benched Pokémon, or vice-versa
 - `0x1000	Get Control` = Add a Special Condition to a Pokémon
 - `0x2000	Increase/Decrease ATK/DEF` = Increase or decrease a Pokémon's HP
 - `0x4000	Pierce` = Make a Pokémon do more damage, have a Pokémon take less damage, or prevent damage done to a Pokémon
 - `0x8000	Multiple Attacks` = Make a Pokémon able to attack more than once per turn
-- `0x10000	Restrict Attack` = Make a Pokémon unable to use its attacks, Mega Evolution, end a player's turn before that player can attack
+- `0x10000	Restrict Attack` = Make a Pokémon unable to use its attacks; Mega Evolution; end a player's turn before that player can attack
 - `0x20000	Direct Attack` = **N/A**
-- `0x40000	Special Summon` = Put a Pokémon in play, play a non-Pokémon card as if it were a Pokémon
+- `0x40000	Special Summon` = Put a Pokémon In Play; play a non-Pokémon card as if it were a Pokémon
 - `0x80000	Token` = **N/A**
 - `0x100000	Type` = Lists a Pokémon category (species) in the text box
 - `0x200000	Attribute` = Lists a non-Attack Cost Energy Type in the text box
 - `0x400000	Reduce LP` = Put a Damage Counter on a Pokémon, except due to a Pokémon's attack
 - `0x800000	Recover LP` = Remove a Damage Counter from a Pokémon
-- `0x1000000	Cannot Destroy` = Make a Pokémon unable to be Knocked Out, doesn't count as a Knocked Out Pokémon
+- `0x1000000	Cannot Destroy` = Make a Pokémon unable to be Knocked Out; doesn't count as a Knocked Out Pokémon
 - `0x2000000	Cannot Target` = Remove a Special Condition from a Pokémon
-- `0x4000000	Counter` = Put any counters/markers on a card, or remove them
-- `0x8000000	Gamble` = Flip a coin, rock-paper-scissors, guess information
+- `0x4000000	Counter` = Lists a counter/marker in the text box; put any counters/markers on a card, or remove them
+- `0x8000000	Gamble` = Flip a coin; rock-paper-scissors; guess information
 - `0x10000000	Fusion` = **N/A**
 - `0x20000000	Synchro` = **N/A**
-- `0x40000000	Xyz` = Evolution card, evolve or devolve a Pokémon, lists an Evolution card in the text box
+- `0x40000000	Xyz` = Lists an Evolution card in the text box; Evolution; evolve or devolve a Pokémon
 - `0x80000000	Cancel out Effect` = Cause a Poké-Body, Poké-Power, or ability to stop working
 </details>
 
