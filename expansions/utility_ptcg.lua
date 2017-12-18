@@ -53,6 +53,10 @@ end
 function Card.IsEnergy(c)
 	return c:IsType(PM_TYPE_ENERGY)
 end
+--check if a card is a Prize card + PM_LOCATION_PRIZE
+function Card.IsPrize(c)
+	return c:IsFacedown()
+end
 --check if a card is or was a type of Pokémon, Trainer or Energy
 Card.IsSubType=Card.IsSetCard
 Card.IsPreviousSubType=Card.IsPreviousSetCard
@@ -314,6 +318,10 @@ function Card.IsRetreatable(c)
 	return Auxiliary.ActivePokemonFilter(c) and c:GetAttachmentGroup():IsExists(Card.IsEnergy,ct,nil) and (ct>=rc or rc==0)
 end
 --========== Duel ==========
+--set aside prize cards face-down
+Duel.SetPrizeCard=Duel.Remove
+--knock out a pokémon
+Duel.KnockOut=Duel.Destroy
 --get all attached cards in a specified location
 Duel.GetAttachmentGroup=Duel.GetOverlayGroup
 --send targets to the discard pile by discarding them
@@ -349,13 +357,11 @@ Duel.IsPlayerCanPlayPokemon=Duel.IsPlayerCanSpecialSummonMonster
 Duel.IsPlayerCanPutPokemonOnBench=Duel.IsPlayerCanSpecialSummonMonster
 --check if it is the first turn of the game
 function Duel.IsFirstTurn()
-	return Duel.GetTurnCount()==1 --add a possible sudden death turn counter workaround
+	return Duel.GetTurnCount()==1 or Duel.GetFlagEffect(tp,PM_EFFECT_SUDDEN_DEATH_RESTART)>0
 end
 --get a player's current prize cards
 function Duel.GetPrizeGroup(tp,player)
-	local lc=Duel.GetMatchingGroup(Auxiliary.PrizeCardsFilter,player,PM_LOCATION_PRIZE,0,nil):GetFirst()
-	if not lc then return end
-	return lc:GetAttachmentGroup()
+	return Duel.GetMatchingGroup(Card.IsPrize,player,PM_LOCATION_PRIZE,0,nil)
 end
 --return the number of prize cards a player has
 function Duel.GetPrizeGroupCount(tp,player)
@@ -499,28 +505,22 @@ end
 --remove type
 function Auxiliary.EnableRemoveType(c,val,range)
 	local e1=Effect.CreateEffect(c)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_REMOVE_TYPE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
 	if range then e1:SetRange(range) end
 	e1:SetValue(val)
 	c:RegisterEffect(e1)
 end
---skip
-function Auxiliary.EnableSkipPhase(c,code1,...)
-	--code1,...: EFFECT_SKIP_DP, EFFECT_SKIP_SP, EFFECT_SKIP_M1, EFFECT_SKIP_BP and/or EFFECT_SKIP_M2
+--cannot bp
+function Auxiliary.EnableCannotBP(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(code1)
+	e1:SetCode(EFFECT_CANNOT_BP)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetRange(PM_LOCATION_RULES)
 	e1:SetTargetRange(1,0)
 	c:RegisterEffect(e1)
-	for i,code in ipairs{...} do
-		local e2=e1:Clone()
-		e2:SetCode(code)
-		c:RegisterEffect(e2)
-	end
 end
 --infinite hand
 function Auxiliary.EnableInfiniteHand(c)
@@ -658,44 +658,22 @@ function Auxiliary.EnablePokemonAttribute(c)
 	e1:SetCondition(Auxiliary.BenchCondition)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	--update hp
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(PM_EFFECT_UPDATE_HP)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetRange(PM_LOCATION_IN_PLAY)
-	e2:SetValue(Auxiliary.HPDamageValue)
-	c:RegisterEffect(e2)
-	--self knock out
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(PM_EFFECT_SELF_KNOCK_OUT)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetRange(PM_LOCATION_IN_PLAY)
-	e3:SetCondition(Auxiliary.KnockOutCondition)
-	c:RegisterEffect(e3)
 	--retreat
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(PM_DESC_RETREAT)
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e4:SetRange(PM_LOCATION_ACTIVE)
-	e4:SetCondition(Auxiliary.RetreatCondition)
-	e4:SetCost(Auxiliary.RetreatCost)
-	e4:SetTarget(Auxiliary.HintTarget)
-	e4:SetOperation(Auxiliary.RetreatOperation)
-	c:RegisterEffect(e4)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(PM_DESC_RETREAT)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e2:SetRange(PM_LOCATION_ACTIVE)
+	e2:SetCondition(Auxiliary.RetreatCondition)
+	e2:SetCost(Auxiliary.RetreatCost)
+	e2:SetTarget(Auxiliary.HintTarget)
+	e2:SetOperation(Auxiliary.RetreatOperation)
+	c:RegisterEffect(e2)
 end
 function Auxiliary.BenchCondition(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0 and c:IsBasicPokemon()
-end
-function Auxiliary.HPDamageValue(e,c)
-	return c:GetCounter(PM_DAMAGE_COUNTER)*-10
-end
-function Auxiliary.KnockOutCondition(e)
-	return e:GetHandler():GetHP()==0
 end
 function Auxiliary.RetreatCondition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,PM_EFFECT_RETREAT)==0 and e:GetHandler():IsRetreatable()
@@ -835,10 +813,6 @@ end
 Auxiliary.hinttg=Auxiliary.HintTarget
 
 --==========[+Filters]==========
---filter for the prize cards + PM_LOCATION_PRIZE
-function Auxiliary.PrizeCardsFilter(c)
-	return c:IsFaceup() and c:IsCode(CARD_PTCG_PRIZE) and c:GetSequence()==SEQUENCE_FIRST_SZONE
-end
 --filter for the active pokémon + PM_LOCATION_ACTIVE
 function Auxiliary.ActivePokemonFilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:IsActive()

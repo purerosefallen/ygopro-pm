@@ -14,7 +14,6 @@ local PTCG={}
 --Card ID
 --↑Rules
 CARD_PTCG_RULES						=26000000	--Pokémon Rules
-CARD_PTCG_PRIZE						=26000999	--Prize cards are attached to this card (may be temporary)
 --↑String
 PM_STRING_WIN						=26000001	--Win
 PM_STRING_GAME						=26000002	--Game Progress
@@ -46,7 +45,7 @@ CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 CARD_DOUBLE_COLORLESS_ENERGY		=26001096	--Base Set 96/102
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
 --↑You may have as many of the following cards in your deck as you like
-CARD_ARCEUS							=26042103	--"Arceus" (Arceus AR AR1)
+CARD_ARCEUS							=26042103	--"Arceus" (Arceus AR1)
 --Counters/Markers
 PM_DAMAGE_COUNTER					=0x1600		--A Pokémon loses 10 HP for each Damage Counter on it
 PM_BURN_MARKER						=0x1601		--When a Pokémon is Burned, put a Burn marker on it
@@ -72,9 +71,9 @@ PM_LOCATION_RULES					=LOCATION_EXTRA		--Location for Pokémon Rules
 PM_LOCATION_ACTIVE_POKEMON			=LOCATION_MZONE		--Location for Active Pokémon
 PM_LOCATION_BENCH					=LOCATION_MZONE		--Location for Benched Pokémon
 PM_LOCATION_IN_PLAY					=LOCATION_MZONE+LOCATION_SZONE	--Location for Active and Benched Pokémon
-PM_LOCATION_PRIZE_CARDS				=LOCATION_SZONE		--Location for Prize cards
 PM_LOCATION_ADJACENT_ACTIVE_POKEMON	=LOCATION_SZONE		--Location for Trainer cards that temporarily stay in play
 PM_LOCATION_DISCARD_PILE			=LOCATION_GRAVE		--Location for cards taken out of play
+PM_LOCATION_PRIZE_CARDS				=LOCATION_REMOVED	--Location for Prize cards
 PM_LOCATION_LOST_ZONE				=LOCATION_REMOVED	--Location for cards no longer playable
 --↑Location combinations
 LOCATIONS_ALL						=0xff		--All locations
@@ -176,15 +175,25 @@ RESETS_STANDARD_DISCONTROL			=0x3ff0000	--0x1ff0000+RESET_CONTROL
 PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.EnablePokemonAttribute
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x100000000				--Included on all Pokémon attacks
 --Codes
-PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Pokémon card
-PM_EFFECT_CANNOT_ATTACK				=EFFECT_CANNOT_ATTACK		--Special Condition
-PM_EFFECT_UPDATE_HIT_POINTS			=EFFECT_UPDATE_ATTACK		--Pokémon card
-PM_EFFECT_SELF_KNOCK_OUT			=EFFECT_SELF_DESTROY		--Pokémon card
-PM_EFFECT_MULLIGAN_CHECK			=CARD_PTCG_RULES			--"If either player has no Basic Pokémon in their opening hand, that player must take a mulligan."
-PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+1			--"You can play only one Supporter card each turn."
-PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+2			--"You can play only one Stadium card each turn."
-PM_EFFECT_LIMIT_ENERGY				=CARD_PTCG_RULES+3			--"You can attach Energy just once each turn."
-PM_EFFECT_RETREAT					=700	--"Retreat your Active Pokémon (once per turn)."
+PM_EFFECT_CANNOT_ACTIVATE			=EFFECT_CANNOT_ACTIVATE		--Prevent a card from activating, being played or attached
+PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Put a Pokémon onto the Bench
+PM_EFFECT_KNOCK_OUT_REPLACE			=EFFECT_DESTROY_REPLACE		--Prevent a Pokémon from being Knocked Out
+PM_EFFECT_CANNOT_ATTACK				=EFFECT_CANNOT_ATTACK		--Prevent a Pokémon from attacking
+PM_EFFECT_UPDATE_HIT_POINTS			=EFFECT_UPDATE_ATTACK		--Increase or decreas a Pokémon's HP
+PM_EFFECT_SELF_KNOCK_OUT			=EFFECT_SELF_DESTROY		--A Pokémon knocks itself out 
+PM_EFFECT_CHANGE_ENERGY				=EFFECT_CHANGE_CODE			--Change an Energy type
+PM_EFFECT_CHANGE_ENERGY_TYPE		=EFFECT_CHANGE_ATTRIBUTE	--Change a Pokémon type
+PM_EFFECT_UPDATE_RETREAT_COST		=EFFECT_UPDATE_LEVEL		--Increase or decrease a Pokémon's Retreat Cost
+PM_EFFECT_CHANGE_RETREAT_COST_FINAL	=EFFECT_CHANGE_LEVEL_FINAL	--Set a Pokémon's Retreat Cost
+PM_EFFECT_ADD_SETCODE				=EFFECT_ADD_SETCODE			--Add a type or archetype to another card
+PM_EFFECT_MULLIGAN_CHECK			=CARD_PTCG_RULES			--Check if a player took a mulligan
+PM_EFFECT_PRIZE_CARD_CHECK			=CARD_PTCG_RULES+1			--Check if a player took a Prize card
+PM_EFFECT_SUDDEN_DEATH_CHECK		=CARD_PTCG_RULES+2			--Check if a card can be reset during Sudden Death
+PM_EFFECT_SUDDEN_DEATH_RESTART		=CARD_PTCG_RULES+3			--Workaround for not being able to change turn counter to 1
+PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+4			--Prevent activating more than 1 Supporter card per turn
+PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+5			--Prevent playing more than 1 Stadium card per turn
+PM_EFFECT_LIMIT_ENERGY				=CARD_PTCG_RULES+6			--Prevent attaching more than 1 Energy card per turn
+PM_EFFECT_RETREAT					=700	--Prevent a player from retreating their Pokémon more than once per turn
 PM_EFFECT_ASLEEP					=701	--"Asleep" Special Condition
 PM_EFFECT_BURNED					=702	--"Burned" Special Condition
 PM_EFFECT_CONFUSED					=703	--"Confused" Special Condition

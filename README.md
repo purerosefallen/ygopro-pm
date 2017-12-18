@@ -35,7 +35,7 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 	-Retreat your Active Pokémon, by switching its place with 1 monster on the Bench, and detaching "Energy" cards equal to its Level [(Retreat Cost)](https://bulbapedia.bulbagarden.net/wiki/Retreat_cost). (You can only do this once per turn.)<br>
 	-Activate or apply any monster effects.<br>
 	-If it is not the first turn of the duel and you have the "Energy" cards attached to your Active Pokémon that are listed in its text, you can activate its effect to [attack](https://bulbapedia.bulbagarden.net/wiki/Attack_(TCG)) the opponent's Active Pokémon. Place [Damage Counters](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Damage) on that opponent's monster, equal to the number listed in your monster's text, divide by 10. (Monsters with a Damage Counter lose 10 ATK for each Damage Counter on it, also are destroyed when their ATK become 0 as a result.) If that opponent's monster is destroyed, add 1 Prize card to your hand. (At any time, if an opponent's monster(s) is destroyed, add 1 Prize card to your hand for each destroyed monster.) Your main phase 1 ends.
-12. Skip your battle phase and main phase 2.
+12. You cannot conduct your battle phase.
 13. During your end phase, activate or apply any [Special Condition](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)) effects, then your turn ends.
 
 ### How to Win
@@ -76,7 +76,7 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 	- [Increased Bench](https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/xy-series/xy6/89/) `(In Play) = Spell & Trap Zones #1-4` (Not fully supported by YGOPro.)
 - `Discard Pile = Graveyard`
 - `Lost Zone = Face-up banished cards` (text color = black)
-- `Prize Cards = Cards placed underneath "Prize Cards" in left-most Spell & Trap Zone` (Your opponent's life points are equal to your total number of Prize cards.)
+- `Prize Cards = Face-down banished cards` (text color = blue) (Your opponent's life points are equal to your total number of Prize cards.)
 </details>
 <details>
 <summary>Card Search</summary>
