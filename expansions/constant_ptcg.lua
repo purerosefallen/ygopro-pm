@@ -75,6 +75,7 @@ PM_LOCATION_ADJACENT_ACTIVE_POKEMON	=LOCATION_SZONE		--Location for Trainer card
 PM_LOCATION_DISCARD_PILE			=LOCATION_GRAVE		--Location for cards taken out of play
 PM_LOCATION_PRIZE_CARDS				=LOCATION_REMOVED	--Location for Prize cards
 PM_LOCATION_LOST_ZONE				=LOCATION_REMOVED	--Location for cards no longer playable
+PM_LOCATION_ATTACHED				=LOCATION_OVERLAY	--Location for cards under other cards 
 --↑Location combinations
 LOCATIONS_ALL						=0xff		--All locations
 --Positions
@@ -209,6 +210,12 @@ PM_EFFECT_CANNOT_REMOVE_ENERGY_ATTACK_TRAINER	=712	--"Brock's Protection" (Gym C
 PM_EFFECT_RESTRICT_MIRACLE_ENERGY	=713	--"Miracle Energy" (Neo Destiny 16/105)
 PM_EFFECT_RESTRICT_POKEMON_STAR		=714	--"Mudkip Star" (Team Rocket Returns 107/109)
 PM_EFFECT_RESTRICT_ACE_SPEC			=715	--"Computer Search" (Boundaries Crossed 137/149)
+--Abilities that activate or actions that occur at the appropriate event
+PM_EVENT_TO_DISCARDPILE				=EVENT_TO_GRAVE			--When a card is put into the discard pile
+PM_EVENT_KNOCKED_OUT				=EVENT_DESTROYED		--When a Pokémon is Knocked Out
+PM_EVENT_PLAY_SUCCESS				=EVENT_SPSUMMON_SUCCESS	--When a Pokémon is put In Play
+PM_EVENT_PRE_ATTACK					=EVENT_CHAIN_ACTIVATING	--Before a Confused Pokémon attacks
+PM_EVENT_ATTACK_END					=EVENT_CHAIN_SOLVED		--When a Pokémon finishes its attack
 --Categories
 PM_CATEGORY_COIN					=CATEGORY_COIN	--"Sabrina's ESP" (Gym Heroes 117/132)
 PM_CATEGORY_RECYCLE					=0x80000000		--"Pokémon Tower" (Wizards Promo 42)

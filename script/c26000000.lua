@@ -146,7 +146,7 @@ function scard.initial_effect(c)
 	e18:SetDescription(aux.Stringid(sid,6))
 	e18:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IMMEDIATELY_APPLY)
 	e18:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e18:SetCode(EVENT_CHAIN_SOLVED)
+	e18:SetCode(PM_EVENT_ATTACK_END)
 	e18:SetRange(PM_LOCATION_RULES)
 	e18:SetCondition(scard.endcon1)
 	e18:SetOperation(scard.endop)
@@ -188,10 +188,10 @@ function scard.initial_effect(c)
 	--protect
 	pm.EnableProtection(c)
 end
-scard.pokemon_tcg=true
+scard.pokemon_card=true
 --apply
 function scard.filter(c)
-	return not c.pokemon_tcg
+	return not c.pokemon_card
 end
 function scard.condition(e)
 	local tp=e:GetHandlerPlayer()
@@ -233,7 +233,7 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 	dg1:Merge(dg2)
 	local dc=dg1:GetFirst()
 	for dc in aux.Next(dg1) do
-		dc:RegisterFlagEffect(PM_EFFECT_SUDDEN_DEATH_CHECK,0,0,1)
+		dc:RegisterFlagEffect(PM_EFFECT_SUDDEN_DEATH_CHECK,0,0,0)
 	end
 	if (g1:GetCount()>0 and g2:GetCount()>0) or (g3:GetCount()==0 and g4:GetCount()==0)
 		or (g5:GetCount()>1 and g6:GetCount()>1) or (dg1:GetCount()~=60 and dg2:GetCount()~=60) then
@@ -414,11 +414,11 @@ function scard.sudden_death(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ShuffleDeck(tp)
 	Duel.ShuffleDeck(1-tp)
 	--call the coin flip
-	local c1=Duel.SelectOption(1-turnp,SELECT_HEADS,SELECT_TAILS)
+	local opt=Duel.SelectOption(1-turnp,SELECT_HEADS,SELECT_TAILS)
 	local res=Duel.TossCoin(turnp,1)
 	local skipp=1-turnp
-	if turnp==1-turnp and c1==res then skipp=turnp
-	elseif turnp==turnp and c1==res then skipp=1-turnp end
+	if turnp==1-turnp and opt==res then skipp=turnp
+	elseif turnp==turnp and opt==res then skipp=1-turnp end
 	--skip to draw phase
 	Duel.SkipPhase(skipp,PHASE_MAIN1,RESET_PHASE+PHASE_DRAW,1)
 	Duel.RegisterFlagEffect(turnp,PM_EFFECT_SUDDEN_DEATH_RESTART,RESET_PHASE+PHASE_END,0,1)
