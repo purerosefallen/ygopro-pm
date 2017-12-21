@@ -15,6 +15,7 @@
 --[+Energy]..................................................functions that are included on every Energy card
 --[+Trainer].................................................functions that are included on every Trainer card
 --[+Attack]..................................................attacks that are shared by many pokémon
+--[+Ability].................................................non-attack effects that are shared by many pokémon
 --[+Conditions]..............................................condition functions
 --[+Targets].................................................target functions
 --[+Filters].................................................filter functions
@@ -125,7 +126,7 @@ function Card.IsOwnerPokemon(c)
 		or c:IsSetCard(PM_SETNAME_BROCK) or c:IsSetCard(PM_SETNAME_ERIKA) or c:IsSetCard(PM_SETNAME_SABRINA)
 		or c:IsSetCard(PM_SETNAME_LT_SURGE) or c:IsSetCard(PM_SETNAME_BLAINE) or c:IsSetCard(PM_SETNAME_GIOVANNI)
 		or c:IsSetCard(PM_SETNAME_KOGA) or c:IsSetCard(PM_SETNAME_TEAM_MAGMA) or c:IsSetCard(PM_SETNAME_TEAM_AQUA)
-		or c:IsSetCard(PM_SETNAME_ROCKETS)) --add new owners here
+		or c:IsSetCard(PM_SETNAME_ROCKETS)) --update with new owners here
 end
 --check if a card is a Stadium
 function Card.IsStadium(c)
@@ -219,7 +220,7 @@ end
 --check if a card can only have one copy of itself in a player's deck
 function Card.IsHasDeckRestriction(c)
 	return c:IsHasEffect(PM_EFFECT_RESTRICT_MIRACLE_ENERGY) or c:IsHasEffect(PM_EFFECT_RESTRICT_ACE_SPEC)
-		or c:IsHasEffect(PM_EFFECT_RESTRICT_POKEMON_STAR) --add new effects here
+		or c:IsHasEffect(PM_EFFECT_RESTRICT_POKEMON_STAR) --update with new effects here
 end
 --get the cards attached underneath another card
 Card.GetAttachmentGroup=Card.GetOverlayGroup
@@ -314,8 +315,7 @@ end
 --check if an active pokémon can be retreated to the bench
 function Card.IsRetreatable(c)
 	local rc=c:GetRetreatCost()
-	local ct=c:GetAttachmentGroup():GetCount()
-	return Auxiliary.ActivePokemonFilter(c) and c:GetAttachmentGroup():IsExists(Card.IsEnergy,ct,nil) and (ct>=rc or rc==0)
+	return Auxiliary.ActivePokemonFilter(c) and (c:GetAttachmentGroup():FilterCount(Card.IsEnergy,nil)>=rc or rc==0)
 end
 --========== Duel ==========
 --set aside prize cards face-down
@@ -746,7 +746,7 @@ function Auxiliary.EnableTrainerActivate(c,cate,targ_func,op_func,con_func,cost_
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_REMAIN_FIELD)
 	c:RegisterEffect(e2)
-	--discard self
+	--self discard
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_PHASE+PHASE_END)
@@ -785,6 +785,28 @@ function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func
 	c:RegisterEffect(e1)
 end
 
+--==========[+Ability]==========
+--Pokémon ability
+function Auxiliary.EnablePokemonAbility(c,desc_id,cate,targ_func,op_func,con_func,count,cost_func,prop)
+	--targ_func: include Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(c:GetOriginalCode(),desc_id))
+	if cate then e1:SetCategory(cate) end
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	if prop then e1:SetProperty(prop) end
+	e1:SetRange(PM_LOCATION_IN_PLAY)
+	if count then
+		e1:SetCountLimit(count)
+	else
+		e1:SetCountLimit(1)
+	end
+	if con_func then e1:SetCondition(con_func) end
+	if cost_func then e1:SetCost(cost_func) end
+	if targ_func then e1:SetTarget(targ_func) end
+	e1:SetOperation(op_func)
+	c:RegisterEffect(e1)
+end
+
 --==========[+Conditions]==========
 --condition for a player's turn
 function Auxiliary.TurnPlayerCondition(p)
@@ -797,6 +819,129 @@ function Auxiliary.TurnPlayerCondition(p)
 			end
 end
 Auxiliary.turnpcon=Auxiliary.TurnPlayerCondition
+--condition for attacks with an Energy Cost of 1 Energy
+function Auxiliary.AttackCostCondition1(ener1,count1)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local c=e:GetHandler()
+				local ct1=c:GetAttachmentGroup():FilterCount(Card.IsEnergyCard,nil,ener1)
+				local ct2=c:GetAttachmentGroup():FilterCount(Card.IsBasicEnergy,nil)
+				local ct3=c:GetAttachmentGroup():FilterCount(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)*2
+				if ener1==CARD_COLORLESS_ENERGY then ct1=0 end
+				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
+					and (ct1>0 or ct2>0 or ct3>0) and ct1+ct2+ct3>=count1
+			end
+end
+Auxiliary.econ1=Auxiliary.AttackCostCondition1
+--condition for attacks with an Energy Cost of 2 different Energy
+function Auxiliary.AttackCostCondition2(ener1,count1,ener2,count2)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local sum=count1+count2
+				local c=e:GetHandler()
+				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,nil,ener1)
+				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,g1,ener2)
+				local g3=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,g1)
+				local g4=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
+				local ct1=g1:GetCount()
+				local ct2=g2:GetCount()
+				local ct3=g3:GetCount()
+				local ct4=g4:GetCount()*2
+				if ener1==CARD_COLORLESS_ENERGY then ct1=0
+				elseif ener2==CARD_COLORLESS_ENERGY then ct2=0 end
+				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
+					and (ct1>0 or ct2>0 or ct3>0 or ct4>0) and ct1+ct2+ct3+ct4>=sum
+			end
+end
+Auxiliary.econ2=Auxiliary.AttackCostCondition2
+--condition for attacks with an Energy Cost of 3 different Energy
+function Auxiliary.AttackCostCondition3(ener1,count1,ener2,count2,ener3,count3)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local sum=count1+count2+count3
+				local c=e:GetHandler()
+				local exg=Group.CreateGroup()
+				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,nil,ener1)
+				exg:Merge(g1)
+				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,g1,ener2)
+				exg:Merge(g2)
+				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener3)
+				local g4=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,exg)
+				local g5=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
+				local ct1=g1:GetCount()
+				local ct2=g2:GetCount()
+				local ct3=g3:GetCount()
+				local ct4=g4:GetCount()
+				local ct5=g5:GetCount()*2
+				if ener1==CARD_COLORLESS_ENERGY then ct1=0
+				elseif ener2==CARD_COLORLESS_ENERGY then ct2=0
+				elseif ener3==CARD_COLORLESS_ENERGY then ct3=0 end
+				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
+					and (ct1>0 or ct2>0 or ct3>0 or ct4>0 or ct5>0) and ct1+ct2+ct3+ct4+ct5>=sum
+			end
+end
+Auxiliary.econ3=Auxiliary.AttackCostCondition3
+--condition for attacks with an Energy Cost of 4 different Energy
+function Auxiliary.AttackCostCondition4(ener1,count1,ener2,count2,ener3,count3,ener4,count4)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local sum=count1+count2+count3+count4
+				local c=e:GetHandler()
+				local exg=Group.CreateGroup()
+				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,nil,ener1)
+				exg:Merge(g1)
+				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,g1,ener2)
+				exg:Merge(g2)
+				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener3)
+				exg:Merge(g3)
+				local g4=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener4)
+				local g5=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,exg)
+				local g6=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
+				local ct1=g1:GetCount()
+				local ct2=g2:GetCount()
+				local ct3=g3:GetCount()
+				local ct4=g4:GetCount()
+				local ct5=g5:GetCount()
+				local ct6=g6:GetCount()*2
+				if ener1==CARD_COLORLESS_ENERGY then ct1=0
+				elseif ener2==CARD_COLORLESS_ENERGY then ct2=0
+				elseif ener3==CARD_COLORLESS_ENERGY then ct3=0
+				elseif ener4==CARD_COLORLESS_ENERGY then ct4=0 end
+				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
+					and (ct1>0 or ct2>0 or ct3>0 or ct4>0 or ct5>0 or ct6>0) and ct1+ct2+ct3+ct4+ct5+ct6>=sum
+			end
+end
+Auxiliary.econ4=Auxiliary.AttackCostCondition4
+--condition for attacks with an Energy Cost of 5 different energy
+function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,ener4,count4,ener5,count5)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local sum=count1+count2+count3+count4+count5
+				local c=e:GetHandler()
+				local exg=Group.CreateGroup()
+				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,nil,ener1)
+				exg:Merge(g1)
+				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,g1,ener2)
+				exg:Merge(g2)
+				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener3)
+				exg:Merge(g3)
+				local g4=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener4)
+				exg:Merge(g4)
+				local g5=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener5)
+				local g6=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,exg)
+				local g7=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
+				local ct1=g1:GetCount()
+				local ct2=g2:GetCount()
+				local ct3=g3:GetCount()
+				local ct4=g4:GetCount()
+				local ct5=g5:GetCount()
+				local ct6=g6:GetCount()
+				local ct7=g7:GetCount()*2
+				if ener1==CARD_COLORLESS_ENERGY then ct1=0
+				elseif ener2==CARD_COLORLESS_ENERGY then ct2=0
+				elseif ener3==CARD_COLORLESS_ENERGY then ct3=0
+				elseif ener4==CARD_COLORLESS_ENERGY then ct4=0
+				elseif ener5==CARD_COLORLESS_ENERGY then ct5=0 end
+				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
+					and (ct1>0 or ct2>0 or ct3>0 or ct4>0 or ct5>0 or ct6>0 or ct7>0) and ct1+ct2+ct3+ct4+ct5+ct6+ct7>=sum
+			end
+end
+Auxiliary.econ5=Auxiliary.AttackCostCondition5
 
 --==========[+Targets]==========
 --target for Duel.Hint(hint,player,desc) only
