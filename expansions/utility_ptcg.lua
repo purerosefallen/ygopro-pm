@@ -833,6 +833,45 @@ function Auxiliary.RemoveToolDescOperation(e)
 	local code=c:GetOriginalCode()
 	e:GetHandler():ResetFlagEffect(code)
 end
+--========== Stadium ==========
+--Stadium card
+function Auxiliary.EnableStadium(c)
+	--play
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(PM_EFFECT_TYPE_PLAY)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e1)
+	--self discard
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(PM_DESC_SELF_DISCARD)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e2:SetRange(PM_LOCATION_STADIUM)
+	e2:SetCondition(Auxiliary.StadiumReplaceCondition)
+	e2:SetOperation(Auxiliary.StadiumReplaceOperation)
+	c:RegisterEffect(e2)
+	--cannot play
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(PM_EFFECT_CANNOT_PLAY)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetRange(PM_LOCATION_STADIUM)
+	e3:SetTargetRange(1,1)
+	e3:SetValue(Auxiliary.StadiumPlayLimit)
+	c:RegisterEffect(e3)
+end
+function Auxiliary.StadiumReplaceCondition(e,tp,eg,ep,ev,re,r,rp)
+	return re:IsActiveType(PM_TYPE_STADIUM)
+end
+function Auxiliary.StadiumReplaceOperation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.SendtoDPile(e:GetHandler(),REASON_RULE+REASON_DISCARD)
+end
+function Auxiliary.StadiumPlayLimit(e,te,tp)
+	local code=e:GetHandler():GetOriginalCode()
+	return te:IsHasType(PM_EFFECT_TYPE_PLAY) and te:IsActiveType(PM_TYPE_STADIUM)
+		and te:GetHandler():GetOriginalCode()==code
+end
 
 --==========[+Attack]==========
 --Pokémon attack
