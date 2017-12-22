@@ -30,6 +30,8 @@ PM_STRING_HINTMSG8					=26000012	--RESERVED
 PM_STRING_HINTMSG9					=26000013	--RESERVED
 PM_STRING_QHINTMSG					=26000014	--Question Hint Message
 PM_STRING_SELECTMSG					=26000015	--Select Message (Energy)
+PM_STRING_ATTACK					=26000016	--Pokémon Attack
+PM_STRING_ATTACK2					=26000017	--RESERVED
 --↑Basic Energy cards
 CARD_GRASS_ENERGY					=26001099	--Base Set 99/102
 CARD_FIRE_ENERGY					=26001098	--Base Set 98/102
@@ -335,6 +337,8 @@ PM_SELECT_METAL						=aux.Stringid(PM_STRING_SELECTMSG,7)	--"Metal"
 PM_SELECT_COLORLESS					=aux.Stringid(PM_STRING_SELECTMSG,8)	--"Colorless"
 PM_SELECT_FAIRY						=aux.Stringid(PM_STRING_SELECTMSG,9)	--"Fairy"
 PM_SELECT_DRAGON					=aux.Stringid(PM_STRING_SELECTMSG,10)	--"Dragon"
+--Pokémon Attack
+PM_DESC_C_COLLECT					=aux.Stringid(PM_STRING_ATTACK,0)		--"[C] Collect: Draw a card."
 --Result
 RESULT_TAILS						=0	--"Tails" coin result
 RESULT_HEADS						=1	--"Heads" coin result

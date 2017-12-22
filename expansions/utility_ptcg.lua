@@ -376,7 +376,7 @@ local dr=Duel.Draw
 function Duel.Draw(player,count,reason)
 	local count=count or 1
 	local ct=Duel.GetFieldGroupCount(player,LOCATION_DECK,0)
-	if count>ct then count=ct end
+	if count>ct and reason~=REASON_RULE then count=ct end
 	return dr(player,count,reason)
 end
 --check if a player can draw cards according to the pokémon trading card game's rules
@@ -854,6 +854,36 @@ function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
 end
+--"[C]Collect Draw a card." (e.g. "Pansage KSS 2")
+function Auxiliary.AttackCollect(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(PM_DESC_C_COLLECT)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(PM_LOCATION_ACTIVE)
+	e1:SetCondition(Auxiliary.AttackCostCondition1(CARD_COLORLESS_ENERGY,1))
+	e1:SetTarget(Auxiliary.DrawTarget(PLAYER_PLAYER,1))
+	e1:SetOperation(Auxiliary.DrawOperation(PLAYER_PLAYER,1))
+	c:RegisterEffect(e1)
+end
+function Auxiliary.DrawTarget(p,ct)
+	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
+				local player=nil
+				if p==PLAYER_PLAYER or p==tp then player=tp
+				elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
+				if chk==0 then return Duel.IsPlayerCanDraw(player,ct) end
+				if e:GetHandler():IsPokemon() then Duel.Hint(HINT_OPSELECTED,1-e:GetHandlerPlayer(),e:GetDescription()) end
+			end
+end
+Auxiliary.drtg=Auxiliary.DrawTarget
+function Auxiliary.DrawOperation(p,ct)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local player=nil
+				if p==PLAYER_PLAYER or p==tp then player=tp
+				elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
+				Duel.Draw(player,ct,REASON_EFFECT)
+			end
+end
+Auxiliary.drop=Auxiliary.DrawOperation
 
 --==========[+Ability]==========
 --Pokémon ability
