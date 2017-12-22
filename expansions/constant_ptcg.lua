@@ -48,6 +48,8 @@ CARD_DOUBLE_COLORLESS_ENERGY		=26001096	--Base Set 96/102
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
 --↑You may have as many of the following cards in your deck as you like
 CARD_ARCEUS							=26042103	--"Arceus" (Arceus AR1)
+--↑Support
+CARD_SILVALLYGX						=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
 --Counters/Markers
 PM_DAMAGE_COUNTER					=0x1600		--A Pokémon loses 10 HP for each Damage Counter on it
 PM_BURN_MARKER						=0x1601		--When a Pokémon is Burned, put a Burn marker on it
