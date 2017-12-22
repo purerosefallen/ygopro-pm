@@ -85,7 +85,7 @@
 - Black & White (BLW) | Black Collection/White Collection : `26048001-26048115*` (112* cards in JP set)
 - **June 17, 2011** | **September 18, 2010** : [McDonald's Collection 2011 (MCD)](https://bulbapedia.bulbagarden.net/wiki/McDonald%27s_Collection_(TCG)) : `2619001-` (12 cards*[9 cards in JP set])
 - Emerging Powers (EPO) | *Not Released in Japanese* : `26049001-26049098`
-- Noble Victories (NVI) | Red Collection : 26050001-26050102*`` (72 cards in JP set)
+- Noble Victories (NVI) | Red Collection : `26050001-26050102*` (72 cards in JP set)
 - Next Destinies (NXD) | Psycho Drive/Hail Blizzard : `26051001-26051103*` (114* cards in JP set)
 - Dark Explorers (DEX) | Dark Rush : `26052001-26052111*` (76 cards in JP set)
 - **June 15th-July 5th, 2012** : [McDonald's Collection 2012 (MCD)](https://bulbapedia.bulbagarden.net/wiki/McDonald%27s_Collection_2012_(TCG)) : `2620001-2620012`

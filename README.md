@@ -21,7 +21,7 @@ If enabled, always choose the chain order from left to right.
 	-If there is at least 1 non-Pokémon card in your deck, you will lose the duel.
 4. Begin the duel by drawing 7 cards, then place 1 "Basic Pokémon" monster from your hand in an extra monster zone face-down as your [Active Pokémon](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Active_Pok.C3.A9mon).<br>
 If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuffle it into the deck, then draw 7 cards. Repeat this until you have a "Basic Pokémon" monster in your hand.<br>
-5. Optional: Place any number of "Basic Pokémon" monsters from your hand in your main monster zones face-down as Pokémon on the [Bench](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Bench).<br>
+5. Optional: Place any number of "Basic Pokémon" monsters from your hand to your main monster zones face-down as Pokémon on the [Bench](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Bench).<br>
 6. Set aside the top 6 cards of your deck as [Prize cards](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Prize_Card), then your life points become 6.<br>
 7. Optional: Your opponent draws a number of cards, up to the number of times you shuffled your hand into the deck because you did not have a "Basic Pokémon" monster in your hand.<br>
 8. Flip all face-down cards on your field face-up.
@@ -93,7 +93,7 @@ You can search for the following specific card information in YGOPro:
 - Rarity: **N/A**
 - Resistance: Type `Resistance: Energy -N`, or type `Resistance: none` for Pokémon that have no Resistance
 - Retreat Cost: Search by `Level/Rank`
-- Total Attack Cost: **N/A** (You can type `[P] ` for Pokémon attacks that require only 1 Psychic Energy, etc.)
+- Total Attack Cost: **N/A** (You can type `[ ]` for Pokémon that don't have an Attack Cost, `[P] ` for Pokémon attacks that require only 1 Psychic Energy, etc.)
 - Weakness: Type `Weakness: Energy x2`, `Weakness: Energy +N`, or type `Weakness: none` for Pokémon that have no Weakness
 
 Note - Energy. The following abbreviations are used for each Energy Type:<br>
