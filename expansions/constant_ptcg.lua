@@ -50,6 +50,8 @@ CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
 CARD_ARCEUS							=26042103	--"Arceus" (Arceus AR1)
 --↑Pokémon GX
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
+--↑Trainer
+CARD_PUZZLE_OF_TIME					=26067109	--"Puzzle of Time" (BREAKpoint 109/122)
 --Counters/Markers
 PM_DAMAGE_COUNTER					=0x1600		--A Pokémon loses 10 HP for each Damage Counter on it
 PM_BURN_MARKER						=0x1601		--When a Pokémon is Burned, put a Burn marker on it

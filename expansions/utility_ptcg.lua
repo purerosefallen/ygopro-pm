@@ -19,6 +19,7 @@
 --[+Conditions]..............................................condition functions
 --[+Targets].................................................target functions
 --[+Filters].................................................filter functions
+--[+Lists]...................................................lists of data that are included on many cards
 
 local Auxiliary={}
 local PTCG=require "expansions.constant_ptcg"
@@ -1066,4 +1067,12 @@ end
 function Auxiliary.BenchPokemonFilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:IsBench()
 end
+
+--==========[+Lists]==========
+--length list for "Blaine's Quiz #1" (Gym Heroes 97/132)
+Auxiliary.length_list={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
+31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,}
+--height list for "Cedric Juniper" (Legendary Treasures 110/113)
+Auxiliary.height_list={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
+31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,}
 return Auxiliary
