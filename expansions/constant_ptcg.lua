@@ -222,8 +222,10 @@ PM_EFFECT_RETREAT_COST_REPLACE		=714	--"Balloon Berry" (Neo Revelation 60/64)
 PM_EFFECT_RESTRICT_MIRACLE_ENERGY	=715	--"Miracle Energy" (Neo Destiny 16/105)
 PM_EFFECT_RESTRICT_POKEMON_STAR		=716	--"Mudkip Star" (Team Rocket Returns 107/109)
 PM_EFFECT_RESTRICT_ACE_SPEC			=717	--"Computer Search" (Boundaries Crossed 137/149)
+PM_EFFECT_EXTEND_BENCH_8			=718	--"Sky Field" (Roaring Skies 89/108)
 --Abilities that activate or actions that occur at the appropriate event
 PM_EVENT_TO_DISCARDPILE				=EVENT_TO_GRAVE			--When a card is put into the discard pile
+PM_EVENT_LEAVE_PLAY					=EVENT_LEAVE_FIELD		--When a card leaves play
 PM_EVENT_KNOCKED_OUT				=EVENT_DESTROYED		--When a Pokémon is Knocked Out
 PM_EVENT_PLAY_SUCCESS				=EVENT_SPSUMMON_SUCCESS	--When a Pokémon is put In Play
 PM_EVENT_PRE_ATTACK					=EVENT_CHAIN_ACTIVATING	--Before a Confused Pokémon attacks

@@ -663,30 +663,51 @@ function Auxiliary.EnablePokemonAttribute(c)
 	e1:SetCondition(Auxiliary.BenchCondition)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	--retreat
+	--[[
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(PM_DESC_RETREAT)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetRange(PM_LOCATION_ACTIVE)
-	e2:SetCondition(Auxiliary.RetreatCondition)
-	e2:SetCost(Auxiliary.RetreatCost)
-	e2:SetTarget(Auxiliary.HintTarget)
-	e2:SetOperation(Auxiliary.RetreatOperation)
+	e2:SetProperty(PM_EFFECT_FLAG_BENCH_PARAM+EFFECT_FLAG_UNCOPYABLE)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCondition(Auxiliary.BenchCondition2)
+	e2:SetTarget(Auxiliary.BenchTarget)
+	e2:SetOperation(Auxiliary.BenchOperation)
 	c:RegisterEffect(e2)
+	]]
+	--retreat
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(PM_DESC_RETREAT)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e3:SetRange(PM_LOCATION_ACTIVE)
+	e3:SetCondition(Auxiliary.RetreatCondition)
+	e3:SetCost(Auxiliary.RetreatCost)
+	e3:SetTarget(Auxiliary.HintTarget)
+	e3:SetOperation(Auxiliary.RetreatOperation)
+	c:RegisterEffect(e3)
 end
 function Auxiliary.BenchCondition(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0 and c:IsBasicPokemon()
 end
+--[[
+function Auxiliary.BenchCondition2(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsPlayerAffectedByEffect(tp,PM_EFFECT_EXTEND_BENCH_8)
+end
+function Auxiliary.BenchTarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+end
+function Auxiliary.BenchOperation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+end
+]]
 function Auxiliary.RetreatCondition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,PM_EFFECT_RETREAT)==0 and e:GetHandler():IsRetreatable()
 end
 function Auxiliary.RetreatCost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Auxiliary.BenchPokemonFilter,tp,PM_LOCATION_BENCH,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Auxiliary.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_PROMOTE)
-	local g=Duel.SelectMatchingCard(tp,Auxiliary.BenchPokemonFilter,tp,PM_LOCATION_BENCH,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,Auxiliary.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
 	Duel.HintSelection(g)
 	g:KeepAlive()
 	e:SetLabelObject(g)
@@ -704,10 +725,10 @@ function Auxiliary.RetreatCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function Auxiliary.RetreatOperation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local g=e:GetLabelObject()
 	if g:GetCount()==0 then return end
-	Duel.SwapSequence(c,g:GetFirst())
+	--Not fully implemented: Duel.SwapSequence doesn't work when promoting Pokémon in LOCATION_SZONE
+	Duel.SwapSequence(e:GetHandler(),g:GetFirst())
 	Duel.RegisterFlagEffect(tp,PM_EFFECT_RETREAT,RESET_PHASE+PHASE_END,0,1)
 end
 
