@@ -315,9 +315,9 @@ end
 function Card.IsRetreatable(c)
 	local rc=c:GetRetreatCost()
 	local ct=c:GetAttachmentGroup():FilterCount(Card.IsEnergy,nil)
+	if c:IsHasEffect(PM_EFFECT_NO_RETREAT_COST) then rc=0 end
 	if c:IsHasEffect(PM_EFFECT_RETREAT_COST_REPLACE) then
 		ct=c:GetAttachmentGroup():FilterCount(Card.IsHasEffect,nil,PM_EFFECT_RETREAT_COST_REPLACE)
-		rc=0
 	end
 	return Auxiliary.ActivePokemonFilter(c) and (ct>=rc or rc==0)
 end
@@ -774,7 +774,7 @@ function Auxiliary.TrainerDiscardOperation(e,tp,eg,ep,ev,re,r,rp)
 end
 --========== Item ==========
 --Pokémon Tool
-function Auxiliary.EnablePokemonTool(c)
+function Auxiliary.EnablePokemonTool(c,desc_id)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(PM_DESC_TOOL)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -783,6 +783,18 @@ function Auxiliary.EnablePokemonTool(c)
 	e1:SetTarget(Auxiliary.PokemonToolTarget)
 	e1:SetOperation(Auxiliary.PokemonToolOperation)
 	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(PM_EFFECT_TYPE_POKEMON_TOOL+EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_ADJUST)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e2:SetCondition(Auxiliary.AddToolDescCondition)
+	e2:SetOperation(Auxiliary.AddToolDescOperation(desc_id))
+	e2:SetLabelObject(c)
+	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetCondition(Auxiliary.RemoveToolDescCondition)
+	e3:SetOperation(Auxiliary.RemoveToolDescOperation)
+	c:RegisterEffect(e3)
 end
 function Auxiliary.PokemonToolFilter(c)
 	return c:IsFaceup() and c:IsPokemon() and not c:GetAttachmentGroup():IsExists(Card.IsPokemonTool,1,nil)
@@ -797,6 +809,28 @@ function Auxiliary.PokemonToolOperation(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	Duel.HintSelection(g)
 	Duel.Attach(g:GetFirst(),Group.FromCards(e:GetHandler()))
+end
+function Auxiliary.AddToolDescCondition(e)
+	local c=e:GetLabelObject()
+	local code=c:GetOriginalCode()
+	return e:GetHandler():GetFlagEffect(code)==0
+end
+function Auxiliary.AddToolDescOperation(desc_id)
+	return	function(e)
+				local c=e:GetLabelObject()
+				local code=c:GetOriginalCode()
+				e:GetHandler():RegisterFlagEffect(code,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(code,desc_id))
+			end
+end
+function Auxiliary.RemoveToolDescCondition(e)
+	local c=e:GetLabelObject()
+	local code=c:GetOriginalCode()
+	return e:GetHandler():GetFlagEffect(code)~=0 and e:GetHandler():GetLocation()~=PM_LOCATION_ATTACHED
+end
+function Auxiliary.RemoveToolDescOperation(e)
+	local c=e:GetLabelObject()
+	local code=c:GetOriginalCode()
+	e:GetHandler():ResetFlagEffect(code)
 end
 
 --==========[+Attack]==========
