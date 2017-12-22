@@ -179,12 +179,13 @@ RESETS_STANDARD						=0x1fe0000	--RESET_TURN_SET+RESET_TOGRAVE+RESET_REMOVE+RESE
 RESETS_STANDARD_DISABLE				=0x1ff0000	--0x1fe0000+RESET_DISABLE
 RESETS_STANDARD_DISCONTROL			=0x3ff0000	--0x1ff0000+RESET_CONTROL
 --Types
+PM_EFFECT_TYPE_PLAY					=EFFECT_TYPE_ACTIVATE		--Trainer cards that a player can play each turn
 PM_EFFECT_TYPE_POKEMON_TOOL			=EFFECT_TYPE_XMATERIAL		--Pokémon Tools that give Pokémon attacks or effects
 --Flags
 PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.EnablePokemonAttribute
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x100000000				--Included on all Pokémon attacks
 --Codes
-PM_EFFECT_CANNOT_ACTIVATE			=EFFECT_CANNOT_ACTIVATE		--Prevent a card from activating, being played or attached
+PM_EFFECT_CANNOT_PLAY				=EFFECT_CANNOT_ACTIVATE		--Prevent a card from being played or attached
 PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Put a Pokémon onto the Bench
 PM_EFFECT_KNOCK_OUT_REPLACE			=EFFECT_DESTROY_REPLACE		--Prevent a Pokémon from being Knocked Out
 PM_EFFECT_CANNOT_ATTACK				=EFFECT_CANNOT_ATTACK		--Prevent a Pokémon from attacking

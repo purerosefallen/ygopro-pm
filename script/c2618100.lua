@@ -3,7 +3,7 @@ local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	--to deck & draw
-	pm.EnableTrainerActivate(c,0,scard.drtg,scard.drop)
+	pm.EnableTrainerPlay(c,0,scard.drtg,scard.drop)
 end
 scard.pokemon_card=true
 function scard.drtg(e,tp,eg,ep,ev,re,r,rp,chk)

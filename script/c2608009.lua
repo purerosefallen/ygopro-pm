@@ -3,7 +3,7 @@ local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	--to bench
-	pm.EnableTrainerActivate(c,0,scard.tbtg,scard.tbop)
+	pm.EnableTrainerPlay(c,0,scard.tbtg,scard.tbop)
 end
 scard.pokemon_card=true
 scard.old_supporter=true

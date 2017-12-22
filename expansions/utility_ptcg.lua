@@ -239,8 +239,8 @@ end
 --check if a pokémon is on the bench
 function Card.IsBench(c)
 	return (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<SEQUENCE_EXTRA_MZONE)
-		--bench extended by "Sky Field ROS 89"
-		or (c:IsLocation(LOCATION_SZONE) and c:GetSequence()~=SEQUENCE_FIRST_SZONE and c:GetSequence()~=SEQUENCE_FIELD_ZONE)
+		--extend bench by "Sky Field ROS 89"
+		or (c:IsLocation(LOCATION_SZONE) and c:GetSequence()~=SEQUENCE_FIELD_ZONE)
 end
 --check if a card is vertical
 Card.IsUpside=Card.IsAttackPos
@@ -739,11 +739,11 @@ end
 
 --==========[+Trainer]==========
 --Trainer card
-function Auxiliary.EnableTrainerActivate(c,cate,targ_func,op_func,con_func,cost_func,prop)
-	--activate
+function Auxiliary.EnableTrainerPlay(c,cate,targ_func,op_func,con_func,cost_func,prop)
+	--play
 	local e1=Effect.CreateEffect(c)
 	if cate then e1:SetCategory(cate) end
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetType(PM_EFFECT_TYPE_PLAY)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	if prop then e1:SetProperty(prop) end
 	if con_func then e1:SetCondition(con_func) end
@@ -771,7 +771,7 @@ function Auxiliary.TrainerDiscardCondition(e)
 	return e:GetHandler():IsOnField() and Duel.GetTurnPlayer()==e:GetHandlerPlayer()
 end
 function Auxiliary.TrainerDiscardOperation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SendtoDPile(e:GetHandler(),REASON_RULE)
+	Duel.SendtoDPile(e:GetHandler(),REASON_RULE+REASON_DISCARD)
 end
 --========== Item ==========
 --Pokémon Tool
