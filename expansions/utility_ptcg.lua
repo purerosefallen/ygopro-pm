@@ -83,11 +83,10 @@ end
 function Card.IsBabyPokemon(c)
 	return c:IsPokemon() and c:IsSubType(PM_TYPE_BABY_POKEMON)
 end
---check if a card is a Pokémon-EX (Pokémon-ex)
-function Card.IsPokemonEX(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX)
+--check if a card is a Pokémon-ex
+function Card.IsPokemonex(c)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX_OLD)
 end
-Card.IsPokemonEx=Card.IsPokemonEX
 --check if a card is a Pokémon star
 function Card.IsPokemonStar(c)
 	return c:IsPokemon() and c:IsSubType(PM_TYPE_POKEMON_STAR)
@@ -103,6 +102,10 @@ end
 --check if a card is a Pokémon LEGEND
 function Card.IsPokemonLEGEND(c)
 	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEGEND)
+end
+--check if a card is a Pokémon-EX
+function Card.IsPokemonEX(c)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX)
 end
 --check if a card is a Restored Pokémon
 function Card.IsRestoredPokemon(c)
@@ -143,10 +146,6 @@ end
 --check if a card is an ACE SPEC
 function Card.IsACESPEC(c)
 	return c:IsTrainer() and c:IsSubType(PM_TYPE_ACE_SPEC)
-end
---check if a card is a Goldenrod Game Corner
-function Card.IsGoldenrodGameCorner(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_GOLDENROD_GAME_CORNER)
 end
 --check if a card is a Supporter
 function Card.IsSupporter(c)
