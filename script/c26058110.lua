@@ -20,7 +20,7 @@ function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	local tc=g:GetFirst()
 	Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEDOWN,true)
-	Duel.Hint(HINT_CODE,0,tc:GetCode())
+	Duel.Hint(HINT_CODE,0,tc:GetOriginalCode())
 	local end_time=0
 	local start_time=os.time()
 	Duel.Hint(HINT_SELECTMSG,1-tp,aux.Stringid(sid,0))

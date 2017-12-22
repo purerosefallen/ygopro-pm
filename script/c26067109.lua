@@ -7,7 +7,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.opttg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.IsExistingTarget(nil,tp,LOCATION_DECK,0,1,nil)
+	local b1=Duel.IsExistingMatchingCard(nil,tp,LOCATION_DECK,0,1,nil)
 	local b2=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,PM_LOCATION_DPILE,0,1,nil)
 		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_HAND,0,1,e:GetHandler(),CARD_PUZZLE_OF_TIME)
 	if chk==0 then return b1 or b2 end
@@ -34,6 +34,6 @@ function scard.optop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,g)
 		end
 		local tc=Duel.GetFirstMatchingCard(Card.IsCode,tp,LOCATION_HAND,0,nil,CARD_PUZZLE_OF_TIME)
-		Duel.SendtoDPile(tc,REASON_EFFECT+REASON_DISCARD)
+		Duel.SendtoDPile(tc,REASON_RULE)
 	end
 end
