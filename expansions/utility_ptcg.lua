@@ -314,7 +314,12 @@ end
 --check if an active pokémon can be retreated to the bench
 function Card.IsRetreatable(c)
 	local rc=c:GetRetreatCost()
-	return Auxiliary.ActivePokemonFilter(c) and (c:GetAttachmentGroup():FilterCount(Card.IsEnergy,nil)>=rc or rc==0)
+	local ct=c:GetAttachmentGroup():FilterCount(Card.IsEnergy,nil)
+	if c:IsHasEffect(PM_EFFECT_RETREAT_COST_REPLACE) then
+		ct=c:GetAttachmentGroup():FilterCount(Card.IsHasEffect,nil,PM_EFFECT_RETREAT_COST_REPLACE)
+		rc=0
+	end
+	return Auxiliary.ActivePokemonFilter(c) and (ct>=rc or rc==0)
 end
 --========== Duel ==========
 --set aside prize cards face-down
@@ -687,9 +692,15 @@ function Auxiliary.RetreatCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local og=c:GetAttachmentGroup()
 	local rc=c:GetRetreatCost()
-	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
-	local sog=og:FilterSelect(tp,Card.IsEnergy,rc,rc,nil)
-	Duel.PDiscard(sog,REASON_COST+REASON_DISCARD)
+	if c:IsHasEffect(PM_EFFECT_RETREAT_COST_REPLACE) then
+		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARD)
+		local sog=og:FilterSelect(tp,Card.IsHasEffect,1,1,nil,PM_EFFECT_RETREAT_COST_REPLACE)
+		Duel.PDiscard(sog,REASON_COST+REASON_DISCARD+REASON_REPLACE)
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
+		local sog=og:FilterSelect(tp,Card.IsEnergy,rc,rc,nil)
+		Duel.PDiscard(sog,REASON_COST+REASON_DISCARD)
+	end
 end
 function Auxiliary.RetreatOperation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -760,6 +771,32 @@ function Auxiliary.TrainerDiscardCondition(e)
 end
 function Auxiliary.TrainerDiscardOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDPile(e:GetHandler(),REASON_RULE)
+end
+--========== Item ==========
+--Pokémon Tool
+function Auxiliary.EnablePokemonTool(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(PM_DESC_TOOL)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetTarget(Auxiliary.PokemonToolTarget)
+	e1:SetOperation(Auxiliary.PokemonToolOperation)
+	c:RegisterEffect(e1)
+end
+function Auxiliary.PokemonToolFilter(c)
+	return c:IsFaceup() and c:IsPokemon() and not c:GetAttachmentGroup():IsExists(Card.IsPokemonTool,1,nil)
+end
+Auxiliary.toolfilter=Auxiliary.PokemonToolFilter
+function Auxiliary.PokemonToolTarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Auxiliary.PokemonToolFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil) end
+end
+function Auxiliary.PokemonToolOperation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_ATTACHTOOL)
+	local g=Duel.SelectMatchingCard(tp,Auxiliary.PokemonToolFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
+	if g:GetCount()==0 then return end
+	Duel.HintSelection(g)
+	Duel.Attach(g:GetFirst(),Group.FromCards(e:GetHandler()))
 end
 
 --==========[+Attack]==========

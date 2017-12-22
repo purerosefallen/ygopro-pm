@@ -172,6 +172,8 @@ PLAYER_OPPONENT						=1		--player=PLAYER_OPPONENT in Effect.SetCondition (Auxili
 RESETS_STANDARD						=0x1fe0000	--RESET_TURN_SET+RESET_TOGRAVE+RESET_REMOVE+RESET_TEMP_REMOVE+RESET_TOHAND+RESET_TODECK+RESET_LEAVE+RESET_TOFIELD
 RESETS_STANDARD_DISABLE				=0x1ff0000	--0x1fe0000+RESET_DISABLE
 RESETS_STANDARD_DISCONTROL			=0x3ff0000	--0x1ff0000+RESET_CONTROL
+--Types
+PM_EFFECT_TYPE_POKEMON_TOOL			=EFFECT_TYPE_XMATERIAL		--Pokémon Tools that give Pokémon attacks or effects
 --Flags
 PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.EnablePokemonAttribute
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x100000000				--Included on all Pokémon attacks
@@ -207,9 +209,10 @@ PM_EFFECT_CANNOT_BE_CONFUSED		=709	--"Mysterious Fossil" (Fossil 62/62)
 PM_EFFECT_CANNOT_BE_PARALYZED		=710	--"Mysterious Fossil" (Fossil 62/62)
 PM_EFFECT_CANNOT_BE_POISONED		=711	--"Mysterious Fossil" (Fossil 62/62)
 PM_EFFECT_CANNOT_REMOVE_ENERGY_ATTACK_TRAINER	=712	--"Brock's Protection" (Gym Challenge 101/132)
-PM_EFFECT_RESTRICT_MIRACLE_ENERGY	=713	--"Miracle Energy" (Neo Destiny 16/105)
-PM_EFFECT_RESTRICT_POKEMON_STAR		=714	--"Mudkip Star" (Team Rocket Returns 107/109)
-PM_EFFECT_RESTRICT_ACE_SPEC			=715	--"Computer Search" (Boundaries Crossed 137/149)
+PM_EFFECT_RETREAT_COST_REPLACE		=713	--"Balloon Berry" (Neo Revelation 60/64)
+PM_EFFECT_RESTRICT_MIRACLE_ENERGY	=714	--"Miracle Energy" (Neo Destiny 16/105)
+PM_EFFECT_RESTRICT_POKEMON_STAR		=715	--"Mudkip Star" (Team Rocket Returns 107/109)
+PM_EFFECT_RESTRICT_ACE_SPEC			=716	--"Computer Search" (Boundaries Crossed 137/149)
 --Abilities that activate or actions that occur at the appropriate event
 PM_EVENT_TO_DISCARDPILE				=EVENT_TO_GRAVE			--When a card is put into the discard pile
 PM_EVENT_KNOCKED_OUT				=EVENT_DESTROYED		--When a Pokémon is Knocked Out
