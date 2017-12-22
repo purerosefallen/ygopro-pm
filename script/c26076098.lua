@@ -13,5 +13,5 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.typecon(e)
-	return e:GetHandler():IsCode(CARD_SILVALLYGX)
+	return e:GetHandler():IsCode(CARD_SILVALLY_GX)
 end
