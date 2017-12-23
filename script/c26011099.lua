@@ -26,7 +26,7 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	local res=Duel.TossCoin(tp,1)
 	if res==RESULT_HEADS then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOHAND)
-		local g=Duel.SelectMatchingCard(tp,Card.IsBasicEnergy,tp,PM_LOCATION_DPILE,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,scard.thfilter,tp,PM_LOCATION_DPILE,0,1,1,nil)
 		if g:GetCount()==0 then return end
 		Duel.SendtoHand(g,PLAYER_OWNER,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
