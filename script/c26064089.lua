@@ -38,8 +38,8 @@ function scard.zop(e)
 end
 function scard.leaveop(e)
 	local tp=e:GetHandlerPlayer()
-	local ct1=Duel.GetMatchingGroupCount(pm.BenchPokemonFilter,e:GetHandlerPlayer(),PM_LOCATION_IN_PLAY,0,nil)
-	local ct2=Duel.GetMatchingGroupCount(pm.BenchPokemonFilter,e:GetHandlerPlayer(),0,PM_LOCATION_IN_PLAY,nil)
+	local ct1=Duel.GetMatchingGroupCount(pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,nil)
+	local ct2=Duel.GetMatchingGroupCount(pm.BenchPokemonFilter,tp,0,PM_LOCATION_IN_PLAY,nil)
 	if ct1>5 then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARD)
 		local g=Duel.SelectMatchingCard(tp,pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,ct1-5,ct1-5,nil)
