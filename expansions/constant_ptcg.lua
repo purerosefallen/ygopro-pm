@@ -192,6 +192,7 @@ PM_EFFECT_CANNOT_ATTACK				=EFFECT_CANNOT_ATTACK		--Prevent a Pokémon from atta
 PM_EFFECT_UPDATE_HIT_POINTS			=EFFECT_UPDATE_ATTACK		--Increase or decreas a Pokémon's HP
 PM_EFFECT_SELF_KNOCK_OUT			=EFFECT_SELF_DESTROY		--A Pokémon knocks itself out 
 PM_EFFECT_CHANGE_ENERGY				=EFFECT_CHANGE_CODE			--Change an Energy type
+PM_EFFECT_ADD_POKEMON_TYPE			=EFFECT_ADD_ATTRIBUTE		--Add a Pokémon type
 PM_EFFECT_CHANGE_POKEMON_TYPE		=EFFECT_CHANGE_ATTRIBUTE	--Change a Pokémon type
 PM_EFFECT_UPDATE_RETREAT_COST		=EFFECT_UPDATE_LEVEL		--Increase or decrease a Pokémon's Retreat Cost
 PM_EFFECT_CHANGE_RETREAT_COST		=EFFECT_CHANGE_LEVEL		--Set a Pokémon's Retreat Cost ("Balloon Berry" Neo Revelation 60/64)

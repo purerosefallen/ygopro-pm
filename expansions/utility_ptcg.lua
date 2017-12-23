@@ -15,7 +15,7 @@
 --[+Energy]..................................................functions that are included on every Energy card
 --[+Trainer].................................................functions that are included on every Trainer card
 --[+Attack]..................................................attacks that are shared by many pokémon
---[+Ability].................................................non-attack effects that are shared by many pokémon
+--[+Ability].................................................non-attack effects that are shared by many cards
 --[+Conditions]..............................................condition functions
 --[+Targets].................................................target functions
 --[+Filters].................................................filter functions
@@ -231,7 +231,7 @@ Card.GetOriginalEnergyType=Card.GetOriginalAttribute
 --get the type (color) a pokémon had when it was on the field
 Card.GetPreviousEnergyType=Card.GetPreviousAttributeOnField
 --check what a pokémon's current type (color) is
-Card.IsEnergyType=Card.IsAttribute
+Card.IsPokemonType=Card.IsAttribute
 --check if a pokémon is active
 function Card.IsActive(c)
 	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()>=SEQUENCE_EXTRA_MZONE
@@ -883,7 +883,7 @@ function Auxiliary.EnableStadium(c)
 	c:RegisterEffect(e3)
 end
 function Auxiliary.StadiumReplaceCondition(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(PM_TYPE_STADIUM)
+	return re:IsActiveType(PM_TYPE_STADIUM) and re:GetHandler()~=e:GetHandler()
 end
 function Auxiliary.StadiumReplaceOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDPile(e:GetHandler(),REASON_RULE+REASON_DISCARD)
@@ -932,7 +932,7 @@ function Auxiliary.DrawTarget(p,ct)
 				if p==PLAYER_PLAYER or p==tp then player=tp
 				elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
 				if chk==0 then return Duel.IsPlayerCanDraw(player,ct) end
-				if e:GetHandler():IsPokemon() then Duel.Hint(HINT_OPSELECTED,1-e:GetHandlerPlayer(),e:GetDescription()) end
+				if e:GetHandler():IsPokemon() then Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription()) end
 			end
 end
 Auxiliary.drtg=Auxiliary.DrawTarget
@@ -965,6 +965,29 @@ function Auxiliary.EnablePokemonAbility(c,desc_id,cate,targ_func,op_func,con_fun
 	if cost_func then e1:SetCost(cost_func) end
 	if targ_func then e1:SetTarget(targ_func) end
 	e1:SetOperation(op_func)
+	c:RegisterEffect(e1)
+end
+--"The Retreat Cost of each Basic Pokémon in play is [C] less. (e.g. "Skyarrow Bridge NXD 91")
+function Auxiliary.EnableRetreatCostChange(c,val,range,s_range,o_range,targ_func,con_func)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(PM_EFFECT_UPDATE_RETREAT_COST)
+	e1:SetRange(range)
+	e1:SetTargetRange(s_range,o_range)
+	if targ_func then e1:SetTarget(targ_func) end
+	if con_func then e1:SetCondition(con_func) end
+	e1:SetValue(val)
+	c:RegisterEffect(e1)
+end
+--"The Retreat Cost for each [P] and [D] Pokémon is 0." (e.g. "Moonlight Stadium GE 100")
+function Auxiliary.EnableNoRetreatCost(c,range,s_range,o_range,targ_func,con_func)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(PM_EFFECT_NO_RETREAT_COST)
+	e1:SetRange(range)
+	e1:SetTargetRange(s_range,o_range)
+	if targ_func then e1:SetTarget(targ_func) end
+	if con_func then e1:SetCondition(con_func) end
 	c:RegisterEffect(e1)
 end
 
