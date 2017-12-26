@@ -49,7 +49,7 @@ function scard.initial_effect(c)
 	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IMMEDIATELY_APPLY)
 	e5:SetDescription(aux.Stringid(sid,4))
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e5:SetCode(PM_EVENT_KNOCKED_OUT)
+	e5:SetCode(PM_EVENT_LEAVE_PLAY)
 	e5:SetRange(PM_LOCATION_RULES)
 	e5:SetCondition(scard.prcon1)
 	e5:SetOperation(scard.prop1)
@@ -73,7 +73,7 @@ function scard.initial_effect(c)
 	local e8=Effect.CreateEffect(c)
 	e8:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_PLAYER_TARGET)
 	e8:SetType(EFFECT_TYPE_FIELD)
-	e8:SetCode(PM_EFFECT_CANNOT_ACTIVATE)
+	e8:SetCode(PM_EFFECT_CANNOT_PLAY)
 	e8:SetRange(PM_LOCATION_RULES)
 	e8:SetTargetRange(1,0)
 	e8:SetValue(scard.evolimit)
@@ -93,7 +93,7 @@ function scard.initial_effect(c)
 	local e11=Effect.CreateEffect(c)
 	e11:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_PLAYER_TARGET)
 	e11:SetType(EFFECT_TYPE_FIELD)
-	e11:SetCode(PM_EFFECT_CANNOT_ACTIVATE)
+	e11:SetCode(PM_EFFECT_CANNOT_PLAY)
 	e11:SetRange(PM_LOCATION_RULES)
 	e11:SetTargetRange(1,0)
 	e11:SetCondition(scard.supcon)
@@ -114,7 +114,7 @@ function scard.initial_effect(c)
 	local e14=Effect.CreateEffect(c)
 	e14:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_PLAYER_TARGET)
 	e14:SetType(EFFECT_TYPE_FIELD)
-	e14:SetCode(PM_EFFECT_CANNOT_ACTIVATE)
+	e14:SetCode(PM_EFFECT_CANNOT_PLAY)
 	e14:SetRange(PM_LOCATION_RULES)
 	e14:SetTargetRange(1,0)
 	e14:SetCondition(scard.stadcon)
@@ -135,7 +135,7 @@ function scard.initial_effect(c)
 	local e17=Effect.CreateEffect(c)
 	e17:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_PLAYER_TARGET)
 	e17:SetType(EFFECT_TYPE_FIELD)
-	e17:SetCode(PM_EFFECT_CANNOT_ACTIVATE)
+	e17:SetCode(PM_EFFECT_CANNOT_PLAY)
 	e17:SetRange(PM_LOCATION_RULES)
 	e17:SetTargetRange(1,0)
 	e17:SetCondition(scard.enercon)
@@ -202,6 +202,7 @@ function scard.condition(e)
 	end
 end
 function scard.operation(e,tp,eg,ep,ev,re,r,rp)
+	local turnp=Duel.GetTurnPlayer()
 	local c=e:GetHandler()
 	--apply rules for you
 	Duel.Remove(c,POS_FACEUP,REASON_RULE)
@@ -216,7 +217,7 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(rules,POS_FACEUP,REASON_RULE)
 		Duel.SendtoExtraP(rules,1-tp,REASON_RULE)
 	end
-	if Duel.GetTurnPlayer()==1-tp then return end
+	if turnp==1-tp then return end
 	--check for non-pokémon tcg cards
 	local g1=Duel.GetMatchingGroup(scard.filter,tp,LOCATIONS_ALL,0,nil)
 	local g2=Duel.GetMatchingGroup(scard.filter,tp,0,LOCATIONS_ALL,nil)
@@ -396,7 +397,7 @@ function scard.prop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,PM_EFFECT_PRIZE_CARD_CHECK,0,0,0)
 end
 function scard.sdfilter(c)
-	return c:GetFlagEffect(PM_EFFECT_SUDDEN_DEATH_CHECK)>0
+	return c:GetFlagEffect(PM_EFFECT_SUDDEN_DEATH_CHECK)~=0
 end
 function scard.rmfilter(c)
 	return c:GetFlagEffect(PM_EFFECT_SUDDEN_DEATH_CHECK)==0
@@ -444,7 +445,7 @@ function scard.sudden_death(e,tp,eg,ep,ev,re,r,rp)
 end
 --prize check
 function scard.lpcon(e)
-	return Duel.GetFlagEffect(e:GetHandlerPlayer(),PM_EFFECT_PRIZE_CARD_CHECK)>0
+	return Duel.GetFlagEffect(e:GetHandlerPlayer(),PM_EFFECT_PRIZE_CARD_CHECK)~=0
 end
 function scard.lpop(e,tp,eg,ep,ev,re,r,rp)
 	local ct1=Duel.GetPrizeGroupCount(tp,tp)
