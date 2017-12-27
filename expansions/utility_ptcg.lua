@@ -16,6 +16,7 @@
 --[+Trainer].................................................functions that are included on every Trainer card
 --[+Attack]..................................................attacks that are shared by many pokémon
 --[+Ability].................................................non-attack effects that are shared by many cards
+--[+SpecialCondition]........................................asleep, burned, confused, paralyzed and poisoned
 --[+Conditions]..............................................condition functions
 --[+Targets].................................................target functions
 --[+Filters].................................................filter functions
@@ -308,9 +309,58 @@ Card.IsSecret=aux.NOT(Card.IsPublic)
 --add the pokémon value to the non-pokémon card
 Card.AddPokemonAttribute=Card.AddMonsterAttribute
 Card.AddPokemonAttributeComplete=Card.AddMonsterAttributeComplete
+--check if a pokémon is asleep
+function Card.IsAsleep(c)
+	return c:GetFlagEffect(PM_EFFECT_ASLEEP)~=0 and c:IsPosition(PM_POS_FACEUP_COUNTERCLOCKWISE)
+end
+--check if a pokémon is burned
+function Card.IsBurned(c)
+	return c:GetFlagEffect(PM_EFFECT_BURNED)~=0 and c:GetMarker(PM_BURN_MARKER)~=0
+end
+--check if a pokémon is confused
+function Card.IsConfused(c)
+	return c:GetFlagEffect(PM_EFFECT_CONFUSED)~=0
+end
+--check if a pokémon is paralyzed
+function Card.IsParalyzed(c)
+	return c:GetFlagEffect(PM_EFFECT_PARALYZED)~=0 and c:IsPosition(PM_POS_FACEUP_CLOCKWISE)
+end
+--check if a pokémon is poisoned
+function Card.IsPoisoned(c)
+	return c:GetFlagEffect(PM_EFFECT_POISONED)~=0 and c:GetMarker(PM_POISON_MARKER)~=0
+end
+--check if a pokémon is affected by a special condition
+function Card.IsAffectedBySpecialCondition(c)
+	return c:IsAsleep() or c:IsBurned() or c:IsConfused() or c:IsParalyzed() or c:IsPoisoned()
+end
+--check if a pokémon can be asleep
+function Card.IsCanBeAsleep(c)
+	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_ASLEEP)
+end
+--check if a pokémon can be burned
+function Card.IsCanBeBurned(c)
+	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_BURNED)
+end
+--check if a pokémon can be confused
+function Card.IsCanBeConfused(c)
+	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_CONFUSED)
+end
+--check if a pokémon can be paralyzed
+function Card.IsCanBeParalyzed(c)
+	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_PARALYZED)
+end
+--check if a pokémon can be poisoned
+function Card.IsCanBePoisoned(c)
+	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_POISONED)
+end
+--check if a pokémon can be affected by a special condition
+--reserved
+function Card.IsCanBeAffectedBySpecialCondition(c)
+	return c:IsCanBeAsleep() and c:IsCanBeBurned() and c:IsCanBeConfused() and c:IsCanBeParalyzed() and c:IsCanBePoisoned()
+end
 --check if a pokémon can attack
 function Card.IsCanAttack(c)
-	return not (Duel.IsFirstTurn() or c:IsHasEffect(PM_EFFECT_CANNOT_ATTACK))
+	return not (Duel.IsFirstTurn() or c:IsAsleep() or c:IsParalyzed() or c:IsHasEffect(PM_EFFECT_CANNOT_ATTACK))
 end
 --check if an active pokémon can be retreated to the bench
 function Card.IsRetreatable(c)
@@ -320,7 +370,11 @@ function Card.IsRetreatable(c)
 	if c:IsHasEffect(PM_EFFECT_RETREAT_COST_REPLACE) then
 		ct=c:GetAttachmentGroup():FilterCount(Card.IsHasEffect,nil,PM_EFFECT_RETREAT_COST_REPLACE)
 	end
-	return Auxiliary.ActivePokemonFilter(c) and (ct>=rc or rc==0)
+	if c:IsAsleep() or c:IsParalyzed() or c:IsHasEffect(PM_EFFECT_CANNOT_RETREAT) then
+		return false
+	else
+		return Auxiliary.ActivePokemonFilter(c) and (ct>=rc or rc==0)
+	end
 end
 --========== Duel ==========
 --set aside prize cards face-down
@@ -360,6 +414,8 @@ Duel.PutOnBenchComplete=Duel.SpecialSummonComplete
 Duel.IsPlayerCanPlayPokemon=Duel.IsPlayerCanSpecialSummonMonster
 --check if a player can put a pokémon onto their bench
 Duel.IsPlayerCanPutPokemonOnBench=Duel.IsPlayerCanSpecialSummonMonster
+--negate a pokémon's attack
+Duel.NegatePokemonAttack=Duel.NegateActivation
 --check if it is the first turn of the game
 function Duel.IsFirstTurn()
 	return Duel.GetTurnCount()==1 or Duel.GetFlagEffect(tp,PM_EFFECT_SUDDEN_DEATH_RESTART)>0
@@ -684,6 +740,16 @@ function Auxiliary.EnablePokemonAttribute(c)
 	e3:SetTarget(Auxiliary.HintTarget)
 	e3:SetOperation(Auxiliary.RetreatOperation)
 	c:RegisterEffect(e3)
+	--remove effects
+	--not yet implemented: remove other effects affecting the pokémon
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_ADJUST)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetRange(PM_LOCATION_BENCH)
+	e4:SetCondition(Auxiliary.RemoveEffectsCondition)
+	e4:SetOperation(Auxiliary.RemoveEffectsOperation)
+	c:RegisterEffect(e4)
 end
 function Auxiliary.BenchCondition(e,c)
 	if c==nil then return true end
@@ -730,6 +796,12 @@ function Auxiliary.RetreatOperation(e,tp,eg,ep,ev,re,r,rp)
 	--Not fully implemented: Duel.SwapSequence doesn't work when promoting Pokémon in LOCATION_SZONE
 	Duel.SwapSequence(e:GetHandler(),g:GetFirst())
 	Duel.RegisterFlagEffect(tp,PM_EFFECT_RETREAT,RESET_PHASE+PHASE_END,0,1)
+end
+function Auxiliary.RemoveEffectsCondition(e)
+	return e:GetHandler():IsBench() and e:GetHandler():IsAffectedBySpecialCondition()
+end
+function Auxiliary.RemoveEffectsOperation(e,tp,eg,ep,ev,re,r,rp)
+	Auxiliary.RemoveSpecialConditions(e:GetHandler())
 end
 
 --==========[+Energy]==========
@@ -989,6 +1061,304 @@ function Auxiliary.EnableNoRetreatCost(c,range,s_range,o_range,targ_func,con_fun
 	if targ_func then e1:SetTarget(targ_func) end
 	if con_func then e1:SetCondition(con_func) end
 	c:RegisterEffect(e1)
+end
+
+--==========[+SpecialCondition]==========
+--[[
+"Turn the Pokémon counterclockwise to show that it is Asleep.
+If a Pokémon is Asleep, it cannot attack or retreat. Between turns, flip a coin. If you flip heads, the Pokémon wakes up
+(turn the card right-side up), but if you flip tails, it stays Asleep."
+]]
+function Auxiliary.EnableAsleep(c,con_func,reset_flag)
+	if c:IsAsleep() or not c:IsCanBeAsleep() then return end
+	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	if not c:IsPosition(PM_POS_FACEUP_COUNTERCLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_COUNTERCLOCKWISE) end
+	--asleep
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(PM_EFFECT_ASLEEP)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	if con_func then e1:SetCondition(con_func) end
+	e1:SetReset(reset_flag)
+	c:RegisterEffect(e1,true)
+	c:RegisterFlagEffect(PM_EFFECT_ASLEEP,reset_flag,EFFECT_FLAG_CLIENT_HINT,1,0,PM_DESC_ASLEEP)
+	--asleep check
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(PM_DESC_ASLEEP_CHECK)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_PHASE+PHASE_END)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetCountLimit(1)
+	e2:SetLabelObject(c)
+	if con_func then
+		e2:SetCondition(aux.AND(Auxiliary.CheckAsleepCondition,con_func))
+	else
+		e2:SetCondition(Auxiliary.CheckAsleepCondition)
+	end
+	e2:SetOperation(Auxiliary.CheckAsleepOperation)
+	Duel.RegisterEffect(e2,c:GetControler())
+end
+function Auxiliary.CheckAsleepCondition(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	if tc:IsAsleep() then
+		return true
+	else
+		e:Reset()
+		return false
+	end
+end
+function Auxiliary.CheckAsleepOperation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
+	local res=Duel.TossCoin(tp,1)
+	if res==RESULT_HEADS then Auxiliary.RemoveAsleep(tc) end
+end
+--[[
+"A Burned Pokémon takes damage between turns, but the condition might heal on its own.
+When a Pokémon is Burned, put a Burn marker on it. Between turns, put 2 damage counters on your Burned Pokémon, then flip a
+coin. If heads, remove the Special Condition Burned.
+A Pokémon cannot have two Burn markers; if an attack gives it another Burn marker, the new Burned Condition simply replaces
+the old one."
+]]
+function Auxiliary.EnableBurned(c,con_func,reset_flag)
+	if not c:IsCanBeBurned() then return end
+	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	if c:GetMarker(PM_BURN_MARKER)==1 then
+		c:RemoveMarker(c:GetControler(),PM_BURN_MARKER,1,REASON_RULE)
+		c:AddMarker(PM_BURN_MARKER,1)
+	else
+		c:AddMarker(PM_BURN_MARKER,1)
+	end
+	--burned
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(PM_EFFECT_BURNED)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(PM_LOCATION_IN_PLAY)
+	if con_func then e1:SetCondition(con_func) end
+	e1:SetReset(reset_flag)
+	c:RegisterEffect(e1,true)
+	c:RegisterFlagEffect(PM_EFFECT_BURNED,reset_flag,EFFECT_FLAG_CLIENT_HINT,1,0,PM_DESC_BURNED)
+	--burned check
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(PM_DESC_BURNED_CHECK)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_PHASE+PHASE_END)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetCountLimit(1)
+	e2:SetLabelObject(c)
+	if con_func then
+		e2:SetCondition(aux.AND(Auxiliary.CheckBurnedCondition,con_func))
+	else
+		e2:SetCondition(Auxiliary.CheckBurnedCondition)
+	end
+	e2:SetOperation(Auxiliary.CheckBurnedOperation)
+	Duel.RegisterEffect(e2,c:GetControler())
+end
+function Auxiliary.CheckBurnedCondition(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	if tc:IsBurned() then
+		return true
+	else
+		e:Reset()
+		return false
+	end
+end
+function Auxiliary.CheckBurnedOperation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
+	tc:AddCounter(PM_DAMAGE_COUNTER,2)
+	Duel.BreakEffect()
+	local res=Duel.TossCoin(tp,1)
+	if res==RESULT_HEADS then Auxiliary.RemoveBurned(tc) end
+end
+--[[
+"Turn a Confused Pokémon with its head pointed toward you to show that it is Confused.
+If your Pokémon is Confused, you must flip a coin before attacking with it. If heads, the attack works normally. If tails, the
+attack does nothing, and put 3 damage counters on your Confused Pokémon."
+]]
+--Confused
+function Auxiliary.EnableConfused(c,con_func,reset_flag)
+	if c:IsConfused() or not c:IsCanBeConfused() then return end
+	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	--confused
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(PM_EFFECT_CONFUSED)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(PM_LOCATION_IN_PLAY)
+	if con_func then e1:SetCondition(con_func) end
+	e1:SetReset(reset_flag)
+	c:RegisterEffect(e1,true)
+	c:RegisterFlagEffect(PM_EFFECT_CONFUSED,reset_flag,EFFECT_FLAG_CLIENT_HINT,1,0,PM_DESC_CONFUSED)
+	--confused check
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(PM_DESC_CONFUSED_CHECK)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(PM_EVENT_PRE_ATTACK)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e2:SetRange(PM_LOCATION_IN_PLAY)
+	if con_func then
+		e2:SetCondition(aux.AND(Auxiliary.CheckConfusedCondition,con_func))
+	else
+		e2:SetCondition(Auxiliary.CheckConfusedCondition)
+	end
+	e2:SetOperation(Auxiliary.CheckConfusedOperation)
+	e2:SetReset(reset_flag)
+	c:RegisterEffect(e2)
+end
+function Auxiliary.CheckConfusedCondition(e,tp,eg,ep,ev,re,r,rp)
+	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
+	return loc==PM_LOCATION_ACTIVE and re:GetHandler():IsConfused() and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
+end
+function Auxiliary.CheckConfusedOperation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Duel.Hint(HINT_CARD,0,c:GetOriginalCode())
+	local res=Duel.TossCoin(tp,1)
+	if res==RESULT_HEADS then return end
+	if not Duel.NegatePokemonAttack(ev) then return end
+	if not c:AddCounter(PM_DAMAGE_COUNTER,3) then return end
+	Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
+end
+--[[
+"Turn the Paralyzed Pokémon clockwise to show that it is Paralyzed.
+If a Pokémon is Paralyzed, it cannot attack or retreat. Remove the Special Condition Paralyzed during the between-turns step
+if your Pokémon was Paralyzed since the beginning of your last turn."
+]]
+--Paralyzed
+function Auxiliary.EnableParalyzed(c,con_func,reset_flag)
+	if c:IsParalyzed() or not c:IsCanBeParalyzed() then return end
+	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	if not c:IsPosition(PM_POS_FACEUP_CLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_CLOCKWISE) end
+	--paralyzed
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(PM_EFFECT_PARALYZED)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(PM_LOCATION_IN_PLAY)
+	if con_func then e1:SetCondition(con_func) end
+	e1:SetReset(reset_flag)
+	c:RegisterEffect(e1)
+	c:RegisterFlagEffect(PM_EFFECT_PARALYZED,reset_flag,EFFECT_FLAG_CLIENT_HINT,1,0,PM_DESC_PARALYZED)
+	--paralyzed check
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(PM_DESC_PARALYZED_CHECK)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_PHASE+PHASE_END)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetCountLimit(1)
+	e2:SetLabelObject(c)
+	e2:SetLabel(0)
+	if con_func then
+		e2:SetCondition(aux.AND(Auxiliary.CheckParalyzedCondition,con_func))
+	else
+		e2:SetCondition(Auxiliary.CheckParalyzedCondition)
+	end
+	e2:SetOperation(Auxiliary.CheckParalyzedOperation)
+	e2:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN)
+	Duel.RegisterEffect(e2,c:GetControler())
+end
+function Auxiliary.CheckParalyzedCondition(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	return tc:IsParalyzed() and Duel.GetTurnPlayer()==tp and Duel.GetTurnCount()~=e:GetLabel()
+end
+function Auxiliary.CheckParalyzedOperation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
+	Auxiliary.RemoveParalyzed(tc)
+end
+--[[
+"A Poisoned Pokémon takes damage between turns. When a Pokémon is Poisoned, put a Poison marker on it. Between turns, put a
+damage counter on your Poisoned Pokémon.
+Pokémon cannot have two Poison markers; if an attack gives it another Poison marker, the new Poisoned Condition simply
+replaces the old one."
+]]
+--Poisoned
+function Auxiliary.EnablePoisoned(c,con_func,reset_flag)
+	if not c:IsCanBePoisoned() then return end
+	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	if c:GetMarker(PM_POISON_MARKER)==1 then
+		c:RemoveMarker(c:GetControler(),PM_POISON_MARKER,1,REASON_RULE)
+		c:AddMarker(PM_POISON_MARKER,1)
+	else
+		c:AddMarker(PM_POISON_MARKER,1)
+	end
+	--poisoned
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(PM_EFFECT_POISONED)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(PM_LOCATION_IN_PLAY)
+	if con_func then e1:SetCondition(con_func) end
+	e1:SetReset(reset_flag)
+	c:RegisterEffect(e1)
+	c:RegisterFlagEffect(PM_EFFECT_POISONED,reset_flag,EFFECT_FLAG_CLIENT_HINT,1,0,PM_DESC_POISONED)
+	--poisoned check
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(PM_DESC_POISONED_CHECK)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_PHASE+PHASE_END)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetCountLimit(1)
+	e2:SetLabelObject(c)
+	if con_func then
+		e2:SetCondition(aux.AND(Auxiliary.CheckPoisonedCondition,con_func))
+	else
+		e2:SetCondition(Auxiliary.CheckPoisonedCondition)
+	end
+	e2:SetOperation(Auxiliary.CheckPoisonedOperation)
+	Duel.RegisterEffect(e2,c:GetControler())
+end
+function Auxiliary.CheckPoisonedCondition(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	if tc:IsPoisoned() then
+		return true
+	else
+		e:Reset()
+		return false
+	end
+end
+function Auxiliary.CheckPoisonedOperation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
+	tc:AddCounter(PM_DAMAGE_COUNTER,1)
+end
+--remove all special conditions affecting a pokémon
+function Auxiliary.RemoveSpecialConditions(c)
+	Auxiliary.RemoveAsleep(c)
+	Auxiliary.RemoveBurned(c)
+	Auxiliary.RemoveConfused(c)
+	Auxiliary.RemoveParalyzed(c)
+	Auxiliary.RemovePoisoned(c)
+end
+--remove the asleep special condition affecting a pokémon 
+function Auxiliary.RemoveAsleep(c)
+	if c:IsPosition(PM_POS_FACEUP_COUNTERCLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_UPSIDE) end
+	if c:IsHasEffect(PM_EFFECT_ASLEEP) then c:ResetEffect(PM_EFFECT_ASLEEP,RESET_EVENT) end
+	if c:GetFlagEffect(PM_EFFECT_ASLEEP)~=0 then c:ResetFlagEffect(PM_EFFECT_ASLEEP) end
+end
+--remove the burned special condition affecting a pokémon
+function Auxiliary.RemoveBurned(c)
+	if c:GetMarker(PM_BURN_MARKER)~=0 then c:RemoveMarker(tp,PM_BURN_MARKER,1,REASON_RULE) end
+	if c:IsHasEffect(PM_EFFECT_BURNED) then c:ResetEffect(PM_EFFECT_BURNED,RESET_EVENT) end
+	if c:GetFlagEffect(PM_EFFECT_BURNED)~=0 then c:ResetFlagEffect(PM_EFFECT_BURNED) end
+end
+--remove the confused special condition affecting a pokémon
+function Auxiliary.RemoveConfused(c)
+	if c:IsHasEffect(PM_EFFECT_CONFUSED) then c:ResetEffect(PM_EFFECT_CONFUSED,RESET_EVENT) end
+	if c:GetFlagEffect(PM_EFFECT_CONFUSED)~=0 then c:ResetFlagEffect(PM_EFFECT_CONFUSED) end
+end
+--remove the paralyzed special condition affecting a pokémon
+function Auxiliary.RemoveParalyzed(c)
+	if c:IsPosition(PM_POS_FACEUP_CLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_UPSIDE) end
+	if c:IsHasEffect(PM_EFFECT_PARALYZED) then c:ResetEffect(PM_EFFECT_PARALYZED,RESET_EVENT) end
+	if c:GetFlagEffect(PM_EFFECT_PARALYZED)~=0 then c:ResetFlagEffect(PM_EFFECT_PARALYZED) end
+end
+--remove the poisoned special condition affecting a pokémon
+function Auxiliary.RemovePoisoned(c)
+	if c:GetMarker(PM_POISON_MARKER)~=0 then c:RemoveMarker(tp,PM_POISON_MARKER,1,REASON_RULE) end
+	if c:IsHasEffect(PM_EFFECT_POISONED) then c:ResetEffect(PM_EFFECT_POISONED,RESET_EVENT) end
+	if c:GetFlagEffect(PM_EFFECT_POISONED)~=0 then c:ResetFlagEffect(PM_EFFECT_POISONED) end
 end
 
 --==========[+Conditions]==========
