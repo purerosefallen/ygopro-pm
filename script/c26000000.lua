@@ -511,9 +511,7 @@ end
 --end turn
 function scard.endcon1(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return rc:IsActive() and rc:IsControler(tp) and loc==PM_LOCATION_ACTIVE
-		and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
+	return rc:IsActive() and rc:IsControler(tp) and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
 end
 function scard.endfilter(c,tp)
 	return c:IsMegaEvolution() and c:IsSummonType(PM_SUMMON_TYPE_EVOLVE) and c:IsControler(tp)

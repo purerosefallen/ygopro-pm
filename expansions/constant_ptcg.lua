@@ -183,7 +183,7 @@ PM_EFFECT_TYPE_PLAY					=EFFECT_TYPE_ACTIVATE		--Trainer cards that a player can
 PM_EFFECT_TYPE_POKEMON_TOOL			=EFFECT_TYPE_XMATERIAL		--Pokémon Tools that give Pokémon attacks or effects
 --Flags
 PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.EnablePokemonAttribute
-PM_EFFECT_FLAG_POKEMON_ATTACK		=0x100000000				--Included on all Pokémon attacks
+PM_EFFECT_FLAG_POKEMON_ATTACK		=0x10000000					--Included on all Pokémon attacks
 --Codes
 PM_EFFECT_CANNOT_PLAY				=EFFECT_CANNOT_ACTIVATE		--Prevent a card from being played or attached
 PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Put a Pokémon onto the Bench
