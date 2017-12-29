@@ -95,6 +95,10 @@ PM_POS_FACEUP_SIDEWAYS				=POS_FACEUP_DEFENSE		--The default position of a Poké
 PM_POS_FACEDOWN_SIDEWAYS			=POS_FACEDOWN_DEFENSE	--N/A
 --Types
 PM_TYPE_RULE						=TYPE_FUSION+TYPE_PENDULUM	--The type of Pokémon Rules to exist face-up in the extra deck
+PM_TYPE_ABILITY						=TYPE_EFFECT	--A special effect that is not an attack
+PM_TYPE_ANCIENT_TRAIT				=TYPE_SPIRIT	--A special effect that is not an ability
+PM_TYPE_POKE_BODY					=TYPE_CONTINUOUS--A Pokémon Power/Ability that is always active
+PM_TYPE_POKE_POWER					=TYPE_UNION		--A Pokémon Power/Ability that a player must trigger or announce using
 --↑Pokémon
 PM_TYPE_POKEMON						=TYPE_MONSTER	--Pokémon=Monster
 PM_TYPE_BASIC_POKEMON				=0x1			--"Clefairy Doll" (Base Set 70/102)
@@ -167,6 +171,7 @@ PM_SETNAME_TEAM_PLASMA					=0x2a		--"Skarmory" (Plasma Storm 87/135)
 PM_REASON_KNOCKED_OUT				=REASON_DESTROY		--Knocked Out=Destroy
 --Summon Type
 PM_SUMMON_TYPE_EVOLVE				=SUMMON_TYPE_XYZ	--Evolve=Xyz
+PM_SUMMON_TYPE_LEVELUP				=0x4d000000			--Pokémon LV.X
 --Status
 PM_STATUS_NO_RETREAT_COST			=STATUS_NO_LEVEL	--Pokémon with no Retreat Cost
 --Player

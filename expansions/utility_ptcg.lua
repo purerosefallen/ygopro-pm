@@ -1003,6 +1003,58 @@ function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
 end
+--put a damage counter(s) on another pokémon when your active pokémon attacks it
+function Auxiliary.AttackDamage(e,count,atg,bool_active,bool_bench)
+	--count: attack damage
+	--atg: attack target
+	--bool_active: false to not apply weakness and resistance to active pokémon
+	--bool_bench: true to apply weakness and resistance to benched pokémon
+	local atg=atg or Auxiliary.GetDefendingPokemon(e)
+	local bool_active=bool_active or true
+	local bool_bench=bool_bench or false
+	local c=e:GetHandler()
+	local tp=e:GetHandlerPlayer()
+	Duel.PokemonAttack(c,atg)
+	local energy=c:GetPokemonType()
+	local weakness_x2=atg.weakness_x2==energy
+	local weakness_10=atg.weakness_10==energy
+	local weakness_20=atg.weakness_20==energy
+	local weakness_30=atg.weakness_30==energy
+	local weakness_40=atg.weakness_40==energy
+	local resistance_20=atg.resistance_20==energy
+	local resistance_30=atg.resistance_30==energy
+	local dam=count/10
+	if atg:IsBench() and not bool_bench then return end
+	--apply weakness
+	if bool_active and weakness_x2 and atg:IsFaceup() and atg:IsRelateToBattle() then
+		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
+		atg:AddCounter(PM_DAMAGE_COUNTER,dam*2)
+	elseif bool_active and weakness_10 and atg:IsFaceup() and atg:IsRelateToBattle() then
+		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
+		atg:AddCounter(PM_DAMAGE_COUNTER,dam+1)
+	elseif bool_active and weakness_20 and atg:IsFaceup() and atg:IsRelateToBattle() then
+		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
+		atg:AddCounter(PM_DAMAGE_COUNTER,dam+2)
+	elseif bool_active and weakness_30 and atg:IsFaceup() and atg:IsRelateToBattle() then
+		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
+		atg:AddCounter(PM_DAMAGE_COUNTER,dam+3)
+	elseif bool_active and weakness_40 and atg:IsFaceup() and atg:IsRelateToBattle() then
+		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
+		atg:AddCounter(PM_DAMAGE_COUNTER,dam+4)
+	--apply resistance
+	elseif bool_active and resistance_20 and atg:IsFaceup() and atg:IsRelateToBattle() then
+		if dam<=2 then return end
+		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_DECREASE)
+		atg:AddCounter(PM_DAMAGE_COUNTER,dam-2)
+	elseif bool_active and resistance_30 and atg:IsFaceup() and atg:IsRelateToBattle() then
+		if dam<=3 then return end
+		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_DECREASE)
+		atg:AddCounter(PM_DAMAGE_COUNTER,dam-3)
+	--apply damage without weakness & resistance
+	elseif atg:IsFaceup() and atg:IsRelateToBattle() then
+		atg:AddCounter(PM_DAMAGE_COUNTER,dam)
+	end
+end
 --"[C]Collect Draw a card." (e.g. "Pansage KSS 2")
 function Auxiliary.AttackCollect(c)
 	local e1=Effect.CreateEffect(c)
@@ -1055,7 +1107,7 @@ function Auxiliary.EnablePokemonAbility(c,desc_id,cate,targ_func,op_func,con_fun
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
 end
---"The Retreat Cost of each Basic Pokémon in play is [C] less. (e.g. "Skyarrow Bridge NXD 91")
+--"The Retreat Cost of each Basic Pokémon in play is [C] less." (e.g. "Skyarrow Bridge NXD 91")
 function Auxiliary.EnableRetreatCostChange(c,val,range,s_range,o_range,targ_func,con_func)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -1509,6 +1561,10 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 			end
 end
 Auxiliary.econ5=Auxiliary.AttackCostCondition5
+--get your opponent's active pokémon that receives the attack
+function Auxiliary.GetDefendingPokemon(e)
+	return Duel.GetFirstMatchingCard(Auxiliary.ActivePokemonFilter,e:GetHandlerPlayer(),0,PM_LOCATION_ACTIVE,nil)
+end
 
 --==========[+Targets]==========
 --target for Duel.Hint(hint,player,desc) only
