@@ -47,7 +47,7 @@ CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 CARD_DOUBLE_COLORLESS_ENERGY		=26001096	--Base Set 96/102
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
 --↑You may have as many of the following cards in your deck as you like
-CARD_ARCEUS							=26042103	--"Arceus" (Arceus AR1)
+CARD_ARCEUS							=26042094	--"Arceus" (Arceus AR1)
 --↑Pokémon GX
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
 --↑Trainer
@@ -56,8 +56,8 @@ CARD_PUZZLE_OF_TIME					=26067109	--"Puzzle of Time" (BREAKpoint 109/122)
 PM_DAMAGE_COUNTER					=0x1600		--A Pokémon loses 10 HP for each Damage Counter on it
 PM_BURN_MARKER						=0x1601		--When a Pokémon is Burned, put a Burn marker on it
 PM_POISON_MARKER					=0x1602		--When a Pokémon is Poisoned, put a Poison marker on it
-PM_COLORING_COUNTER					=0x1603		--"Smeargle" (Wizards Promo 32/53)
-PM_LIGHTNING_ROD_MARKER				=0x1604		--"Electabuzz" (Wizards Promo 46/53)
+PM_COLORING_COUNTER					=0x1603		--"Smeargle" (Black Star Promo Wizards of the Coast 32/53)
+PM_LIGHTNING_ROD_MARKER				=0x1604		--"Electabuzz" (Black Star Promo Wizards of the Coast 46/53)
 PM_CHAR_COUNTER						=0x1605		--"Quilava" (Neo Genesis 47/111)
 PM_DARK_IVYSAUR_MARKER				=0x1606		--"Dark Ivysaur" (Best of Game 6/9)
 PM_IMPRISON_MARKER					=0x1607		--"Tropius δ" (Dragon Frontiers 23/101)
@@ -233,7 +233,7 @@ PM_EVENT_PRE_ATTACK					=EVENT_CHAIN_ACTIVATING	--Before a Confused Pokémon att
 PM_EVENT_ATTACK_END					=EVENT_CHAIN_SOLVED		--When a Pokémon finishes its attack
 --Categories
 PM_CATEGORY_COIN					=CATEGORY_COIN	--"Sabrina's ESP" (Gym Heroes 117/132)
-PM_CATEGORY_RECYCLE					=0x80000000		--"Pokémon Tower" (Wizards Promo 42)
+PM_CATEGORY_RECYCLE					=0x80000000		--"Pokémon Tower" (Black Star Promo Wizards of the Coast 42)
 --Descriptions
 --↑Win (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)
 PM_DESC_INVALID						=aux.Stringid(PM_STRING_WIN,0)	--"You have an invalid deck."
