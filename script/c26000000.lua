@@ -14,7 +14,7 @@ function scard.initial_effect(c)
 	e1:SetOperation(scard.operation)
 	c:RegisterEffect(e1)
 	--remove type
-	pm.EnableRemoveType(c,PM_TYPE_RULE)
+	pm.RuleRemoveType(c,PM_TYPE_RULE)
 	--draw
 	local e2=Effect.CreateEffect(c)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IMMEDIATELY_APPLY)
@@ -166,27 +166,27 @@ function scard.initial_effect(c)
 	e20:SetOperation(scard.winop)
 	c:RegisterEffect(e20)
 	--cannot bp
-	pm.EnableCannotBP(c)
+	pm.RuleCannotBP(c)
 	--infinite hand
-	pm.EnableInfiniteHand(c)
+	pm.RuleInfiniteHand(c)
 	--cannot change position
-	pm.EnableCannotChangePosition(c)
+	pm.RuleCannotChangePosition(c)
 	--cannot attack
-	pm.EnableCannotAttack(c)
+	pm.RuleCannotAttack(c)
 	--cannot direct attack
-	pm.EnableCannotDirectAttack(c)
+	pm.RuleCannotDirectAttack(c)
 	--indestructible
-	pm.EnableIndestructible(c,EFFECT_INDESTRUCTABLE_BATTLE)
+	pm.RuleIndestructible(c,EFFECT_INDESTRUCTABLE_BATTLE)
 	--no battle damage
-	pm.EnableNoBattleDamage(c)
+	pm.RuleNoBattleDamage(c)
 	--no effect damage
-	pm.EnableNoEffectDamage(c)
+	pm.RuleNoEffectDamage(c)
 	--cannot summon/mset
-	pm.EnableCannotSummonMSet(c)
+	pm.RuleCannotSummonMSet(c)
 	--cannot sset
-	pm.EnableCannotSSet(c)
+	pm.RuleCannotSSet(c)
 	--protect
-	pm.EnableProtection(c)
+	pm.RuleProtect(c)
 end
 scard.pokemon_card=true
 --apply

@@ -430,6 +430,8 @@ Duel.PutOnBenchComplete=Duel.SpecialSummonComplete
 Duel.IsPlayerCanPlayPokemon=Duel.IsPlayerCanSpecialSummonMonster
 --check if a player can put a pokémon onto their bench
 Duel.IsPlayerCanPutPokemonOnBench=Duel.IsPlayerCanSpecialSummonMonster
+--a player's active pokémon attacks the opponent's defending pokémon
+Duel.PokemonAttack=Duel.CalculateDamage
 --negate a pokémon's attack
 Duel.NegatePokemonAttack=Duel.NegateActivation
 --check if it is the first turn of the game
@@ -464,7 +466,7 @@ end
 
 --==========[+RuleFunctions]==========
 --functions that are included on the rules card
-function Auxiliary.EnableProtection(c)
+function Auxiliary.RuleProtect(c)
 	--immune
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
@@ -480,107 +482,88 @@ function Auxiliary.EnableProtection(c)
 	end)
 	c:RegisterEffect(e1b)
 	--indestructible
-	Auxiliary.EnableSingleIndestructible(c)
-	--cannot release
-	Auxiliary.EnableCannotRelease(c)
-	--cannot be material
-	Auxiliary.EnableCannotBeMaterial(c)
-	--cannot change zone
-	Auxiliary.EnableCannotChangeZone(c)
-end
---indestructible (EFFECT_TYPE_SINGLE)
-function Auxiliary.EnableSingleIndestructible(c)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_INDESTRUCTABLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetRange(PM_LOCATION_RULES)
-	e1:SetValue(1)
-	c:RegisterEffect(e1)
-	local e1b=e1:Clone()
-	e1b:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	c:RegisterEffect(e1b)
-	local e1c=e1:Clone()
-	e1c:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	c:RegisterEffect(e1c)
-end
---cannot release
-function Auxiliary.EnableCannotRelease(c)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UNRELEASABLE_SUM)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetRange(PM_LOCATION_RULES)
-	e1:SetValue(1)
-	c:RegisterEffect(e1)
-	local e1b=e1:Clone()
-	e1b:SetCode(EFFECT_UNRELEASABLE_NONSUM)
-	c:RegisterEffect(e1b)
-	local e1c=e1:Clone()
-	e1c:SetCode(EFFECT_UNRELEASABLE_EFFECT)
-	c:RegisterEffect(e1c)
-end
---cannot be material
-function Auxiliary.EnableCannotBeMaterial(c)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetValue(1)
-	c:RegisterEffect(e1)
-	local e1b=e1:Clone()
-	e1b:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
-	c:RegisterEffect(e1b)
-	local e1c=e1:Clone()
-	e1c:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
-	c:RegisterEffect(e1c)
-	local e1d=e1:Clone()
-	e1d:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-	c:RegisterEffect(e1d)
-end
---cannot change zone
-function Auxiliary.EnableCannotChangeZone(c)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_CANNOT_TO_HAND)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetRange(PM_LOCATION_RULES)
-	c:RegisterEffect(e1)
-	local e1b=e1:Clone()
-	e1b:SetCode(EFFECT_CANNOT_TO_DECK)
-	c:RegisterEffect(e1b)
-	local e1c=e1:Clone()
-	e1c:SetCode(EFFECT_CANNOT_REMOVE) 
-	c:RegisterEffect(e1c)
-	local e1d=e1:Clone()
-	e1d:SetCode(EFFECT_CANNOT_TO_GRAVE)
-	c:RegisterEffect(e1d)
 	local e2=Effect.CreateEffect(c)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_MONSTER_SSET)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e2:SetCode(EFFECT_INDESTRUCTABLE)
+	e2:SetRange(PM_LOCATION_RULES)
+	e2:SetValue(1)
 	c:RegisterEffect(e2)
 	local e2b=e2:Clone()
-	e2b:SetCode(EFFECT_CANNOT_SUMMON)
+	e2b:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	c:RegisterEffect(e2b)
 	local e2c=e2:Clone()
-	e2c:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
+	e2c:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	c:RegisterEffect(e2c)
-	local e2d=e2:Clone()
-	e2d:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	c:RegisterEffect(e2d)
-	local e2e=e2:Clone()
-	e2e:SetCode(EFFECT_CANNOT_MSET)
-	c:RegisterEffect(e2e)
-	local e2f=e2:Clone()
-	e2f:SetCode(EFFECT_CANNOT_SSET)
-	c:RegisterEffect(e2f)
-	local e2g=e2:Clone()
-	e2g:SetCode(EFFECT_CANNOT_USE_AS_COST)
-	c:RegisterEffect(e2g)
+	--cannot release
+	local e3=Effect.CreateEffect(c)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_UNRELEASABLE_SUM)
+	e3:SetRange(PM_LOCATION_RULES)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
+	local e3b=e3:Clone()
+	e3b:SetCode(EFFECT_UNRELEASABLE_NONSUM)
+	c:RegisterEffect(e3b)
+	local e3c=e3:Clone()
+	e3c:SetCode(EFFECT_UNRELEASABLE_EFFECT)
+	c:RegisterEffect(e3c)
+	--cannot be material
+	local e4=Effect.CreateEffect(c)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
+	e4:SetValue(1)
+	c:RegisterEffect(e4)
+	local e4b=e4:Clone()
+	e4b:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+	c:RegisterEffect(e4b)
+	local e4c=e4:Clone()
+	e4c:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
+	c:RegisterEffect(e4c)
+	local e4d=e4:Clone()
+	e4d:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	c:RegisterEffect(e4d)
+	--cannot change zone
+	local e5=Effect.CreateEffect(c)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetCode(EFFECT_CANNOT_TO_HAND)
+	e5:SetRange(PM_LOCATION_RULES)
+	c:RegisterEffect(e5)
+	local e5b=e5:Clone()
+	e5b:SetCode(EFFECT_CANNOT_TO_DECK)
+	c:RegisterEffect(e5b)
+	local e5c=e5:Clone()
+	e5c:SetCode(EFFECT_CANNOT_REMOVE) 
+	c:RegisterEffect(e5c)
+	local e5d=e5:Clone()
+	e5d:SetCode(EFFECT_CANNOT_TO_GRAVE)
+	c:RegisterEffect(e5d)
+	local e6=Effect.CreateEffect(c)
+	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e6:SetType(EFFECT_TYPE_SINGLE)
+	e6:SetCode(EFFECT_CANNOT_SUMMON)
+	c:RegisterEffect(e6)
+	local e6b=e6:Clone()
+	e6b:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
+	c:RegisterEffect(e6b)
+	local e6c=e6:Clone()
+	e6c:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	c:RegisterEffect(e6c)
+	local e6d=e6:Clone()
+	e6d:SetCode(EFFECT_CANNOT_MSET)
+	c:RegisterEffect(e6d)
+	local e6e=e6:Clone()
+	e6e:SetCode(EFFECT_CANNOT_SSET)
+	c:RegisterEffect(e6e)
+	local e6f=e6:Clone()
+	e6f:SetCode(EFFECT_CANNOT_USE_AS_COST)
+	c:RegisterEffect(e6f)
 end
 --remove type
-function Auxiliary.EnableRemoveType(c,val,range)
+function Auxiliary.RuleRemoveType(c,val,range)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_REMOVE_TYPE)
@@ -590,7 +573,7 @@ function Auxiliary.EnableRemoveType(c,val,range)
 	c:RegisterEffect(e1)
 end
 --cannot bp
-function Auxiliary.EnableCannotBP(c)
+function Auxiliary.RuleCannotBP(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_BP)
@@ -600,7 +583,7 @@ function Auxiliary.EnableCannotBP(c)
 	c:RegisterEffect(e1)
 end
 --infinite hand
-function Auxiliary.EnableInfiniteHand(c)
+function Auxiliary.RuleInfiniteHand(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_HAND_LIMIT)
@@ -611,7 +594,7 @@ function Auxiliary.EnableInfiniteHand(c)
 	c:RegisterEffect(e1)
 end
 --cannot change position
-function Auxiliary.EnableCannotChangePosition(c)
+function Auxiliary.RuleCannotChangePosition(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
@@ -620,8 +603,8 @@ function Auxiliary.EnableCannotChangePosition(c)
 	e1:SetTargetRange(LOCATION_MZONE,0)
 	c:RegisterEffect(e1)
 end
---rule: cannot attack (EFFECT_TYPE_FIELD)
-function Auxiliary.EnableCannotAttack(c)
+--cannot attack
+function Auxiliary.RuleCannotAttack(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_ATTACK)
@@ -634,7 +617,7 @@ function Auxiliary.EnableCannotAttack(c)
 	c:RegisterEffect(e1)
 end
 --cannot direct attack
-function Auxiliary.EnableCannotDirectAttack(c)
+function Auxiliary.RuleCannotDirectAttack(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
@@ -643,8 +626,8 @@ function Auxiliary.EnableCannotDirectAttack(c)
 	e1:SetTargetRange(LOCATION_MZONE,0)
 	c:RegisterEffect(e1)
 end
---indestructible (EFFECT_TYPE_FIELD)
-function Auxiliary.EnableIndestructible(c,code1,...)
+--indestructible
+function Auxiliary.RuleIndestructible(c,code1,...)
 	--code1,...: EFFECT_INDESTRUCTABLE, EFFECT_INDESTRUCTABLE_EFFECT and/or EFFECT_INDESTRUCTABLE_BATTLE
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -661,7 +644,7 @@ function Auxiliary.EnableIndestructible(c,code1,...)
 	end
 end
 --no battle damage
-function Auxiliary.EnableNoBattleDamage(c)
+function Auxiliary.RuleNoBattleDamage(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
@@ -676,7 +659,7 @@ function Auxiliary.EnableNoBattleDamage(c)
 	c:RegisterEffect(e2)
 end
 --no effect damage
-function Auxiliary.EnableNoEffectDamage(c)
+function Auxiliary.RuleNoEffectDamage(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CHANGE_DAMAGE)
@@ -697,7 +680,7 @@ function Auxiliary.EnableNoEffectDamage(c)
 	c:RegisterEffect(e2)
 end
 --cannot summon/mset
-function Auxiliary.EnableCannotSummonMSet(c)
+function Auxiliary.RuleCannotSummonMSet(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_SUMMON)
@@ -710,7 +693,7 @@ function Auxiliary.EnableCannotSummonMSet(c)
 	c:RegisterEffect(e2)
 end
 --cannot sset
-function Auxiliary.EnableCannotSSet(c)
+function Auxiliary.RuleCannotSSet(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_SSET)
@@ -1009,6 +992,7 @@ function Auxiliary.AttackDamage(e,count,atg,bool_active,bool_bench)
 	--atg: attack target
 	--bool_active: false to not apply weakness and resistance to active pokémon
 	--bool_bench: true to apply weakness and resistance to benched pokémon
+	count=count/10
 	local atg=atg or Auxiliary.GetDefendingPokemon(e)
 	local bool_active=bool_active or true
 	local bool_bench=bool_bench or false
@@ -1023,37 +1007,22 @@ function Auxiliary.AttackDamage(e,count,atg,bool_active,bool_bench)
 	local weakness_40=atg.weakness_40==energy
 	local resistance_20=atg.resistance_20==energy
 	local resistance_30=atg.resistance_30==energy
-	local dam=count/10
+	local ct=count
 	if atg:IsBench() and not bool_bench then return end
-	--apply weakness
-	if bool_active and weakness_x2 and atg:IsFaceup() and atg:IsRelateToBattle() then
-		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
-		atg:AddCounter(PM_DAMAGE_COUNTER,dam*2)
-	elseif bool_active and weakness_10 and atg:IsFaceup() and atg:IsRelateToBattle() then
-		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
-		atg:AddCounter(PM_DAMAGE_COUNTER,dam+1)
-	elseif bool_active and weakness_20 and atg:IsFaceup() and atg:IsRelateToBattle() then
-		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
-		atg:AddCounter(PM_DAMAGE_COUNTER,dam+2)
-	elseif bool_active and weakness_30 and atg:IsFaceup() and atg:IsRelateToBattle() then
-		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
-		atg:AddCounter(PM_DAMAGE_COUNTER,dam+3)
-	elseif bool_active and weakness_40 and atg:IsFaceup() and atg:IsRelateToBattle() then
-		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
-		atg:AddCounter(PM_DAMAGE_COUNTER,dam+4)
-	--apply resistance
-	elseif bool_active and resistance_20 and atg:IsFaceup() and atg:IsRelateToBattle() then
-		if dam<=2 then return end
-		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_DECREASE)
-		atg:AddCounter(PM_DAMAGE_COUNTER,dam-2)
-	elseif bool_active and resistance_30 and atg:IsFaceup() and atg:IsRelateToBattle() then
-		if dam<=3 then return end
-		Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_DECREASE)
-		atg:AddCounter(PM_DAMAGE_COUNTER,dam-3)
-	--apply damage without weakness & resistance
-	elseif atg:IsFaceup() and atg:IsRelateToBattle() then
-		atg:AddCounter(PM_DAMAGE_COUNTER,dam)
+	if atg:IsFacedown() or not atg:IsRelateToBattle() then return end
+	if bool_active then
+		--apply weakness & resistance
+		if weakness_x2 then ct=count*2
+		elseif weakness_10 then ct=count+1
+		elseif weakness_20 then ct=count+2
+		elseif weakness_30 then ct=count+3
+		elseif weakness_40 then ct=count+4
+		elseif resistance_20 then ct=count-2
+		elseif resistance_30 then ct=count-3 end
 	end
+	if ct>count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
+	elseif ct<count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_DECREASE) end
+	atg:AddCounter(PM_DAMAGE_COUNTER,ct)
 end
 --"[C]Collect Draw a card." (e.g. "Pansage KSS 2")
 function Auxiliary.AttackCollect(c)
