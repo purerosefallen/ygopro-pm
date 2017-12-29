@@ -3,7 +3,7 @@ local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	--sort deck or to hand
-	pm.EnableTrainerPlay(c,0,scard.opttg,scard.optop)
+	pm.EnableTrainerPlay(c,nil,scard.opttg,scard.optop)
 end
 scard.pokemon_card=true
 function scard.opttg(e,tp,eg,ep,ev,re,r,rp,chk)

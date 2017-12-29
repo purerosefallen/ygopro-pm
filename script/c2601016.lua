@@ -1,9 +1,9 @@
---Computer Error (Wizards Black Star Promo 16)
+--Computer Error (Black Star Promo Wizards of the Coast 16)
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	--draw
-	pm.EnableTrainerPlay(c,0,scard.drtg,scard.drop)
+	pm.EnableTrainerPlay(c,nil,scard.drtg,scard.drop)
 end
 scard.pokemon_card=true
 function scard.drtg(e,tp,eg,ep,ev,re,r,rp,chk)

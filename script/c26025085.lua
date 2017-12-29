@@ -1,4 +1,4 @@
---Fluffy Berry (Unseen Forces 85/115)
+--Fluffy Berry (EX Unseen Forces 85/115)
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)

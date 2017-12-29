@@ -1,9 +1,9 @@
---Trevor (XY Promo XY33)
+--Trevor (Black Star Promo XY33)
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	--search
-	pm.EnableTrainerPlay(c,0,scard.thtg,scard.thop)
+	pm.EnableTrainerPlay(c,nil,scard.thtg,scard.thop)
 end
 scard.pokemon_card=true
 function scard.thfilter(c)

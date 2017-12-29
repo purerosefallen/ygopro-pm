@@ -1,9 +1,9 @@
---Karen (XY Promo XY177)
+--Karen (Black Star Promo XY177)
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	--to deck
-	pm.EnableTrainerPlay(c,0,scard.tdtg,scard.tdop)
+	pm.EnableTrainerPlay(c,nil,scard.tdtg,scard.tdop)
 end
 scard.pokemon_card=true
 function scard.tdfilter(c)

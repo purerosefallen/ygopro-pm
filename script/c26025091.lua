@@ -1,4 +1,4 @@
---Sitrus Berry (Unseen Forces 91/115)
+--Sitrus Berry (EX Unseen Forces 91/115)
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)

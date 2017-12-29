@@ -5,7 +5,7 @@ local scard,sid=pm.GetID()
 os=require('os')
 function scard.initial_effect(c)
 	--draw
-	pm.EnableTrainerPlay(c,0,scard.drtg,scard.drop)
+	pm.EnableTrainerPlay(c,nil,scard.drtg,scard.drop)
 end
 scard.pokemon_card=true
 function scard.filter(c)

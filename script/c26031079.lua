@@ -1,4 +1,4 @@
---Phoebe's Stadium (Power Keepers 79/108)
+--Phoebe's Stadium (EX Power Keepers 79/108)
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)

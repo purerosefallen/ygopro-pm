@@ -1,4 +1,4 @@
---Oran Berry (Ruby & Sapphire 85/109)
+--Oran Berry (EX Ruby & Sapphire 85/109)
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
