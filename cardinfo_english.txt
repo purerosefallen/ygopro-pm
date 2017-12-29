@@ -29,8 +29,12 @@
 0x200	Fairy
 0x400	Dragon
 0x44	Water&Darkness
+0x48	Lightning&Darkness
 0x50	Psychic&Darkness
 0x60	Fighting&Darkness
+0x90	Psychic&Metal
+0xa0	Fighting&Metal
+0x210	Psychic&Fairy
 0xfff	All Energy
 ##level
 0x0	No Retreat Cost
@@ -80,7 +84,7 @@
 0x8000000	Coin/RPS/Guess     
 0x10000000	#Fusion            
 0x20000000	#Synchro           
-0x40000000	Evolution          
+0x40000000	Evolution/Level-Up 
 0x80000000	Restrict Ability   
 ##race
 0x0	No Monster Type
@@ -119,22 +123,22 @@
 0x40	Rule      
 0x80	N/A       
 0x100	N/A       
-0x200	N/A       
-0x400	N/A       
+0x200	Anc. Trait
+0x400	Poké-Power
 0x800	N/A       
 0x1000	N/A       
 0x2000	N/A       
 0x4000	Token     
 0x8000	N/A       
 0x10000	N/A       
-0x20000	N/A       
+0x20000	Poké-Body 
 0x40000	N/A       
 0x80000	Stadium   
 0x100000	N/A       
 0x200000	N/A       
 0x400000	N/A       
 0x800000	N/A       
-0x1000000	Pendulum  
+0x1000000	Evo/LVX   
 0x2000000	N/A       
 0x4000000	N/A       
 ##setname
@@ -173,7 +177,7 @@
 0x1f	δ(Delta)	δ-デルタ
 0x20	Holon	ホロン
 0x1020	Holon Energy	ホロンエネルギー
-0x21	Pokémon LV.X(Level-Up)
+0x21	Pokémon LV.X(Level-Up)	???
 0x22	Fossil	化石
 0x23	Team Galactic's Invention	???
 0x24	Pokémon SP	???
@@ -181,7 +185,7 @@
 0x26	Item	グッズ
 0x27	Pokémon-EX	ポケモンEX
 0x28	Restored Pokémon	復元ポケモン
-0x29	ACE SPEC	ACE	SPEC
+0x29	ACE SPEC	ACE SPEC
 0x2a	Team Plasma	プラズマ団
 0x2b	MEGA Evolution Pokémon	メガシンカ
 0x2c	Pokémon BREAK	ポケモンBREAK

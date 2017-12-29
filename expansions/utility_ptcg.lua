@@ -48,6 +48,22 @@ end
 function Card.IsPokemon(c)
 	return c:IsType(PM_TYPE_POKEMON)
 end
+--check if a pokémon has a Pokémon Power/Ability
+function Card.HasAbility(c)
+	return c:IsType(PM_TYPE_ABILITY)
+end
+--check if a pokémon has an Ancient Trait
+function Card.HasAncientTrait(c)
+	return c:IsType(PM_TYPE_ANCIENT_TRAIT)
+end
+--check if a pokémon has a Poké-Body
+function Card.HasPokeBody(c)
+	return c:IsType(PM_TYPE_POKE_BODY)
+end
+--check if a pokémon has a Poké-Power
+function Card.HasPokePower(c)
+	return c:IsType(PM_TYPE_POKE_POWER)
+end
 --check if a card is a Trainer
 function Card.IsTrainer(c)
 	return c:IsType(PM_TYPE_TRAINER) and not c:IsHasEffect(PM_EFFECT_REMOVE_TRAINER)
@@ -226,11 +242,11 @@ end
 --get the cards attached underneath another card
 Card.GetAttachmentGroup=Card.GetOverlayGroup
 --get a pokémon's CURRENT type (color)
-Card.GetEnergyType=Card.GetAttribute
+Card.GetPokemonType=Card.GetAttribute
 --get a pokémon's ORIGINAL type (color)
-Card.GetOriginalEnergyType=Card.GetOriginalAttribute
+Card.GetOriginalPokemonType=Card.GetOriginalAttribute
 --get the type (color) a pokémon had when it was on the field
-Card.GetPreviousEnergyType=Card.GetPreviousAttributeOnField
+Card.GetPreviousPokemonType=Card.GetPreviousAttributeOnField
 --check what a pokémon's current type (color) is
 Card.IsPokemonType=Card.IsAttribute
 --check if a pokémon is active
@@ -1174,10 +1190,9 @@ function Auxiliary.CheckBurnedOperation(e,tp,eg,ep,ev,re,r,rp)
 end
 --[[
 "Turn a Confused Pokémon with its head pointed toward you to show that it is Confused.
-If your Pokémon is Confused, you must flip a coin before attacking with it. If heads, the attack works normally. If tails, the
-attack does nothing, and put 3 damage counters on your Confused Pokémon."
+If your Pokémon is Confused, you must flip a coin before attacking with it. If heads, the attack works normally. If tails,
+the attack does nothing, and put 3 damage counters on your Confused Pokémon."
 ]]
---Confused
 function Auxiliary.EnableConfused(c,con_func,reset_flag)
 	if c:IsConfused() or not c:IsCanBeConfused() then return end
 	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
@@ -1225,7 +1240,6 @@ end
 If a Pokémon is Paralyzed, it cannot attack or retreat. Remove the Special Condition Paralyzed during the between-turns step
 if your Pokémon was Paralyzed since the beginning of your last turn."
 ]]
---Paralyzed
 function Auxiliary.EnableParalyzed(c,con_func,reset_flag)
 	if c:IsParalyzed() or not c:IsCanBeParalyzed() then return end
 	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
@@ -1273,7 +1287,6 @@ damage counter on your Poisoned Pokémon.
 Pokémon cannot have two Poison markers; if an attack gives it another Poison marker, the new Poisoned Condition simply
 replaces the old one."
 ]]
---Poisoned
 function Auxiliary.EnablePoisoned(c,con_func,reset_flag)
 	if not c:IsCanBePoisoned() then return end
 	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
