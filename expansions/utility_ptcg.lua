@@ -697,6 +697,27 @@ function Auxiliary.RuleCannotSSet(c)
 	e1:SetTargetRange(1,0)
 	c:RegisterEffect(e1)
 end
+--adjust extra deck
+function Auxiliary.RuleAdjustExtraDeck(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_ADJUST)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e1:SetRange(PM_LOCATION_RULES)
+	e1:SetCondition(Auxiliary.AdjustExtraDeckCondition)
+	e1:SetOperation(Auxiliary.AdjustExtraDeckOperation)
+	c:RegisterEffect(e1)
+end
+function Auxiliary.AdjustExtraDeckFilter(c)
+	return c:IsType(TYPE_PENDULUM) and c:IsPreviousLocation(PM_LOCATION_IN_PLAY)
+end
+function Auxiliary.AdjustExtraDeckCondition(e)
+	return Duel.IsExistingMatchingCard(Auxiliary.AdjustExtraDeckFilter,e:GetHandlerPlayer(),LOCATION_EXTRA,0,1,nil)
+end
+function Auxiliary.AdjustExtraDeckOperation(e)
+	local g=Duel.GetMatchingGroup(Auxiliary.AdjustExtraDeckFilter,e:GetHandlerPlayer(),LOCATION_EXTRA,0,nil)
+	Duel.SendtoDPile(g,REASON_RULE)
+end
 
 --==========[+Pokémon]==========
 --Pokémon card

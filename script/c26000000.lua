@@ -185,6 +185,8 @@ function scard.initial_effect(c)
 	pm.RuleCannotSummonMSet(c)
 	--cannot sset
 	pm.RuleCannotSSet(c)
+	--adjust extra deck
+	pm.RuleAdjustExtraDeck(c)
 	--protect
 	pm.RuleProtect(c)
 end
