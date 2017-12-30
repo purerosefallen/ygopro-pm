@@ -309,7 +309,7 @@ Card.IsCanAddMarker=Card.IsCanAddCounter
 --check if a marker can be removed from a card
 Card.IsCanRemoveMarker=Card.IsCanRemoveCounter
 --check if a pokémon can be put in play
-Card.IsCanBePutOnBench=Card.IsCanBeSpecialSummoned
+Card.IsCanBePutInPlay=Card.IsCanBeSpecialSummoned
 --set the group underneath a card as attachments that belong to it
 Card.SetAttachment=Card.SetMaterial
 --check if a card can be put in the discard pile
@@ -423,14 +423,8 @@ Duel.Attach=Duel.Overlay
 Duel.PutInPlay=Duel.SpecialSummon
 Duel.PutInPlayStep=Duel.SpecialSummonStep
 Duel.PutInPlayComplete=Duel.SpecialSummonComplete
---a player puts a pokémon onto their bench
-Duel.PutOnBench=Duel.SpecialSummon
-Duel.PutOnBenchStep=Duel.SpecialSummonStep
-Duel.PutOnBenchComplete=Duel.SpecialSummonComplete
 --check if a player can put a pokémon in play
 Duel.IsPlayerCanPutPokemonInPlay=Duel.IsPlayerCanSpecialSummonMonster
---check if a player can put a pokémon onto their bench
-Duel.IsPlayerCanPutPokemonOnBench=Duel.IsPlayerCanSpecialSummonMonster
 --a player's active pokémon attacks the opponent's defending pokémon
 Duel.PokemonAttack=Duel.CalculateDamage
 --negate a pokémon's attack
@@ -829,7 +823,7 @@ function Auxiliary.EvolvePokemonTarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tid=Duel.GetTurnCount()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
 		and Duel.IsExistingMatchingCard(Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil,c:GetCode(),tid)
-		and c:IsCanBePutOnBench(e,PM_SUMMON_TYPE_EVOLVE,tp,false,false) end
+		and c:IsCanBePutInPlay(e,PM_SUMMON_TYPE_EVOLVE,tp,false,false) end
 end
 function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
