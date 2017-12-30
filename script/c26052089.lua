@@ -13,7 +13,6 @@ end
 scard.pokemon_card=true
 scard.height=5.11
 scard.devolve_list={CARD_FRAXURE,CARD_AXEW}
-scard.evolve_list={CARD_HAXORUS}
 function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
 	pm.AttackDamage(e,60)
 end
