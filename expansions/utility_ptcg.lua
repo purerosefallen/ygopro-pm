@@ -12,6 +12,7 @@
 --[+UniversalFunctions]......................................functions that are included on every script
 --[+RuleFunctions]...........................................functions that are included on the rules card
 --[+Pokémon].................................................functions that are included on every Pokémon card
+--[+Evolution]...............................................functions that are included on every Evolution card
 --[+Energy]..................................................functions that are included on every Energy card
 --[+Trainer].................................................functions that are included on every Trainer card
 --[+Attack]..................................................attacks that are shared by many pokémon
@@ -143,11 +144,11 @@ function Card.IsPokemonGX(c)
 end
 --check if a pokémon has an owner
 function Card.IsOwnerPokemon(c)
-	return c:IsPokemon() and (c:IsSetCard(PM_SETNAME_MISTY)
-		or c:IsSetCard(PM_SETNAME_BROCK) or c:IsSetCard(PM_SETNAME_ERIKA) or c:IsSetCard(PM_SETNAME_SABRINA)
-		or c:IsSetCard(PM_SETNAME_LT_SURGE) or c:IsSetCard(PM_SETNAME_BLAINE) or c:IsSetCard(PM_SETNAME_GIOVANNI)
-		or c:IsSetCard(PM_SETNAME_KOGA) or c:IsSetCard(PM_SETNAME_TEAM_MAGMA) or c:IsSetCard(PM_SETNAME_TEAM_AQUA)
-		or c:IsSetCard(PM_SETNAME_ROCKETS)) --update with new owners here
+	return c:IsPokemon() and (c:IsSetCard(PM_SETNAME_OWNER)
+		or c:IsSetCard(PM_SETNAME_MISTY) or c:IsSetCard(PM_SETNAME_BROCK) or c:IsSetCard(PM_SETNAME_ERIKA)
+		or c:IsSetCard(PM_SETNAME_SABRINA) or c:IsSetCard(PM_SETNAME_LT_SURGE) or c:IsSetCard(PM_SETNAME_BLAINE)
+		or c:IsSetCard(PM_SETNAME_GIOVANNI) or c:IsSetCard(PM_SETNAME_KOGA) or c:IsSetCard(PM_SETNAME_TEAM_MAGMA)
+		or c:IsSetCard(PM_SETNAME_TEAM_AQUA) or c:IsSetCard(PM_SETNAME_ROCKETS)) --update with new owners here
 end
 --check if a card is a Stadium
 function Card.IsStadium(c)
@@ -419,15 +420,15 @@ Duel.LevelUp=Duel.Overlay
 --attach a card to another card
 Duel.Attach=Duel.Overlay
 --a player puts a pokémon in play
-Duel.PlayPokemon=Duel.SpecialSummon
-Duel.PlayPokemonStep=Duel.SpecialSummonStep
-Duel.PlayPokemonComplete=Duel.SpecialSummonComplete
+Duel.PutInPlay=Duel.SpecialSummon
+Duel.PutInPlayStep=Duel.SpecialSummonStep
+Duel.PutInPlayComplete=Duel.SpecialSummonComplete
 --a player puts a pokémon onto their bench
 Duel.PutOnBench=Duel.SpecialSummon
 Duel.PutOnBenchStep=Duel.SpecialSummonStep
 Duel.PutOnBenchComplete=Duel.SpecialSummonComplete
 --check if a player can put a pokémon in play
-Duel.IsPlayerCanPlayPokemon=Duel.IsPlayerCanSpecialSummonMonster
+Duel.IsPlayerCanPutPokemonInPlay=Duel.IsPlayerCanSpecialSummonMonster
 --check if a player can put a pokémon onto their bench
 Duel.IsPlayerCanPutPokemonOnBench=Duel.IsPlayerCanSpecialSummonMonster
 --a player's active pokémon attacks the opponent's defending pokémon
@@ -803,6 +804,77 @@ function Auxiliary.RemoveEffectsOperation(e,tp,eg,ep,ev,re,r,rp)
 	Auxiliary.RemoveSpecialConditions(e:GetHandler())
 end
 
+--==========[+Evolution]==========
+--[[
+"If you have a card in your hand that says "Evolves from X," and X is the name of a Pokémon you had in play at the beginning
+of your turn, you may play that card in your hand on top of Pokémon X.
+This is called "evolving" a Pokémon."
+]]
+--Not fully implemented: Incompatible with Pokémon in LOCATION_SZONE
+function Auxiliary.EnableEvolve(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(PM_DESC_EVOLVE)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetTarget(Auxiliary.EvolvePokemonTarget)
+	e1:SetOperation(Auxiliary.EvolvePokemonOperation)
+	c:RegisterEffect(e1)
+end
+function Auxiliary.EvolvePokemonFilter(c,tcode,tid)
+	return c:IsFaceup() and c.evolve_list and table.unpack(c.evolve_list)==tcode and c:GetTurnID()~=tid
+end
+function Auxiliary.EvolvePokemonTarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	local tid=Duel.GetTurnCount()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
+		and Duel.IsExistingMatchingCard(Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil,c:GetCode(),tid)
+		and c:IsCanBePutOnBench(e,PM_SUMMON_TYPE_EVOLVE,tp,false,false) end
+end
+function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tid=Duel.GetTurnCount()
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_EVOLVE)
+	local g=Duel.SelectMatchingCard(tp,Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil,c:GetCode(),tid)
+	local tc=g:GetFirst()
+	if not tc then return end
+	Duel.HintSelection(g)
+	--register sequence
+	local seq=tc:GetSequence()
+	--register counters
+	local damc=tc:GetCounter(PM_DAMAGE_COUNTER)
+	local colc=tc:GetCounter(PM_COLORING_COUNTER)
+	local chac=tc:GetCounter(PM_CHAR_COUNTER)
+	--register markers
+	local burm=tc:GetMarker(PM_BURN_MARKER)
+	local poim=tc:GetMarker(PM_POISON_MARKER)
+	local rodm=tc:GetMarker(PM_LIGHTNING_ROD_MARKER)
+	local ivym=tc:GetMarker(PM_DARK_IVYSAUR_MARKER)
+	local prim=tc:GetMarker(PM_IMPRISON_MARKER)
+	local shom=tc:GetMarker(PM_SHOCKWAVE_MARKER)
+	local mg=tc:GetAttachmentGroup()
+	if tc:IsActive() then Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) end --workaround
+	if mg:GetCount()~=0 then
+		Duel.Attach(c,mg)
+	end
+	c:SetAttachment(g)
+	Duel.Evolve(c,g)
+	Duel.PutInPlay(c,PM_SUMMON_TYPE_EVOLVE,tp,tp,false,false,PM_POS_FACEUP_UPSIDE)
+	--retain sequence
+	if c:GetSequence()~=seq then Duel.MoveSequence(c,seq) end
+	--retain counters
+	if damc>0 then c:AddCounter(PM_DAMAGE_COUNTER,damc) end
+	if colc>0 then c:AddCounter(PM_COLORING_COUNTER,colc) end
+	if chac>0 then c:AddCounter(PM_CHAR_COUNTER,chac) end
+	--retain markers
+	if burm>0 then c:AddCounter(PM_BURN_MARKER,burm) end
+	if poim>0 then c:AddCounter(PM_POISON_MARKER,poim) end
+	if rodm>0 then c:AddCounter(PM_LIGHTNING_ROD_MARKER,rodm) end
+	if ivym>0 then c:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
+	if prim>0 then c:AddCounter(PM_IMPRISON_MARKER,prim) end
+	if shom>0 then c:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
+end
+
 --==========[+Energy]==========
 --Energy card
 function Auxiliary.EnableEnergyAttribute(c)
@@ -987,15 +1059,13 @@ function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func
 	c:RegisterEffect(e1)
 end
 --put a damage counter(s) on another pokémon when your active pokémon attacks it
-function Auxiliary.AttackDamage(e,count,atg,bool_active,bool_bench)
+function Auxiliary.AttackDamage(e,count,atg,bool_apply)
 	--count: attack damage
 	--atg: attack target
-	--bool_active: false to not apply weakness and resistance to active pokémon
-	--bool_bench: true to apply weakness and resistance to benched pokémon
+	--bool_apply: false to not apply weakness and resistance to the attack target
 	count=count/10
 	local atg=atg or Auxiliary.GetDefendingPokemon(e)
-	local bool_active=bool_active or true
-	local bool_bench=bool_bench or false
+	local bool_apply=bool_apply or true
 	local c=e:GetHandler()
 	local tp=e:GetHandlerPlayer()
 	Duel.PokemonAttack(c,atg)
@@ -1008,9 +1078,8 @@ function Auxiliary.AttackDamage(e,count,atg,bool_active,bool_bench)
 	local resistance_20=atg.resistance_20==energy
 	local resistance_30=atg.resistance_30==energy
 	local ct=count
-	if atg:IsBench() and not bool_bench then return end
-	if atg:IsFacedown() or not atg:IsRelateToBattle() then return end
-	if bool_active then
+	if ct==0 or atg:IsFacedown() or not atg:IsRelateToBattle() then return end
+	if bool_apply then
 		--apply weakness & resistance
 		if weakness_x2 then ct=count*2
 		elseif weakness_10 then ct=count+1
@@ -1054,6 +1123,32 @@ function Auxiliary.DrawOperation(p,ct)
 			end
 end
 Auxiliary.drop=Auxiliary.DrawOperation
+--"The Defending Pokémon can't retreat during your opponent's next turn." (e.g. "Axew Black Star Promo BW26")
+function Auxiliary.EnableCannotRetreat(c,desc,reset_flag,reset_count,con_func)
+	local reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	local reset_count=reset_count or 1
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(desc)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(PM_EFFECT_CANNOT_RETREAT)
+	e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+	if con_func then e1:SetCondition(con_func) end
+	e1:SetReset(reset_flag,reset_count)
+	c:RegisterEffect(e1)
+end
+--"This Pokémon can't attack" (e.g. "Haxorus NVI 88")
+function Auxiliary.EnableCannotAttack(c,desc,reset_flag,reset_count,con_func)
+	local reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	local reset_count=reset_count or 1
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(desc)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(PM_EFFECT_CANNOT_ATTACK)
+	e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+	if con_func then e1:SetCondition(con_func) end
+	e1:SetReset(reset_flag,reset_count)
+	c:RegisterEffect(e1)
+end
 
 --==========[+Ability]==========
 --Pokémon ability
@@ -1076,6 +1171,17 @@ function Auxiliary.EnablePokemonAbility(c,desc_id,cate,targ_func,op_func,con_fun
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
 end
+--"The Retreat Cost for each [P] and [D] Pokémon is 0." (e.g. "Moonlight Stadium GE 100")
+function Auxiliary.EnableNoRetreatCost(c,range,s_range,o_range,targ_func,con_func)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(PM_EFFECT_NO_RETREAT_COST)
+	e1:SetRange(range)
+	e1:SetTargetRange(s_range,o_range)
+	if targ_func then e1:SetTarget(targ_func) end
+	if con_func then e1:SetCondition(con_func) end
+	c:RegisterEffect(e1)
+end
 --"The Retreat Cost of each Basic Pokémon in play is [C] less." (e.g. "Skyarrow Bridge NXD 91")
 function Auxiliary.EnableRetreatCostChange(c,val,range,s_range,o_range,targ_func,con_func)
 	local e1=Effect.CreateEffect(c)
@@ -1086,17 +1192,6 @@ function Auxiliary.EnableRetreatCostChange(c,val,range,s_range,o_range,targ_func
 	if targ_func then e1:SetTarget(targ_func) end
 	if con_func then e1:SetCondition(con_func) end
 	e1:SetValue(val)
-	c:RegisterEffect(e1)
-end
---"The Retreat Cost for each [P] and [D] Pokémon is 0." (e.g. "Moonlight Stadium GE 100")
-function Auxiliary.EnableNoRetreatCost(c,range,s_range,o_range,targ_func,con_func)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(PM_EFFECT_NO_RETREAT_COST)
-	e1:SetRange(range)
-	e1:SetTargetRange(s_range,o_range)
-	if targ_func then e1:SetTarget(targ_func) end
-	if con_func then e1:SetCondition(con_func) end
 	c:RegisterEffect(e1)
 end
 

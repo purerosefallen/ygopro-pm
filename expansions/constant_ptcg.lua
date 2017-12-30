@@ -46,6 +46,10 @@ CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 --↑Special Energy cards
 CARD_DOUBLE_COLORLESS_ENERGY		=26001096	--Base Set 96/102
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
+--↑Pokémon that are part of an evolutionary line
+CARD_AXEW							=2618010	--Black Star Promo BW10
+CARD_FRAXURE						=26050087	--Noble Victories 87/101
+CARD_HAXORUS						=26050088	--Noble Victories 88/101
 --↑You may have as many of the following cards in your deck as you like
 CARD_ARCEUS							=26042094	--"Arceus" (Arceus AR1)
 --↑Pokémon GX
@@ -193,7 +197,6 @@ PM_EFFECT_FLAG_POKEMON_ATTACK		=0x10000000					--Included on all Pokémon attack
 PM_EFFECT_CANNOT_PLAY				=EFFECT_CANNOT_ACTIVATE		--Prevent a card from being played or attached
 PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Put a Pokémon onto the Bench
 PM_EFFECT_KNOCK_OUT_REPLACE			=EFFECT_DESTROY_REPLACE		--Prevent a Pokémon from being Knocked Out
-PM_EFFECT_CANNOT_ATTACK				=EFFECT_CANNOT_ATTACK		--Prevent a Pokémon from attacking
 PM_EFFECT_UPDATE_HIT_POINTS			=EFFECT_UPDATE_ATTACK		--Increase or decreas a Pokémon's HP
 PM_EFFECT_SELF_KNOCK_OUT			=EFFECT_SELF_DESTROY		--A Pokémon knocks itself out 
 PM_EFFECT_CHANGE_ENERGY				=EFFECT_CHANGE_CODE			--Change an Energy type
@@ -228,7 +231,8 @@ PM_EFFECT_RETREAT_COST_REPLACE		=714	--"Balloon Berry" (Neo Revelation 60/64)
 PM_EFFECT_RESTRICT_MIRACLE_ENERGY	=715	--"Miracle Energy" (Neo Destiny 16/105)
 PM_EFFECT_RESTRICT_POKEMON_STAR		=716	--"Mudkip Star" (Team Rocket Returns 107/109)
 PM_EFFECT_RESTRICT_ACE_SPEC			=717	--"Computer Search" (Boundaries Crossed 137/149)
-PM_EFFECT_EXTEND_BENCH_8			=718	--"Sky Field" (Roaring Skies 89/108)
+PM_EFFECT_CANNOT_ATTACK				=718	--"Haxorus" (Noble Victories 88/101)
+PM_EFFECT_EXTEND_BENCH_8			=719	--"Sky Field" (Roaring Skies 89/108)
 --Abilities that activate or actions that occur at the appropriate event
 PM_EVENT_TO_DISCARDPILE				=EVENT_TO_GRAVE			--When a card is put into the discard pile
 PM_EVENT_LEAVE_PLAY					=EVENT_LEAVE_FIELD		--When a card leaves play
@@ -250,9 +254,10 @@ PM_DESC_SLOWBRO						=aux.Stringid(PM_STRING_WIN,4)	--"If you use this attack wh
 PM_DESC_MULLIGAN					=aux.Stringid(PM_STRING_GAME,0)	--"Your opening hand has no Basic Pokémon. Select OK to take a mulligan."
 PM_DESC_MULLIGAN_WARN				=aux.Stringid(PM_STRING_GAME,1)	--"Your opponent had no Basic Pokémon in their hand and will redraw after you play your starting Pokémon."
 PM_DESC_EMPTY_BENCH					=aux.Stringid(PM_STRING_GAME,2)	--"You have no additional Basic Pokémon to start on your Bench. Select OK to continue."
-PM_DESC_DAMAGE_INCREASE				=aux.Stringid(PM_STRING_GAME,3)	--"Damage Increased"
-PM_DESC_DAMAGE_DECREASE				=aux.Stringid(PM_STRING_GAME,4)	--"Damage Decreased"
-PM_DESC_NO_TARGETS					=aux.Stringid(PM_STRING_GAME,5)	--"There are no valid targets to select. Click OK to continue."
+PM_DESC_SUDDEN_DEATH				=aux.Stringid(PM_STRING_GAME,3)	--"Sudden Death"
+PM_DESC_DAMAGE_INCREASE				=aux.Stringid(PM_STRING_GAME,4)	--"Damage Increased"
+PM_DESC_DAMAGE_DECREASE				=aux.Stringid(PM_STRING_GAME,5)	--"Damage Decreased"
+PM_DESC_NO_TARGETS					=aux.Stringid(PM_STRING_GAME,6)	--"There are no valid targets to select. Click OK to continue."
 --↑Special Condition
 PM_DESC_ASLEEP						=aux.Stringid(PM_STRING_CONDITION,0)	--"This Pokémon is Asleep."
 PM_DESC_ASLEEP_DESC					=aux.Stringid(PM_STRING_CONDITION,1)	--"While Asleep, a Pokémon cannot attack or retreat."
