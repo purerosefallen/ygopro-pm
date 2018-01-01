@@ -52,6 +52,8 @@ CARD_FRAXURE						=26050087	--Noble Victories 87/101
 CARD_HAXORUS						=26050088	--Noble Victories 88/101
 --↑You may have as many of the following cards in your deck as you like
 CARD_ARCEUS							=26042094	--"Arceus LV.X" (Arceus AR1)
+--↑Pokémon LV.X
+CARD_MEWTWO							=26001010	--"Mewtwo LV.X" (Legends Awakened 144/146)
 --↑Pokémon GX
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
 --↑Trainer
@@ -234,9 +236,11 @@ PM_EFFECT_IMMUNE_DAMAGE				=717	--"Squirtle" (Base Set 63/102)
 PM_EFFECT_IMMUNE_ATTACK				=718	--"Arceus" (Arceus AR9)
 PM_EFFECT_IMMUNE_ATTACK_EFFECT		=719	--"Arceus" (Arceus AR9)
 PM_EFFECT_IMMUNE_ATTACK_DAMAGE		=720	--"Arceus" (Arceus AR9)
-PM_EFFECT_RESTRICT_ACE_SPEC			=721	--"Computer Search" (Boundaries Crossed 137/149)
-PM_EFFECT_CANNOT_ATTACK				=722	--"Haxorus" (Noble Victories 88/101)
-PM_EFFECT_EXTEND_BENCH_8			=723	--"Sky Field" (Roaring Skies 89/108)
+PM_EFFECT_IMMUNE_ATTACK_POKEMONLVX	=721	--"Arceus" (Arceus AR9)
+PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED	=722	--"Mewtwo LV.X" (Legends Awakened 144/146)
+PM_EFFECT_RESTRICT_ACE_SPEC			=723	--"Computer Search" (Boundaries Crossed 137/149)
+PM_EFFECT_CANNOT_ATTACK				=724	--"Haxorus" (Noble Victories 88/101)
+PM_EFFECT_EXTEND_BENCH_8			=725	--"Sky Field" (Roaring Skies 89/108)
 --Abilities that activate or actions that occur at the appropriate event
 PM_EVENT_TO_DISCARDPILE				=EVENT_TO_GRAVE			--When a card is put into the discard pile
 PM_EVENT_LEAVE_PLAY					=EVENT_LEAVE_FIELD		--When a card leaves play

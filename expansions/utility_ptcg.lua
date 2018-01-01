@@ -20,6 +20,7 @@
 --[+Ability].................................................non-attack effects that are shared by many cards
 --[+SpecialCondition]........................................asleep, burned, confused, paralyzed and poisoned
 --[+Conditions]..............................................condition functions
+--[+Costs]...................................................cost functions
 --[+Targets].................................................target functions
 --[+Filters].................................................filter functions
 --[+Lists]...................................................lists of data that are included on many cards
@@ -174,6 +175,7 @@ function Card.IsOwnerPokemon(c)
 		or c:IsSetCard(PM_SETNAME_SABRINA) or c:IsSetCard(PM_SETNAME_LT_SURGE) or c:IsSetCard(PM_SETNAME_BLAINE)
 		or c:IsSetCard(PM_SETNAME_GIOVANNI) or c:IsSetCard(PM_SETNAME_KOGA) or c:IsSetCard(PM_SETNAME_TEAM_MAGMA)
 		or c:IsSetCard(PM_SETNAME_TEAM_AQUA) or c:IsSetCard(PM_SETNAME_ROCKETS)) --update with new owners here
+		and not c:IsHasAlias()
 end
 --check if a card is a Stadium
 function Card.IsStadium(c)
@@ -1208,6 +1210,7 @@ function Auxiliary.AttackDamage(e,count,atg,bool_weak,bool_resist,bool_effect)
 	local ct=count
 	if ct==0 or atg:IsFacedown() or atg:IsImmuneToAttack() or atg:IsImmuneToAttackDamage()
 		or atg:IsImmuneToDamage() or not atg:IsRelateToBattle() then return end
+	if atg:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not c:IsEvolution() then return end
 	--apply weakness
 	if bool_weak then
 		if weakness_x2 then ct=count*2
@@ -1251,6 +1254,7 @@ function Auxiliary.EffectDamage(e,count,atg,bool_weak,bool_resist)
 	local ct=count
 	if ct==0 or atg:IsFacedown() or atg:IsImmuneToAttack() or atg:IsImmuneToAttackDamage()
 		or atg:IsImmuneToDamage() then return end
+	if atg:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not c:IsEvolution() then return end
 	--apply weakness
 	if bool_weak then
 		if weakness_x2 then ct=count*2
@@ -1810,6 +1814,34 @@ Auxiliary.econ5=Auxiliary.AttackCostCondition5
 function Auxiliary.GetDefendingPokemon(e)
 	return Duel.GetFirstMatchingCard(Auxiliary.ActivePokemonFilter,e:GetHandlerPlayer(),0,PM_LOCATION_ACTIVE,nil)
 end
+
+--==========[+Costs]==========
+--cost for discarding Energy to a pokémon
+function Auxiliary.DiscardEnergyCost(c,min,max,energy)
+	--energy: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
+	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
+				local max=max or min
+				local g=c:GetAttachmentGroup()
+				local energy=energy or nil
+				if chk==0 then
+					if energy then
+						return g:IsExists(Card.IsEnergy,min,energy)
+					else
+						return g:IsExists(Card.IsEnergy,min,nil)
+					end
+				end
+				local sg=nil
+				if energy then
+					Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
+					sg=g:FilterSelect(tp,Card.IsEnergy,min,max,energy)
+				else
+					Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
+					sg=g:FilterSelect(tp,Card.IsEnergy,min,max,nil)
+				end
+				Duel.SendtoDPile(sg,REASON_COST+REASON_DISCARD)
+			end
+end
+Auxiliary.decost=Auxiliary.DiscardEnergyCost
 
 --==========[+Targets]==========
 --target for Duel.Hint(hint,player,desc) only
