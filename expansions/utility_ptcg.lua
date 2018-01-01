@@ -13,6 +13,7 @@
 --[+RuleFunctions]...........................................functions that are included on the rules card
 --[+Pokémon].................................................functions that are included on every Pokémon card
 --[+Evolution]...............................................functions that are included on every Evolution card
+--[+LVX].....................................................functions that are included on every Pokémon LV.X card
 --[+Energy]..................................................functions that are included on every Energy card
 --[+Trainer].................................................functions that are included on every Trainer card
 --[+Attack]..................................................attacks that are shared by many pokémon
@@ -80,6 +81,11 @@ function Card.IsHasResistance(c,resist)
 		or (c.resistance_30 and c.resistance_30==resist)
 		--update with new resistance here
 end
+--check if a card has an alias
+function Card.IsHasAlias(c)
+	return c:GetCode()~=c:GetOriginalCode()
+		and not (c:IsHasEffect(EFFECT_ADD_CODE) or c:IsHasEffect(EFFECT_CHANGE_CODE))
+end
 --check if a card is a Trainer
 function Card.IsTrainer(c)
 	return c:IsType(PM_TYPE_TRAINER) and not c:IsHasEffect(PM_EFFECT_REMOVE_TRAINER)
@@ -103,63 +109,63 @@ Card.IsPreviousSubType=Card.IsPreviousSetCard
 Card.IsOriginalSubType=Card.IsOriginalSetCard
 --check if a card is a Basic Pokémon
 function Card.IsBasicPokemon(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_BASIC_POKEMON)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_BASIC_POKEMON) and not c:IsHasAlias()
 end
 --check if a card is an Evolution Pokémon
 function Card.IsEvolution(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_EVOLUTION)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_EVOLUTION) and not c:IsHasAlias()
 end
 --check if a card is a Stage 1 Pokémon
 function Card.IsStage1(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_STAGE_1)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_STAGE_1) and not c:IsHasAlias()
 end
 --check if a card is a Stage 2 Pokémon
 function Card.IsStage2(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_STAGE_2)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_STAGE_2) and not c:IsHasAlias()
 end
 --check if a card is a Baby Pokémon
 function Card.IsBabyPokemon(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_BABY_POKEMON)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_BABY_POKEMON) and not c:IsHasAlias()
 end
 --check if a card is a Pokémon-ex
 function Card.IsPokemonex(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX_OLD)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX_OLD) and not c:IsHasAlias()
 end
 --check if a card is a Pokémon star
 function Card.IsPokemonStar(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_POKEMON_STAR)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_POKEMON_STAR) and not c:IsHasAlias()
 end
 --check if a card is a Pokémon LV.X (Pokémon Level-Up)
 function Card.IsPokemonLVX(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEVEL_UP)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEVEL_UP) and not c:IsHasAlias()
 end
 --check if a card is a Pokémon SP
 function Card.IsPokemonSP(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_SP)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_SP) and not c:IsHasAlias()
 end
 --check if a card is a Pokémon LEGEND
 function Card.IsPokemonLEGEND(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEGEND)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEGEND) and not c:IsHasAlias()
 end
 --check if a card is a Pokémon-EX
 function Card.IsPokemonEX(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX) and not c:IsHasAlias()
 end
 --check if a card is a Restored Pokémon
 function Card.IsRestoredPokemon(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_RESTORED)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_RESTORED) and not c:IsHasAlias()
 end
 --check if a card is a Mega Evolution Pokémon
 function Card.IsMegaEvolution(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_MEGA)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_MEGA) and not c:IsHasAlias()
 end
 --check if a card is a Pokémon BREAK
 function Card.IsPokemonBREAK(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_BREAK)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_BREAK) and not c:IsHasAlias()
 end
 --check if a card is a Pokémon-GX
 function Card.IsPokemonGX(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_GX)
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_GX) and not c:IsHasAlias()
 end
 --check if a pokémon has an owner
 function Card.IsOwnerPokemon(c)
@@ -175,31 +181,31 @@ function Card.IsStadium(c)
 end
 --check if a card is an Item
 function Card.IsItem(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_ITEM)
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_ITEM) and not c:IsHasAlias()
 end
 --check if a card is a Pokémon Tool
 function Card.IsPokemonTool(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_POKEMON_TOOL)
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_POKEMON_TOOL) and not c:IsHasAlias()
 end
 --check if a card is an ACE SPEC
 function Card.IsACESPEC(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_ACE_SPEC)
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_ACE_SPEC) and not c:IsHasAlias()
 end
 --check if a card is a Supporter
 function Card.IsSupporter(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_SUPPORTER)
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_SUPPORTER) and not c:IsHasAlias()
 end
 --check if a card is a Technical Machine
 function Card.IsTechnicalMachine(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_TECHNICAL_MACHINE)
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_TECHNICAL_MACHINE) and not c:IsHasAlias()
 end
 --check if a card is a Rocket's Secret Machine
 function Card.IsRocketsSecretMachine(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_ROCKETS_SECRET_MACHINE)
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_ROCKETS_SECRET_MACHINE) and not c:IsHasAlias()
 end
 --check if a card is a basic Energy
 function Card.IsBasicEnergy(c)
-	return c:IsEnergy() and c:IsSubType(PM_TYPE_BASIC_ENERGY)
+	return c:IsEnergy() and c:IsSubType(PM_TYPE_BASIC_ENERGY) and not c:IsHasAlias()
 end
 --check if a card is a [G] Energy
 function Card.IsGrassEnergy(c)
@@ -243,7 +249,7 @@ function Card.IsFairyEnergy(c)
 end
 --check if a card is a Special Energy
 function Card.IsSpecialEnergy(c)
-	return c:IsEnergy() and c:IsSubType(PM_TYPE_SPECIAL)
+	return c:IsEnergy() and c:IsSubType(PM_TYPE_SPECIAL) and not c:IsHasAlias()
 end
 --check if a card can only have one copy of itself in a player's deck
 function Card.IsHasDeckRestriction(c)
@@ -916,6 +922,81 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	if ivym>0 then c:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
 	if prim>0 then c:AddCounter(PM_IMPRISON_MARKER,prim) end
 	if shom>0 then c:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
+end
+
+--==========[+LVX]==========
+--[[
+"They are played similarly to an Evolution card but have special rules as well:
+- Only the Active Pokémon can be Leveled-Up.
+- When a Pokémon LV.X is played, it keeps all attacks, Poké-Powers, and Poké-Bodies from the earlier level.
+- A Pokémon LV.X shares the same name as the Pokémon it is put on top of.
+- A Pokémon LV.X is not considered an Evolution card."
+]]
+function Auxiliary.EnableLevelUp(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(PM_DESC_LVX)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetTarget(Auxiliary.LVXTarget)
+	e1:SetOperation(Auxiliary.LVXOperation)
+	c:RegisterEffect(e1)
+end
+function Auxiliary.LVXFilter(c,tcode,tid)
+	return Auxiliary.ActivePokemonFilter(c) and c.levelup_list and table.unpack(c.levelup_list)==tcode and c:GetTurnID()~=tid
+end
+function Auxiliary.LVXTarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	local tid=Duel.GetTurnCount()
+	if chk==0 then return Duel.GetLocationCount(tp,PM_LOCATION_ACTIVE)>-1
+		and Duel.IsExistingMatchingCard(Auxiliary.LVXFilter,tp,PM_LOCATION_ACTIVE,0,1,nil,c:GetCode(),tid)
+		and c:IsCanBePutInPlay(e,PM_SUMMON_TYPE_LEVELUP,tp,false,false) end
+end
+function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tid=Duel.GetTurnCount()
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_LEVELUP)
+	local g=Duel.SelectMatchingCard(tp,Auxiliary.LVXFilter,tp,PM_LOCATION_ACTIVE,0,1,1,nil,c:GetCode(),tid)
+	local tc=g:GetFirst()
+	if not tc then return end
+	Duel.HintSelection(g)
+	--register sequence
+	local seq=tc:GetSequence()
+	--register counters
+	local damc=tc:GetCounter(PM_DAMAGE_COUNTER)
+	local colc=tc:GetCounter(PM_COLORING_COUNTER)
+	local chac=tc:GetCounter(PM_CHAR_COUNTER)
+	--register markers
+	local burm=tc:GetMarker(PM_BURN_MARKER)
+	local poim=tc:GetMarker(PM_POISON_MARKER)
+	local rodm=tc:GetMarker(PM_LIGHTNING_ROD_MARKER)
+	local ivym=tc:GetMarker(PM_DARK_IVYSAUR_MARKER)
+	local prim=tc:GetMarker(PM_IMPRISON_MARKER)
+	local shom=tc:GetMarker(PM_SHOCKWAVE_MARKER)
+	local mg=tc:GetAttachmentGroup()
+	Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) --workaround
+	if mg:GetCount()~=0 then
+		Duel.Attach(c,mg)
+	end
+	c:SetAttachment(g)
+	Duel.LevelUp(c,g)
+	Duel.PutInPlay(c,PM_SUMMON_TYPE_LEVELUP,tp,tp,false,false,PM_POS_FACEUP_UPSIDE)
+	--retain sequence
+	if c:GetSequence()~=seq then Duel.MoveSequence(c,seq) end
+	--retain counters
+	if damc>0 then c:AddCounter(PM_DAMAGE_COUNTER,damc) end
+	if colc>0 then c:AddCounter(PM_COLORING_COUNTER,colc) end
+	if chac>0 then c:AddCounter(PM_CHAR_COUNTER,chac) end
+	--retain markers
+	if burm>0 then c:AddCounter(PM_BURN_MARKER,burm) end
+	if poim>0 then c:AddCounter(PM_POISON_MARKER,poim) end
+	if rodm>0 then c:AddCounter(PM_LIGHTNING_ROD_MARKER,rodm) end
+	if ivym>0 then c:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
+	if prim>0 then c:AddCounter(PM_IMPRISON_MARKER,prim) end
+	if shom>0 then c:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
+	--gain attack & effect
+	local code=tc:GetOriginalCode()
+	c:CopyEffect(code,RESET_EVENT+RESETS_STANDARD_DISABLE,1)
 end
 
 --==========[+Energy]==========
