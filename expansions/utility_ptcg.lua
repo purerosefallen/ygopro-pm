@@ -50,20 +50,35 @@ function Card.IsPokemon(c)
 	return c:IsType(PM_TYPE_POKEMON)
 end
 --check if a pokémon has a Pokémon Power/Ability
-function Card.HasAbility(c)
+function Card.IsHasAbility(c)
 	return c:IsType(PM_TYPE_ABILITY)
 end
 --check if a pokémon has an Ancient Trait
-function Card.HasAncientTrait(c)
+function Card.IsHasAncientTrait(c)
 	return c:IsType(PM_TYPE_ANCIENT_TRAIT)
 end
 --check if a pokémon has a Poké-Body
-function Card.HasPokeBody(c)
+function Card.IsHasPokeBody(c)
 	return c:IsType(PM_TYPE_POKE_BODY)
 end
 --check if a pokémon has a Poké-Power
-function Card.HasPokePower(c)
+function Card.IsHasPokePower(c)
 	return c:IsType(PM_TYPE_POKE_POWER)
+end
+--check what type of Weakness a pokémon has
+function Card.IsHasWeakness(c,weak)
+	return (c.weakness_x2 and c.weakness_x2==weak)
+		or (c.weakness_10 and c.weakness_10==weak)
+		or (c.weakness_20 and c.weakness_20==weak)
+		or (c.weakness_30 and c.weakness_30==weak)
+		or (c.weakness_40 and c.weakness_40==weak)
+		--update with new weakness here
+end
+--check what type of Resistance a pokémon has
+function Card.IsHasResistance(c,resist)
+	return (c.resistance_20 and c.resistance_20==resist)
+		or (c.resistance_30 and c.resistance_30==resist)
+		--update with new resistance here
 end
 --check if a card is a Trainer
 function Card.IsTrainer(c)
@@ -392,6 +407,26 @@ function Card.IsRetreatable(c)
 	else
 		return Auxiliary.ActivePokemonFilter(c) and (ct>=rc or rc==0)
 	end
+end
+--check if a pokémon is unaffected by all effects of attacks, including damage
+function Card.IsImmuneToAttack(c)
+	if c:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK) then return true end
+	return false
+end
+--check if a pokémon is unaffected by damage done by attacks
+function Card.IsImmuneToAttackDamage(c)
+	if c:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_DAMAGE) then return true end
+	return false
+end
+--check if a pokémon is unaffected by all effects of attacks, except damage
+function Card.IsImmuneToAttackEffect(c)
+	if c:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_EFFECT) then return true end
+	return false
+end
+--check if a pokémon is unaffected by all damage
+function Card.IsImmuneToDamage(c)
+	if c:IsHasEffect(PM_EFFECT_IMMUNE_DAMAGE) then return true end
+	return false
 end
 --========== Duel ==========
 --set aside prize cards face-down
@@ -1073,14 +1108,18 @@ function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
 end
---put a damage counter(s) on another pokémon when your active pokémon attacks it
-function Auxiliary.AttackDamage(e,count,atg,bool_apply)
+--put a damage counter(s) on a pokémon when an active pokémon attacks it
+function Auxiliary.AttackDamage(e,count,atg,bool_weak,bool_resist,bool_effect)
 	--count: attack damage
 	--atg: attack target
-	--bool_apply: false to not apply weakness and resistance to the attack target
+	--bool_weak: false to not apply weakness to the attack target
+	--bool_resist: false to not apply resistance to the attack target
+	--bool_effect: reserved - true to be unaffected by effects on the attack target
 	count=count/10
 	local atg=atg or Auxiliary.GetDefendingPokemon(e)
-	local bool_apply=bool_apply or true
+	local bool_weak=bool_weak or true
+	local bool_resist=bool_resist or true
+	local bool_effect=bool_effect or false
 	local c=e:GetHandler()
 	local tp=e:GetHandlerPlayer()
 	Duel.PokemonAttack(c,atg)
@@ -1093,15 +1132,61 @@ function Auxiliary.AttackDamage(e,count,atg,bool_apply)
 	local resistance_20=atg.resistance_20==energy
 	local resistance_30=atg.resistance_30==energy
 	local ct=count
-	if ct==0 or atg:IsFacedown() or not atg:IsRelateToBattle() then return end
-	if bool_apply then
-		--apply weakness & resistance
+	if ct==0 or atg:IsFacedown() or atg:IsImmuneToAttack() or atg:IsImmuneToAttackDamage() or atg:IsImmuneToDamage()
+		or not atg:IsRelateToBattle() then return end
+	--apply weakness
+	if bool_weak then
 		if weakness_x2 then ct=count*2
 		elseif weakness_10 then ct=count+1
 		elseif weakness_20 then ct=count+2
 		elseif weakness_30 then ct=count+3
-		elseif weakness_40 then ct=count+4
-		elseif resistance_20 then ct=count-2
+		elseif weakness_40 then ct=count+4 end
+	end
+	--apply resistance
+	if bool_resist then
+		if resistance_20 then ct=count-2
+		elseif resistance_30 then ct=count-3 end
+	end
+	--apply poké-powers, poké-bodies and any other effects
+	--reserved
+	if ct>count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
+	elseif ct<count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_DECREASE) end
+	atg:AddCounter(PM_DAMAGE_COUNTER,ct)
+end
+--put a damage counter(s) on a pokémon due to an effect
+function Auxiliary.EffectDamage(e,count,atg,bool_weak,bool_resist)
+	--count: attack damage
+	--atg: attack target
+	--bool_weak: false to not apply weakness to the attack target
+	--bool_resist: false to not apply resistance to the attack target
+	count=count/10
+	local atg=atg or Auxiliary.GetDefendingPokemon(e)
+	local bool_weak=bool_weak or true
+	local bool_resist=bool_resist or true
+	local bool_effect=bool_effect or false
+	local c=e:GetHandler()
+	local tp=e:GetHandlerPlayer()
+	local energy=c:GetPokemonType()
+	local weakness_x2=atg.weakness_x2==energy
+	local weakness_10=atg.weakness_10==energy
+	local weakness_20=atg.weakness_20==energy
+	local weakness_30=atg.weakness_30==energy
+	local weakness_40=atg.weakness_40==energy
+	local resistance_20=atg.resistance_20==energy
+	local resistance_30=atg.resistance_30==energy
+	local ct=count
+	if ct==0 or atg:IsFacedown() or atg:IsImmuneToAttack() or atg:IsImmuneToDamage() then return end
+	--apply weakness
+	if bool_weak then
+		if weakness_x2 then ct=count*2
+		elseif weakness_10 then ct=count+1
+		elseif weakness_20 then ct=count+2
+		elseif weakness_30 then ct=count+3
+		elseif weakness_40 then ct=count+4 end
+	end
+	--apply resistance
+	if bool_resist then
+		if resistance_20 then ct=count-2
 		elseif resistance_30 then ct=count-3 end
 	end
 	if ct>count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
@@ -1517,6 +1602,12 @@ function Auxiliary.TurnPlayerCondition(p)
 			end
 end
 Auxiliary.turnpcon=Auxiliary.TurnPlayerCondition
+--condition for attacks with no Energy Cost
+function Auxiliary.AttackCostCondition0(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
+end
+Auxiliary.econ0=Auxiliary.AttackCostCondition0
 --condition for attacks with an Energy Cost of 1 Energy
 function Auxiliary.AttackCostCondition1(ener1,count1)
 	return	function(e,tp,eg,ep,ev,re,r,rp)

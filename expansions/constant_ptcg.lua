@@ -51,7 +51,7 @@ CARD_AXEW							=2618010	--Black Star Promo BW10
 CARD_FRAXURE						=26050087	--Noble Victories 87/101
 CARD_HAXORUS						=26050088	--Noble Victories 88/101
 --↑You may have as many of the following cards in your deck as you like
-CARD_ARCEUS							=26042094	--"Arceus" (Arceus AR1)
+CARD_ARCEUS							=26042094	--"Arceus LV.X" (Arceus AR1)
 --↑Pokémon GX
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
 --↑Trainer
@@ -230,9 +230,13 @@ PM_EFFECT_NO_RETREAT_COST			=713	--YGOPro cannot change RC to 0 ("Balloon Berry"
 PM_EFFECT_RETREAT_COST_REPLACE		=714	--"Balloon Berry" (Neo Revelation 60/64)
 PM_EFFECT_RESTRICT_MIRACLE_ENERGY	=715	--"Miracle Energy" (Neo Destiny 16/105)
 PM_EFFECT_RESTRICT_POKEMON_STAR		=716	--"Mudkip Star" (Team Rocket Returns 107/109)
-PM_EFFECT_RESTRICT_ACE_SPEC			=717	--"Computer Search" (Boundaries Crossed 137/149)
-PM_EFFECT_CANNOT_ATTACK				=718	--"Haxorus" (Noble Victories 88/101)
-PM_EFFECT_EXTEND_BENCH_8			=719	--"Sky Field" (Roaring Skies 89/108)
+PM_EFFECT_IMMUNE_DAMAGE				=717	--"Squirtle" (Base Set 63/102)
+PM_EFFECT_IMMUNE_ATTACK				=718	--"Arceus" (Arceus AR9)
+PM_EFFECT_IMMUNE_ATTACK_EFFECT		=719	--"Arceus" (Arceus AR9)
+PM_EFFECT_IMMUNE_ATTACK_DAMAGE		=720	--"Arceus" (Arceus AR9)
+PM_EFFECT_RESTRICT_ACE_SPEC			=721	--"Computer Search" (Boundaries Crossed 137/149)
+PM_EFFECT_CANNOT_ATTACK				=722	--"Haxorus" (Noble Victories 88/101)
+PM_EFFECT_EXTEND_BENCH_8			=723	--"Sky Field" (Roaring Skies 89/108)
 --Abilities that activate or actions that occur at the appropriate event
 PM_EVENT_TO_DISCARDPILE				=EVENT_TO_GRAVE			--When a card is put into the discard pile
 PM_EVENT_LEAVE_PLAY					=EVENT_LEAVE_FIELD		--When a card leaves play
