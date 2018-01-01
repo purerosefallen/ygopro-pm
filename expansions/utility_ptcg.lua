@@ -84,9 +84,13 @@ end
 function Card.IsTrainer(c)
 	return c:IsType(PM_TYPE_TRAINER) and not c:IsHasEffect(PM_EFFECT_REMOVE_TRAINER)
 end
---check if a card is an Energy
-function Card.IsEnergy(c)
-	return c:IsType(PM_TYPE_ENERGY)
+--check if a card is an Energy (or what type of Energy a card is)
+function Card.IsEnergy(c,energy)
+	if energy then
+		return c:IsType(PM_TYPE_ENERGY) and c:IsCode(energy)
+	else
+		return c:IsType(PM_TYPE_ENERGY)
+	end
 end
 --check if a card is a Prize card + PM_LOCATION_PRIZE
 function Card.IsPrize(c)
@@ -196,15 +200,6 @@ end
 --check if a card is a basic Energy
 function Card.IsBasicEnergy(c)
 	return c:IsEnergy() and c:IsSubType(PM_TYPE_BASIC_ENERGY)
-end
---check what type of basic Energy a card is 
-function Card.IsEnergyCard(c,energy)
-	if energy then
-		return c:IsEnergy() and c:IsCode(energy)
-	else
-		return c:IsEnergy() and c:IsCode(CARD_GRASS_ENERGY,CARD_FIRE_ENERGY,CARD_WATER_ENERGY,CARD_LIGHTNING_ENERGY,
-		CARD_PSYCHIC_ENERGY,CARD_FIGHTING_ENERGY,CARD_DARKNESS_ENERGY,CARD_METAL_ENERGY,CARD_FAIRY_ENERGY)
-	end
 end
 --check if a card is a [G] Energy
 function Card.IsGrassEnergy(c)
@@ -435,9 +430,7 @@ Duel.SetPrizeCard=Duel.Remove
 Duel.KnockOut=Duel.Destroy
 --get all attached cards in a specified location
 Duel.GetAttachmentGroup=Duel.GetOverlayGroup
---send targets to the discard pile by discarding them
-Duel.PDiscard=Duel.SendtoGrave
---send targets to the discard pile
+--send targets to the discard pile (discard them)
 Duel.SendtoDiscardPile=Duel.SendtoGrave
 Duel.SendtoDPile=Duel.SendtoDiscardPile
 --check if a player can put a marker on a card
@@ -833,11 +826,11 @@ function Auxiliary.RetreatCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if c:IsHasEffect(PM_EFFECT_RETREAT_COST_REPLACE) then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARD)
 		local sog=og:FilterSelect(tp,Card.IsHasEffect,1,1,nil,PM_EFFECT_RETREAT_COST_REPLACE)
-		Duel.PDiscard(sog,REASON_COST+REASON_DISCARD+REASON_REPLACE)
+		Duel.SendtoDPile(sog,REASON_COST+REASON_DISCARD+REASON_REPLACE)
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
 		local sog=og:FilterSelect(tp,Card.IsEnergy,rc,rc,nil)
-		Duel.PDiscard(sog,REASON_COST+REASON_DISCARD)
+		Duel.SendtoDPile(sog,REASON_COST+REASON_DISCARD)
 	end
 end
 function Auxiliary.RetreatOperation(e,tp,eg,ep,ev,re,r,rp)
@@ -1132,8 +1125,8 @@ function Auxiliary.AttackDamage(e,count,atg,bool_weak,bool_resist,bool_effect)
 	local resistance_20=atg.resistance_20==energy
 	local resistance_30=atg.resistance_30==energy
 	local ct=count
-	if ct==0 or atg:IsFacedown() or atg:IsImmuneToAttack() or atg:IsImmuneToAttackDamage() or atg:IsImmuneToDamage()
-		or not atg:IsRelateToBattle() then return end
+	if ct==0 or atg:IsFacedown() or atg:IsImmuneToAttack() or atg:IsImmuneToAttackDamage()
+		or atg:IsImmuneToDamage() or not atg:IsRelateToBattle() then return end
 	--apply weakness
 	if bool_weak then
 		if weakness_x2 then ct=count*2
@@ -1175,7 +1168,8 @@ function Auxiliary.EffectDamage(e,count,atg,bool_weak,bool_resist)
 	local resistance_20=atg.resistance_20==energy
 	local resistance_30=atg.resistance_30==energy
 	local ct=count
-	if ct==0 or atg:IsFacedown() or atg:IsImmuneToAttack() or atg:IsImmuneToDamage() then return end
+	if ct==0 or atg:IsFacedown() or atg:IsImmuneToAttack() or atg:IsImmuneToAttackDamage()
+		or atg:IsImmuneToDamage() then return end
 	--apply weakness
 	if bool_weak then
 		if weakness_x2 then ct=count*2
@@ -1612,7 +1606,7 @@ Auxiliary.econ0=Auxiliary.AttackCostCondition0
 function Auxiliary.AttackCostCondition1(ener1,count1)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
 				local c=e:GetHandler()
-				local ct1=c:GetAttachmentGroup():FilterCount(Card.IsEnergyCard,nil,ener1)
+				local ct1=c:GetAttachmentGroup():FilterCount(Card.IsEnergy,nil,ener1)
 				local ct2=c:GetAttachmentGroup():FilterCount(Card.IsBasicEnergy,nil)
 				local ct3=c:GetAttachmentGroup():FilterCount(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)*2
 				if ener1==CARD_COLORLESS_ENERGY then ct1=0 end
@@ -1626,8 +1620,8 @@ function Auxiliary.AttackCostCondition2(ener1,count1,ener2,count2)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
 				local sum=count1+count2
 				local c=e:GetHandler()
-				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,nil,ener1)
-				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,g1,ener2)
+				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
+				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
 				local g3=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,g1)
 				local g4=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
 				local ct1=g1:GetCount()
@@ -1647,11 +1641,11 @@ function Auxiliary.AttackCostCondition3(ener1,count1,ener2,count2,ener3,count3)
 				local sum=count1+count2+count3
 				local c=e:GetHandler()
 				local exg=Group.CreateGroup()
-				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,nil,ener1)
+				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
 				exg:Merge(g1)
-				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,g1,ener2)
+				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
 				exg:Merge(g2)
-				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener3)
+				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergy,exg,ener3)
 				local g4=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,exg)
 				local g5=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
 				local ct1=g1:GetCount()
@@ -1673,13 +1667,13 @@ function Auxiliary.AttackCostCondition4(ener1,count1,ener2,count2,ener3,count3,e
 				local sum=count1+count2+count3+count4
 				local c=e:GetHandler()
 				local exg=Group.CreateGroup()
-				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,nil,ener1)
+				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
 				exg:Merge(g1)
-				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,g1,ener2)
+				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
 				exg:Merge(g2)
-				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener3)
+				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergy,exg,ener3)
 				exg:Merge(g3)
-				local g4=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener4)
+				local g4=c:GetAttachmentGroup():Filter(Card.IsEnergy,exg,ener4)
 				local g5=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,exg)
 				local g6=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
 				local ct1=g1:GetCount()
@@ -1703,15 +1697,15 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 				local sum=count1+count2+count3+count4+count5
 				local c=e:GetHandler()
 				local exg=Group.CreateGroup()
-				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,nil,ener1)
+				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
 				exg:Merge(g1)
-				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,g1,ener2)
+				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
 				exg:Merge(g2)
-				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener3)
+				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergy,exg,ener3)
 				exg:Merge(g3)
-				local g4=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener4)
+				local g4=c:GetAttachmentGroup():Filter(Card.IsEnergy,exg,ener4)
 				exg:Merge(g4)
-				local g5=c:GetAttachmentGroup():Filter(Card.IsEnergyCard,exg,ener5)
+				local g5=c:GetAttachmentGroup():Filter(Card.IsEnergy,exg,ener5)
 				local g6=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,exg)
 				local g7=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
 				local ct1=g1:GetCount()
