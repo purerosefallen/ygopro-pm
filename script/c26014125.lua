@@ -21,5 +21,5 @@ function scard.healcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function scard.healop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RemoveCounter(tp,PM_DAMAGE_COUNTER,3,REASON_EFFECT)
-	Duel.SendtoDPile(e:GetLabelObject(),REASON_EFFECT)
+	Duel.SendtoDPile(e:GetLabelObject(),REASON_EFFECT+REASON_DISCARD)
 end
