@@ -369,11 +369,11 @@ function scard.prcon1(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(scard.prfilter1,1,nil,tp)
 		and Duel.GetLocationCount(tp,PM_LOCATION_ACTIVE)>0
 		and Duel.CheckLocation(tp,PM_LOCATION_ACTIVE,SEQUENCE_EXTRA_MZONE)
-		and Duel.IsExistingMatchingCard(pm.BenchPokemonFilter,tp,PM_LOCATION_BENCH,0,1,nil)
+		and Duel.IsExistingMatchingCard(pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil)
 end
 function scard.prop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_PROMOTE)
-	local g=Duel.SelectMatchingCard(tp,pm.BenchPokemonFilter,tp,PM_LOCATION_BENCH,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
 	Duel.HintSelection(g)
 	Duel.MoveSequence(g:GetFirst(),SEQUENCE_EXTRA_MZONE)
 end
