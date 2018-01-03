@@ -2,12 +2,11 @@
 
 ### How to Install
 1. Exit YGOPro.
-2. Put all `cards-X.cdb`, `constant_X.lua` and `utility_X.lua` files in the `expansions` folder.
-3. Put the `script` folder in a `.zip` file and put it in the `expansions` folder, or put the `script` folder in the main folder instead.<br>
-Optional: If you have card pics, put them in a `pics` folder and put it in the `.zip` file, or put the `pics` folder in the main folder instead.
-4. Put `lflist.conf` in the main folder. (Make a backup of the original file(s), if you do not want to overwrite them.)
-5. Optional: Put the `deck` folder in the main folder.
-6. Optional: Put all `fieldX.png` and `field-transparentX.png` files in the `textures` folder. (Make a backup of the original file(s), if you do not want to overwrite them.)
+2. Put the following files and folders in YGOPro's main folder. **Make a backup of the original files, if you do not want to overwrite them**:<br>
+-`deck`<br>
+-`expansions`<br>
+-`textures`<br>
+-`lflist.conf`
 
 ### How to Play
 In Yugioh terms:
@@ -29,7 +28,7 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 10. Nothing happens during your standby phase.
 11. Optional: During your main phase 1, do any of the following:<br>
 	-Special summon any number of "Basic Pokémon" monsters from your hand in your main monster zones.<br>
-	-Special summon any number of ["Evolution"](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Evolution_card) monsters from your hand, by placing them on top of a card in the main monster zone or extra monster zone that has its name listed in its text, except if that card was summoned this turn, or if it is the first turn of the duel. (This is treated as an evolution summon.)<br>
+	-Special summon any number of ["Evolution"](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Evolution_card) monsters from your hand, by stacking them on top of a card in the main monster zone or extra monster zone that has its name listed in its text, except if that card was summoned this turn, or if it is the first turn of the duel. (This is treated as an evolution summon.)<br>
 	-Attach an ["Energy"](https://bulbapedia.bulbagarden.net/wiki/Energy_card_(TCG)) card from your hand to 1 of your monsters as a material. (You can only do this once per turn.)<br>
 	-Activate any number of ["Trainer"](https://bulbapedia.bulbagarden.net/wiki/Trainer_card_(TCG)) cards from your hand. (You can only activate 1 "Supporter" and 1 "Stadium" card per turn.)<br>
 	-Retreat your Active Pokémon, by switching its place with 1 monster on the Bench, and detaching "Energy" cards equal to its Level [(Retreat Cost)](https://bulbapedia.bulbagarden.net/wiki/Retreat_cost). (You can only do this once per turn.)<br>
@@ -39,7 +38,7 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 13. During your end phase, activate or apply any [Special Condition](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)) effects, then your turn ends.
 
 ### How to Win
-1. Take all your Prize cards. (Your opponent's life points are reduced to 0.)
+1. When you take your last Prize card. (Your opponent's life points are reduced to 0.)
 2. At any time, if your opponent controls no monsters. (If their only monster is destroyed.)
 3. If your opponent cannot draw a card for their normal draw during their draw phase.
 4. [Some cards](https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/?cardName=&cardText=win+this+game&evolvesFrom=&simpleSubmit=&format=unlimited&particularArtist=&sort=number&sort=number) will allow you to win by other means.
@@ -47,8 +46,11 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 <details>
 <summary>Card Types</summary>
 
-- `Pokémon = Monster (Level=Retreat Cost, ATK=current HP, DEF=original HP)`
-	- `Pokémon with "Poké-Power", "Poké-Body", "Ability", etc. in their text = Monster + Effect`
+- `Pokémon = Monster (Level = Retreat Cost, ATK = current HP, DEF = original HP)`
+	- `Pokémon with "Pokémon Power" or "Ability" in their text = Monster + Effect`
+	- `Pokémon with "Ancient Trait" in their text = Monster + Spirit`
+	- `Pokémon with "Poké-Power" in their text = Monster + Effect + Union`
+	- `Pokémon with "Poké-Body" in their text = Monster + Effect + Continuous`
 - `Trainer = Spell`
 	- `Stadium = Spell + Field`
 - `Energy = Trap`
@@ -121,35 +123,36 @@ Note - missing information. Text that appears on the card that is not essential 
 
 - `Ability/Pokémon Power =` [Monster effect](http://yugioh.wikia.com/wiki/Monster_effect)
 - `Active Pokémon = Monster in the Extra Monster Zone`
-- `Ancient Trait` = *TBA*
+- `Ancient Trait =` [Continuous effect](http://yugioh.wikia.com/wiki/Continuous_Effect) `[while that monster is in a Monster Zone or Spell & Trap Zone]`
 - `Attach = Attach a card to a monster as a material`
 - `Attack = During your Main Phase, if this card has [...] attached to it: You can activate this effect; (attack goes here).`
+- `Benched Pokémon = Monster in the Main Monster Zone [or card in the Spell & Trap Zone]`
 - `Between-Turns Step = End Phase`
-- `Break Evolution` = *TBA*
+- `Break Evolution` = Special Summon this card (from your hand) in Defense Position, by stacking it on a monster that is linted in this card's text. (This is treated as an Evolution Summon.) This card can attack while in face-up Defense Position.`
 - `Burn Marker = Burn Counter`
 - `Damage = Place a Damage Counter on a monster at the end of the Damage Step. (Monsters with a Damage Counter lose 10 ATK for each Damage Counter on it, also are destroyed when their ATK become 0 as a result.)`
 - `Damage Counter = Damage Counter`
 - `Defending Pokémon = Attack target in an Extra Monster Zone`
-- `Devolve` = *TBA*
+- `Devolve` = *Not yet implemented*
 - `Discard = Send a card to the Graveyard or detach a material from a monster.`
-- `Evolve = Special Summon this card (from your hand) in Attack Position, by placing it on a monster that is listed in this card's text. (This is treated as an Evolution Summon.)`
+- `Evolve = Special Summon this card (from your hand) in Attack Position, by stacking it on a monster that is listed in this card's text. (This is treated as an Evolution Summon.)`
 - `Evolved Pokémon = "Evolution" monster with a material whose name is included on it`
-- `GX Marker` = *TBA*
+- `GX Marker = Each player can only use 1 "GX attack" effect per Duel.`
 - `Game = Duel`
 - `Hit Points (HP) = ATK`
 - `In Play = Cards in the Extra Monster Zones and Main Monster Zones [or Spell & Trap Zone as an extended Bench]`
 - `Knocked Out = When a monster on the field is destroyed`
 - `Match = Duel`
-- `Poké-Body =` [Continuous](http://yugioh.wikia.com/wiki/Continuous_Effect) `monster effect [while that monster is in a Monster Zone or Spell & Trap Zone]`
+- `Poké-Body = `Continuous monster effect [while that monster is in a Monster Zone or Spell & Trap Zone]`
 - `Poké-Power =` [Ignition](http://yugioh.wikia.com/wiki/Ignition_Effect) `monster effect`
 - `Pokémon = Monster`
-- `Pokémon Legend` = *TBA*
+- `Pokémon Legend` = *Not yet implemented*
 - `Poison Marker = Poison Counter`
-- `Resistance` = *TBA*
+- `Resistance = If this card attacks a monster that has this card's Attribute listed in its "Resistance" text, this card does less damage to that monster, equal to its Resistance number.`
 - `Retreat = Once per turn: You can switch the locations of 1 monster in your Extra Monster Zone with 1 monster in your Main Monster Zone [or Spell & Trap Zone as an extended Bench], by detaching "Energy" cards from the monster in the Extra Monster Zone equal to its Level.`
 - `Special Condition = Continuous Effect` (["Asleep"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Asleep), ["Burned"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Burned), ["Confused"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Confused), ["Paralyzed"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Paralyzed) and ["Poisoned"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Poisoned))
-- `Sudden Death` = *TBA*
-- `Weakness` = *TBA*
+- `Sudden Death = If the Duel would end in a DRAW, it is reset instead and each player sets aside the top card of their Deck as a Prize card.`
+- `Weakness = If this card attacks a monster that has this card's Attribute listed in its "Weakness" text, this card does more damage to that monster, equal to its Weakness number.`
 </details>
 <details>
 <summary>OT</summary>
@@ -197,32 +200,32 @@ Note - missing information. Text that appears on the card that is not essential 
 - `0x8	Send to Graveyard` = Put a card into the discard pile; discard a card
 - `0x10	Return to Hand` = Put a card that is In Play into a player's hand
 - `0x20	Return to Deck` = Put a card into a player's deck
-- `0x40	Hand Destruction` = Take a card or have your opponent, take a out of their hand; decrease their hand size
-- `0x80	Deck Destruction` = Take a card or have your opponent, take a out of their deck; decrease their deck size
-- `0x100	Increase Draw` = Put a card from the top of the deck into a player's hand
+- `0x40	Hand Destruction` = Decrease the opponent's hand size
+- `0x80	Deck Destruction` = Decrease the opponent's deck size
+- `0x100	Increase Draw` = Put the top card of a player's deck into a player's hand
 - `0x200	Search Deck` = Look at a player's deck
-- `0x400	Recover from Graveyard` = Put a card from the discard pile into a player's hand, or In Play
-- `0x800	Change Card Position` = Switch an Active Pokémon with a Benched Pokémon, or vice-versa
+- `0x400	Recover from Graveyard` = Put a card from the discard pile into a player's hand or In Play
+- `0x800	Change Card Position` = Switch an Active Pokémon with a Benched Pokémon or vice-versa
 - `0x1000	Get Control` = Add a Special Condition to a Pokémon
 - `0x2000	Increase/Decrease ATK/DEF` = Increase or decrease a Pokémon's HP
-- `0x4000	Pierce` = Make a Pokémon do more damage, have a Pokémon take less damage, or prevent damage done to a Pokémon
+- `0x4000	Pierce` = Increase or decrease the damage done from a Pokémon's attack; prevent damage done to a Pokémon
 - `0x8000	Multiple Attacks` = Make a Pokémon able to attack more than once per turn
-- `0x10000	Restrict Attack` = Make a Pokémon unable to use its attacks; Mega Evolution; end a player's turn before that player can attack
+- `0x10000	Restrict Attack` = Make a Pokémon unable to use its attacks; Mega Evolution; end a player's turn
 - `0x20000	Direct Attack` = **N/A**
 - `0x40000	Special Summon` = Put a Pokémon In Play; play a non-Pokémon card as if it were a Pokémon
 - `0x80000	Token` = **N/A**
 - `0x100000	Type` = Lists a Pokémon category (species) in the text box
 - `0x200000	Attribute` = Lists a non-Attack Cost Energy Type in the text box
 - `0x400000	Reduce LP` = Put a Damage Counter on a Pokémon, except due to a Pokémon's attack
-- `0x800000	Recover LP` = Remove a Damage Counter from a Pokémon
+- `0x800000	Recover LP` = Remove a Damage Counter from a Pokémon; heal damage from a Pokémon
 - `0x1000000	Cannot Destroy` = Make a Pokémon unable to be Knocked Out; doesn't count as a Knocked Out Pokémon
 - `0x2000000	Cannot Target` = Remove a Special Condition from a Pokémon
-- `0x4000000	Counter` = Lists a counter/marker in the text box; put any counters/markers on a card, or remove them
+- `0x4000000	Counter` = Lists a counter/marker in the text box; put any counters/markers on a card or remove them
 - `0x8000000	Gamble` = Flip a coin; rock-paper-scissors; guess information
 - `0x10000000	Fusion` = **N/A**
 - `0x20000000	Synchro` = **N/A**
-- `0x40000000	Xyz` = Lists an Evolution card in the text box; Evolution; evolve or devolve a Pokémon
-- `0x80000000	Cancel out Effect` = Cause a Poké-Body, Poké-Power, or ability to stop working
+- `0x40000000	Xyz` = Lists an Evolution or LV.X (Level-Up) card in the text box; evolve, devolve or Level Up a Pokémon
+- `0x80000000	Cancel out Effect` = Cause a Poké-Body, Poké-Power or Pokémon Power/ability to stop working
 </details>
 
 #
