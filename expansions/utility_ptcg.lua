@@ -484,7 +484,9 @@ function Duel.IsPlayerCanDraw(player,count)
 end
 --check if it is the first turn of the game
 function Duel.IsFirstTurn()
-	return Duel.GetTurnCount()==1 or Duel.GetFlagEffect(tp,PM_EFFECT_SUDDEN_DEATH_RESTART)>0
+	return Duel.GetTurnCount()==1
+		or Duel.GetFlagEffect(0,PM_EFFECT_SUDDEN_DEATH_RESTART)>0
+		or Duel.GetFlagEffect(1,PM_EFFECT_SUDDEN_DEATH_RESTART)>0
 end
 --get a player's current prize cards
 function Duel.GetPrizeGroup(tp,player)
