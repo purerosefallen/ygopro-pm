@@ -51,42 +51,6 @@ end
 function Card.IsPokemon(c)
 	return c:IsType(PM_TYPE_POKEMON)
 end
---check if a pokémon has a Pokémon Power/Ability
-function Card.IsHasAbility(c)
-	return c:IsType(PM_TYPE_ABILITY)
-end
---check if a pokémon has an Ancient Trait
-function Card.IsHasAncientTrait(c)
-	return c:IsType(PM_TYPE_ANCIENT_TRAIT)
-end
---check if a pokémon has a Poké-Body
-function Card.IsHasPokeBody(c)
-	return c:IsType(PM_TYPE_POKE_BODY)
-end
---check if a pokémon has a Poké-Power
-function Card.IsHasPokePower(c)
-	return c:IsType(PM_TYPE_POKE_POWER)
-end
---check what type of Weakness a pokémon has
-function Card.IsHasWeakness(c,weak)
-	return (c.weakness_x2 and c.weakness_x2==weak)
-		or (c.weakness_10 and c.weakness_10==weak)
-		or (c.weakness_20 and c.weakness_20==weak)
-		or (c.weakness_30 and c.weakness_30==weak)
-		or (c.weakness_40 and c.weakness_40==weak)
-		--update with new weakness here
-end
---check what type of Resistance a pokémon has
-function Card.IsHasResistance(c,resist)
-	return (c.resistance_20 and c.resistance_20==resist)
-		or (c.resistance_30 and c.resistance_30==resist)
-		--update with new resistance here
-end
---check if a card has an alias
-function Card.IsHasAlias(c)
-	return c:GetCode()~=c:GetOriginalCode()
-		and not (c:IsHasEffect(EFFECT_ADD_CODE) or c:IsHasEffect(EFFECT_CHANGE_CODE))
-end
 --check if a card is a Trainer
 function Card.IsTrainer(c)
 	return c:IsType(PM_TYPE_TRAINER) and not c:IsHasEffect(PM_EFFECT_REMOVE_TRAINER)
@@ -108,6 +72,11 @@ Card.IsSubType=Card.IsSetCard
 Card.IsPreviousSubType=Card.IsPreviousSetCard
 --check what a card's original type is
 Card.IsOriginalSubType=Card.IsOriginalSetCard
+--check if a card has an alias
+function Card.IsHasAlias(c)
+	return c:GetCode()~=c:GetOriginalCode()
+		and not (c:IsHasEffect(EFFECT_ADD_CODE) or c:IsHasEffect(EFFECT_CHANGE_CODE))
+end
 --check if a card is a Basic Pokémon
 function Card.IsBasicPokemon(c)
 	return c:IsPokemon() and c:IsSubType(PM_TYPE_BASIC_POKEMON) and not c:IsHasAlias()
@@ -176,6 +145,37 @@ function Card.IsOwnerPokemon(c)
 		or c:IsSetCard(PM_SETNAME_GIOVANNI) or c:IsSetCard(PM_SETNAME_KOGA) or c:IsSetCard(PM_SETNAME_TEAM_MAGMA)
 		or c:IsSetCard(PM_SETNAME_TEAM_AQUA) or c:IsSetCard(PM_SETNAME_ROCKETS)) --update with new owners here
 		and not c:IsHasAlias()
+end
+--check if a pokémon has a Pokémon Power/Ability
+function Card.IsHasAbility(c)
+	return c:IsType(PM_TYPE_ABILITY)
+end
+--check if a pokémon has an Ancient Trait
+function Card.IsHasAncientTrait(c)
+	return c:IsType(PM_TYPE_ANCIENT_TRAIT)
+end
+--check if a pokémon has a Poké-Body
+function Card.IsHasPokeBody(c)
+	return c:IsType(PM_TYPE_POKE_BODY)
+end
+--check if a pokémon has a Poké-Power
+function Card.IsHasPokePower(c)
+	return c:IsType(PM_TYPE_POKE_POWER)
+end
+--check what type of Weakness a pokémon has
+function Card.IsHasWeakness(c,weak)
+	return (c.weakness_x2 and c.weakness_x2==weak)
+		or (c.weakness_10 and c.weakness_10==weak)
+		or (c.weakness_20 and c.weakness_20==weak)
+		or (c.weakness_30 and c.weakness_30==weak)
+		or (c.weakness_40 and c.weakness_40==weak)
+		--update with new weakness here
+end
+--check what type of Resistance a pokémon has
+function Card.IsHasResistance(c,resist)
+	return (c.resistance_20 and c.resistance_20==resist)
+		or (c.resistance_30 and c.resistance_30==resist)
+		--update with new resistance here
 end
 --check if a card is a Stadium
 function Card.IsStadium(c)
@@ -465,18 +465,6 @@ Duel.IsPlayerCanPutPokemonInPlay=Duel.IsPlayerCanSpecialSummonMonster
 Duel.PokemonAttack=Duel.CalculateDamage
 --negate a pokémon's attack
 Duel.NegatePokemonAttack=Duel.NegateActivation
---check if it is the first turn of the game
-function Duel.IsFirstTurn()
-	return Duel.GetTurnCount()==1 or Duel.GetFlagEffect(tp,PM_EFFECT_SUDDEN_DEATH_RESTART)>0
-end
---get a player's current prize cards
-function Duel.GetPrizeGroup(tp,player)
-	return Duel.GetMatchingGroup(Card.IsPrize,player,PM_LOCATION_PRIZE,0,nil)
-end
---return the number of prize cards a player has
-function Duel.GetPrizeGroupCount(tp,player)
-	return Duel.GetPrizeGroup(tp,player):GetCount()
-end
 --let a player draw cards equal to or less than count with a reason and return the number of cards drawn
 local dr=Duel.Draw
 function Duel.Draw(player,count,reason)
@@ -493,6 +481,149 @@ function Duel.IsPlayerCanDraw(player,count)
 	if ct==0 then return end
 	if count>ct then count=ct end
 	return ipcd(player,count)
+end
+--check if it is the first turn of the game
+function Duel.IsFirstTurn()
+	return Duel.GetTurnCount()==1 or Duel.GetFlagEffect(tp,PM_EFFECT_SUDDEN_DEATH_RESTART)>0
+end
+--get a player's current prize cards
+function Duel.GetPrizeGroup(tp,player)
+	return Duel.GetMatchingGroup(Card.IsPrize,player,PM_LOCATION_PRIZE,0,nil)
+end
+--return the number of prize cards a player has
+function Duel.GetPrizeGroupCount(tp,player)
+	return Duel.GetPrizeGroup(tp,player):GetCount()
+end
+--get your active pokémon that does the attack
+function Duel.GetAttackingPokemon(e)
+	return Duel.GetFirstMatchingCard(Auxiliary.ActivePokemonFilter,e:GetHandlerPlayer(),PM_LOCATION_ACTIVE,0,nil)
+end
+--get your opponent's active pokémon that receives the attack
+function Duel.GetDefendingPokemon(e)
+	return Duel.GetFirstMatchingCard(Auxiliary.ActivePokemonFilter,e:GetHandlerPlayer(),0,PM_LOCATION_ACTIVE,nil)
+end
+--put a damage counter on the defending pokémon for each 10 damage the attacking pokémon does
+function Duel.AttackDamage(e,count,d,bool_weak,bool_resist,bool_effect)
+	--count: attack damage
+	--d: the defending pokémon
+	--bool_weak: false to not apply weakness to the attack target
+	--bool_resist: false to not apply resistance to the attack target
+	--bool_effect: false to not apply effects on the attack target
+	count=count/10
+	local a=Duel.GetAttackingPokemon(e)
+	local d=d or Duel.GetDefendingPokemon(e)
+	local bool_weak=bool_weak or true
+	local bool_resist=bool_resist or true
+	local bool_effect=bool_effect or true
+	local turnp=Duel.GetTurnPlayer()
+	Duel.PokemonAttack(a,d)
+	local energy=a:GetPokemonType()
+	local weakness_x2=d.weakness_x2==energy
+	local weakness_10=d.weakness_10==energy
+	local weakness_20=d.weakness_20==energy
+	local weakness_30=d.weakness_30==energy
+	local weakness_40=d.weakness_40==energy
+	local resistance_20=d.resistance_20==energy
+	local resistance_30=d.resistance_30==energy
+	local ct=count
+	if ct==0 or d:IsFacedown() or d:IsImmuneToAttack() or d:IsImmuneToAttackDamage()
+		or d:IsImmuneToDamage() or not d:IsRelateToBattle() then return end
+	if d:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not a:IsEvolution() then return end
+	--apply effects before weakness & resistance
+	--reserved
+	--apply weakness
+	if bool_weak then
+		if weakness_x2 then ct=count*2
+		elseif weakness_10 then ct=count+1
+		elseif weakness_20 then ct=count+2
+		elseif weakness_30 then ct=count+3
+		elseif weakness_40 then ct=count+4 end
+	end
+	--apply resistance
+	if bool_resist then
+		if resistance_20 then ct=count-2
+		elseif resistance_30 then ct=count-3 end
+	end
+	--apply effects after weakness & resistance
+	--reserved
+	if ct>count then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_INCREASE)
+	elseif ct<count then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
+	d:AddCounter(PM_DAMAGE_COUNTER,ct)
+end
+--put a damage counter(s) on a pokémon due to an effect
+function Duel.EffectDamage(e,count,c1,c2,bool_weak,bool_resist)
+	--count: the number of damage counters
+	--c1: the pokémon with the effect
+	--c2: the pokémon that receives the damage counters
+	--bool_weak: false to not apply weakness to the attack target
+	--bool_resist: false to not apply resistance to the attack target
+	count=count/10
+	local c1=c1 or Duel.GetAttackingPokemon(e)
+	local c2=c2 or Duel.GetDefendingPokemon(e)
+	local bool_weak=bool_weak or true
+	local bool_resist=bool_resist or true
+	local bool_effect=bool_effect or true
+	local tp=e:GetHandlerPlayer()
+	local energy=c1:GetPokemonType()
+	local weakness_x2=c2.weakness_x2==energy
+	local weakness_10=c2.weakness_10==energy
+	local weakness_20=c2.weakness_20==energy
+	local weakness_30=c2.weakness_30==energy
+	local weakness_40=c2.weakness_40==energy
+	local resistance_20=c2.resistance_20==energy
+	local resistance_30=c2.resistance_30==energy
+	local ct=count
+	if ct==0 or c2:IsFacedown() or c2:IsImmuneToAttack() or c2:IsImmuneToAttackDamage()
+		or c2:IsImmuneToDamage() then return end
+	if c2:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not c1:IsEvolution() then return end
+	--apply effects before weakness & resistance
+	--reserved
+	--apply weakness
+	if bool_weak then
+		if weakness_x2 then ct=count*2
+		elseif weakness_10 then ct=count+1
+		elseif weakness_20 then ct=count+2
+		elseif weakness_30 then ct=count+3
+		elseif weakness_40 then ct=count+4 end
+	end
+	--apply resistance
+	if bool_resist then
+		if resistance_20 then ct=count-2
+		elseif resistance_30 then ct=count-3 end
+	end
+	--apply effects after weakness & resistance
+	--reserved
+	if ct>count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
+	elseif ct<count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_DECREASE) end
+	d:AddCounter(PM_DAMAGE_COUNTER,ct)
+end
+--remove a special condition affecting a pokémon
+function Duel.RemoveSpecialCondition(c,code)
+	--code: PM_EFFECT_ASLEEP, PM_EFFECT_BURNED, PM_EFFECT_CONFUSED, PM_EFFECT_PARALYZED and/or PM_EFFECT_POISONED
+	if code==PM_EFFECT_ASLEEP or not code then
+		if c:IsPosition(PM_POS_FACEUP_COUNTERCLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_UPSIDE) end
+		if c:IsHasEffect(PM_EFFECT_ASLEEP) then c:ResetEffect(PM_EFFECT_ASLEEP,RESET_EVENT) end
+		if c:GetFlagEffect(PM_EFFECT_ASLEEP)~=0 then c:ResetFlagEffect(PM_EFFECT_ASLEEP) end
+	end
+	if code==PM_EFFECT_BURNED or not code then
+		if c:GetMarker(PM_BURN_MARKER)~=0 then c:RemoveMarker(tp,PM_BURN_MARKER,1,REASON_RULE) end
+		if c:IsHasEffect(PM_EFFECT_BURNED) then c:ResetEffect(PM_EFFECT_BURNED,RESET_EVENT) end
+		if c:GetFlagEffect(PM_EFFECT_BURNED)~=0 then c:ResetFlagEffect(PM_EFFECT_BURNED) end
+	end
+	if code==PM_EFFECT_CONFUSED or not code then
+		if c:IsHasEffect(PM_EFFECT_CONFUSED) then c:ResetEffect(PM_EFFECT_CONFUSED,RESET_EVENT) end
+		if c:GetFlagEffect(PM_EFFECT_CONFUSED)~=0 then c:ResetFlagEffect(PM_EFFECT_CONFUSED) end
+	end
+	if code==PM_EFFECT_PARALYZED or not code then
+		if c:IsPosition(PM_POS_FACEUP_CLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_UPSIDE) end
+		if c:IsHasEffect(PM_EFFECT_PARALYZED) then c:ResetEffect(PM_EFFECT_PARALYZED,RESET_EVENT) end
+		if c:GetFlagEffect(PM_EFFECT_PARALYZED)~=0 then c:ResetFlagEffect(PM_EFFECT_PARALYZED) end
+	end
+	if code==PM_EFFECT_POISONED or not code then
+		if c:GetMarker(PM_POISON_MARKER)~=0 then c:RemoveMarker(tp,PM_POISON_MARKER,1,REASON_RULE) end
+		if c:IsHasEffect(PM_EFFECT_POISONED) then c:ResetEffect(PM_EFFECT_POISONED,RESET_EVENT) end
+		if c:GetFlagEffect(PM_EFFECT_POISONED)~=0 then c:ResetFlagEffect(PM_EFFECT_POISONED) end
+	end
 end
 
 --==========[+RuleFunctions]==========
@@ -852,7 +983,7 @@ function Auxiliary.RemoveEffectsCondition(e)
 	return e:GetHandler():IsBench() and e:GetHandler():IsAffectedBySpecialCondition()
 end
 function Auxiliary.RemoveEffectsOperation(e,tp,eg,ep,ev,re,r,rp)
-	Auxiliary.RemoveSpecialConditions(e:GetHandler())
+	Duel.RemoveSpecialCondition(e:GetHandler())
 end
 
 --==========[+Evolution]==========
@@ -1184,94 +1315,6 @@ function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
 end
---put a damage counter(s) on a pokémon when an active pokémon attacks it
-function Auxiliary.AttackDamage(e,count,atg,bool_weak,bool_resist,bool_effect)
-	--count: attack damage
-	--atg: attack target
-	--bool_weak: false to not apply weakness to the attack target
-	--bool_resist: false to not apply resistance to the attack target
-	--bool_effect: reserved - true to be unaffected by effects on the attack target
-	count=count/10
-	local atg=atg or Auxiliary.GetDefendingPokemon(e)
-	local bool_weak=bool_weak or true
-	local bool_resist=bool_resist or true
-	local bool_effect=bool_effect or false
-	local c=e:GetHandler()
-	local tp=e:GetHandlerPlayer()
-	Duel.PokemonAttack(c,atg)
-	local energy=c:GetPokemonType()
-	local weakness_x2=atg.weakness_x2==energy
-	local weakness_10=atg.weakness_10==energy
-	local weakness_20=atg.weakness_20==energy
-	local weakness_30=atg.weakness_30==energy
-	local weakness_40=atg.weakness_40==energy
-	local resistance_20=atg.resistance_20==energy
-	local resistance_30=atg.resistance_30==energy
-	local ct=count
-	if ct==0 or atg:IsFacedown() or atg:IsImmuneToAttack() or atg:IsImmuneToAttackDamage()
-		or atg:IsImmuneToDamage() or not atg:IsRelateToBattle() then return end
-	if atg:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not c:IsEvolution() then return end
-	--apply weakness
-	if bool_weak then
-		if weakness_x2 then ct=count*2
-		elseif weakness_10 then ct=count+1
-		elseif weakness_20 then ct=count+2
-		elseif weakness_30 then ct=count+3
-		elseif weakness_40 then ct=count+4 end
-	end
-	--apply resistance
-	if bool_resist then
-		if resistance_20 then ct=count-2
-		elseif resistance_30 then ct=count-3 end
-	end
-	--apply poké-powers, poké-bodies and any other effects
-	--reserved
-	if ct>count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
-	elseif ct<count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_DECREASE) end
-	atg:AddCounter(PM_DAMAGE_COUNTER,ct)
-end
---put a damage counter(s) on a pokémon due to an effect
-function Auxiliary.EffectDamage(e,count,atg,bool_weak,bool_resist)
-	--count: attack damage
-	--atg: attack target
-	--bool_weak: false to not apply weakness to the attack target
-	--bool_resist: false to not apply resistance to the attack target
-	count=count/10
-	local atg=atg or Auxiliary.GetDefendingPokemon(e)
-	local bool_weak=bool_weak or true
-	local bool_resist=bool_resist or true
-	local bool_effect=bool_effect or false
-	local c=e:GetHandler()
-	local tp=e:GetHandlerPlayer()
-	local energy=c:GetPokemonType()
-	local weakness_x2=atg.weakness_x2==energy
-	local weakness_10=atg.weakness_10==energy
-	local weakness_20=atg.weakness_20==energy
-	local weakness_30=atg.weakness_30==energy
-	local weakness_40=atg.weakness_40==energy
-	local resistance_20=atg.resistance_20==energy
-	local resistance_30=atg.resistance_30==energy
-	local ct=count
-	if ct==0 or atg:IsFacedown() or atg:IsImmuneToAttack() or atg:IsImmuneToAttackDamage()
-		or atg:IsImmuneToDamage() then return end
-	if atg:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not c:IsEvolution() then return end
-	--apply weakness
-	if bool_weak then
-		if weakness_x2 then ct=count*2
-		elseif weakness_10 then ct=count+1
-		elseif weakness_20 then ct=count+2
-		elseif weakness_30 then ct=count+3
-		elseif weakness_40 then ct=count+4 end
-	end
-	--apply resistance
-	if bool_resist then
-		if resistance_20 then ct=count-2
-		elseif resistance_30 then ct=count-3 end
-	end
-	if ct>count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
-	elseif ct<count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_DECREASE) end
-	atg:AddCounter(PM_DAMAGE_COUNTER,ct)
-end
 --"[C]Collect Draw a card." (e.g. "Pansage KSS 2")
 function Auxiliary.AttackCollect(c)
 	local e1=Effect.CreateEffect(c)
@@ -1422,7 +1465,7 @@ function Auxiliary.CheckAsleepOperation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
 	local res=Duel.TossCoin(tp,1)
-	if res==RESULT_HEADS then Auxiliary.RemoveAsleep(tc) end
+	if res==RESULT_HEADS then Duel.RemoveSpecialCondition(tc,PM_EFFECT_ASLEEP) end
 end
 --[[
 "A Burned Pokémon takes damage between turns, but the condition might heal on its own.
@@ -1481,7 +1524,7 @@ function Auxiliary.CheckBurnedOperation(e,tp,eg,ep,ev,re,r,rp)
 	tc:AddCounter(PM_DAMAGE_COUNTER,2)
 	Duel.BreakEffect()
 	local res=Duel.TossCoin(tp,1)
-	if res==RESULT_HEADS then Auxiliary.RemoveBurned(tc) end
+	if res==RESULT_HEADS then Duel.RemoveSpecialCondition(tc,PM_EFFECT_BURNED) end
 end
 --[[
 "Turn a Confused Pokémon with its head pointed toward you to show that it is Confused.
@@ -1574,7 +1617,7 @@ end
 function Auxiliary.CheckParalyzedOperation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
-	Auxiliary.RemoveParalyzed(tc)
+	Duel.RemoveSpecialCondition(tc,PM_EFFECT_PARALYZED)
 end
 --[[
 "A Poisoned Pokémon takes damage between turns. When a Pokémon is Poisoned, put a Poison marker on it. Between turns, put a
@@ -1630,43 +1673,6 @@ function Auxiliary.CheckPoisonedOperation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
 	tc:AddCounter(PM_DAMAGE_COUNTER,1)
-end
---remove all special conditions affecting a pokémon
-function Auxiliary.RemoveSpecialConditions(c)
-	Auxiliary.RemoveAsleep(c)
-	Auxiliary.RemoveBurned(c)
-	Auxiliary.RemoveConfused(c)
-	Auxiliary.RemoveParalyzed(c)
-	Auxiliary.RemovePoisoned(c)
-end
---remove the asleep special condition affecting a pokémon 
-function Auxiliary.RemoveAsleep(c)
-	if c:IsPosition(PM_POS_FACEUP_COUNTERCLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_UPSIDE) end
-	if c:IsHasEffect(PM_EFFECT_ASLEEP) then c:ResetEffect(PM_EFFECT_ASLEEP,RESET_EVENT) end
-	if c:GetFlagEffect(PM_EFFECT_ASLEEP)~=0 then c:ResetFlagEffect(PM_EFFECT_ASLEEP) end
-end
---remove the burned special condition affecting a pokémon
-function Auxiliary.RemoveBurned(c)
-	if c:GetMarker(PM_BURN_MARKER)~=0 then c:RemoveMarker(tp,PM_BURN_MARKER,1,REASON_RULE) end
-	if c:IsHasEffect(PM_EFFECT_BURNED) then c:ResetEffect(PM_EFFECT_BURNED,RESET_EVENT) end
-	if c:GetFlagEffect(PM_EFFECT_BURNED)~=0 then c:ResetFlagEffect(PM_EFFECT_BURNED) end
-end
---remove the confused special condition affecting a pokémon
-function Auxiliary.RemoveConfused(c)
-	if c:IsHasEffect(PM_EFFECT_CONFUSED) then c:ResetEffect(PM_EFFECT_CONFUSED,RESET_EVENT) end
-	if c:GetFlagEffect(PM_EFFECT_CONFUSED)~=0 then c:ResetFlagEffect(PM_EFFECT_CONFUSED) end
-end
---remove the paralyzed special condition affecting a pokémon
-function Auxiliary.RemoveParalyzed(c)
-	if c:IsPosition(PM_POS_FACEUP_CLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_UPSIDE) end
-	if c:IsHasEffect(PM_EFFECT_PARALYZED) then c:ResetEffect(PM_EFFECT_PARALYZED,RESET_EVENT) end
-	if c:GetFlagEffect(PM_EFFECT_PARALYZED)~=0 then c:ResetFlagEffect(PM_EFFECT_PARALYZED) end
-end
---remove the poisoned special condition affecting a pokémon
-function Auxiliary.RemovePoisoned(c)
-	if c:GetMarker(PM_POISON_MARKER)~=0 then c:RemoveMarker(tp,PM_POISON_MARKER,1,REASON_RULE) end
-	if c:IsHasEffect(PM_EFFECT_POISONED) then c:ResetEffect(PM_EFFECT_POISONED,RESET_EVENT) end
-	if c:GetFlagEffect(PM_EFFECT_POISONED)~=0 then c:ResetFlagEffect(PM_EFFECT_POISONED) end
 end
 
 --==========[+Conditions]==========
@@ -1810,10 +1816,6 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 			end
 end
 Auxiliary.econ5=Auxiliary.AttackCostCondition5
---get your opponent's active pokémon that receives the attack
-function Auxiliary.GetDefendingPokemon(e)
-	return Duel.GetFirstMatchingCard(Auxiliary.ActivePokemonFilter,e:GetHandlerPlayer(),0,PM_LOCATION_ACTIVE,nil)
-end
 
 --==========[+Costs]==========
 --cost for discarding Energy to a pokémon

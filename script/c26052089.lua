@@ -14,17 +14,17 @@ scard.pokemon_card=true
 scard.height=5.11
 scard.devolve_list={CARD_FRAXURE,CARD_AXEW}
 function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
-	pm.AttackDamage(e,60)
+	Duel.AttackDamage(e,60)
 end
 function scard.damop2(e,tp,eg,ep,ev,re,r,rp)
 	local ct=80
 	local c1,c2=Duel.TossCoin(tp,2)
 	if c1+c2==RESULT_HEADS+RESULT_HEADS then
-		pm.AttackDamage(e,ct)
-		local tc=pm.GetDefendingPokemon(e)
+		Duel.AttackDamage(e,ct)
+		local tc=Duel.GetDefendingPokemon(e)
 		pm.EnableParalyzed(tc)
 	elseif c1+c2==RESULT_TAILS+RESULT_TAILS then
 		ct=0
-		pm.AttackDamage(e,ct)
+		Duel.AttackDamage(e,ct)
 	end
 end

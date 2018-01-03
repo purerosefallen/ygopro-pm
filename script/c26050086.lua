@@ -12,5 +12,5 @@ scard.evolve_list={CARD_FRAXURE}
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c1,c2=Duel.TossCoin(tp,2)
 	local ct=c1+c2
-	pm.AttackDamage(e,ct*10)
+	Duel.AttackDamage(e,ct*10)
 end

@@ -18,7 +18,7 @@ scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_PSYCHIC
 scard.levelup_list={CARD_MEWTWO}
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	pm.AttackDamage(e,120)
+	Duel.AttackDamage(e,120)
 	local g=e:GetHandler():GetAttachmentGroup():Filter(Card.IsEnergy,nil)
 	Duel.SendtoDPile(g,REASON_EFFECT+REASON_DISCARD)
 end

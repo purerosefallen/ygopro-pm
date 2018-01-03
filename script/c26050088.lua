@@ -16,10 +16,10 @@ scard.devolve_list={CARD_FRAXURE,CARD_AXEW}
 function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
 	local c1,c2=Duel.TossCoin(tp,2)
 	local ct=c1+c2
-	pm.AttackDamage(e,ct*50)
+	Duel.AttackDamage(e,ct*50)
 end
 function scard.damop2(e,tp,eg,ep,ev,re,r,rp)
-	pm.AttackDamage(e,120)
+	Duel.AttackDamage(e,120)
 	local tc=e:GetHandler()
 	pm.EnableCannotAttack(tc,aux.Stringid(sid,2),RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_SELF_TURN,2)
 end

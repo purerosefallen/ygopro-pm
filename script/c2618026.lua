@@ -10,7 +10,7 @@ scard.pokemon_card=true
 scard.height=2.00
 scard.evolve_list={CARD_FRAXURE}
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	pm.AttackDamage(e,20)
-	local tc=pm.GetDefendingPokemon(e)
+	Duel.AttackDamage(e,20)
+	local tc=Duel.GetDefendingPokemon(e)
 	pm.EnableCannotRetreat(tc,aux.Stringid(sid,1),RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
 end
