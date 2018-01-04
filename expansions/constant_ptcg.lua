@@ -44,12 +44,11 @@ CARD_METAL_ENERGY					=26032130	--Diamond & Pearl 30/130
 CARD_COLORLESS_ENERGY				=nil		--energy=CARD_COLORLESS_ENERGY in Card.IsEnergy (c, energy)
 CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 --↑Special Energy cards
-CARD_DOUBLE_COLORLESS_ENERGY		=26001096	--Base Set 96/102
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
 --↑Pokémon that are part of an evolutionary line
-CARD_AXEW							=2618010	--Black Star Promo BW10
-CARD_FRAXURE						=26050087	--Noble Victories 87/101
-CARD_HAXORUS						=26050088	--Noble Victories 88/101
+CARD_AXEW							=2618010	--Axew → Fraxure → Haxorus (Black Star Promo BW10)
+CARD_FRAXURE						=26050087	--Axew → Fraxure → Haxorus (Noble Victories 87/101)
+CARD_HAXORUS						=26050088	--Axew → Fraxure → Haxorus (Noble Victories 88/101)
 --↑You may have as many of the following cards in your deck as you like
 CARD_ARCEUS							=26042094	--"Arceus LV.X" (Arceus AR1)
 --↑Pokémon LV.X
@@ -137,20 +136,7 @@ PM_TYPE_BASIC_ENERGY				=0x5			--"Energy Retrieval" (Base Set 81/102)
 PM_TYPE_SPECIAL_ENERGY				=0xf			--"Smoochum" (Neo Revelation 54/64)
 PM_TYPE_HOLON_ENERGY					=0x1020		--"Flareon δ" (EX Delta Species 5/113) (+PM_TYPE_SPECIAL_ENERGY)
 --new special energy goes here
---Pokémon/Energy Type (color)
-PM_ENERGY_ALL						=0xfff			--Include all 11 Energy types
-PM_ENERGY_GRASS						=0x001			--EARTH
-PM_ENERGY_FIRE						=0x002			--WATER
-PM_ENERGY_WATER						=0x004			--FIRE
-PM_ENERGY_LIGHTNING					=0x008			--WIND
-PM_ENERGY_PSYCHIC					=0x010			--LIGHT
-PM_ENERGY_FIGHTING					=0x020			--DARK
-PM_ENERGY_DARKNESS					=0x040			--DIVINE
-PM_ENERGY_METAL						=0x080			--???
-PM_ENERGY_COLORLESS					=0x100			--???
-PM_ENERGY_FAIRY						=0x200			--???
-PM_ENERGY_DRAGON					=0x400			--???
---Setname
+--↑Setname
 PM_SETNAME_MISTY						=0x6		--"Misty" (Gym Heroes 18/132) (+PM_SETNAME_OWNER)
 PM_SETNAME_BROCK						=0x7		--"Brock's Geodude" (Gym Heroes 66/132) (+PM_SETNAME_OWNER)
 PM_SETNAME_ERIKA						=0x8		--"Celadon City Gym" (Gym Heroes 107/132) (+PM_SETNAME_OWNER)
@@ -173,6 +159,21 @@ PM_SETNAME_HOLON					=0x20			--"Holon Transceiver" (EX Delta Species 98/113)
 PM_SETNAME_FOSSIL					=0x22			--"Fossil Excavator" (Mysterious Treasures 111/123)
 PM_SETNAME_TEAM_GALACTICS_INVENTION	=0x23			--"Honchkrow G" (Platinum 77/127)
 PM_SETNAME_TEAM_PLASMA					=0x2a		--"Skarmory" (Plasma Storm 87/135)
+--↑Special Energy (for PM_EFFECT_ADD_SETCODE only)
+PM_TYPE_DOUBLE_COLORLESS_ENERGY		=0x999			--Double Colorless Energy (Base Set 96/102)
+--Pokémon/Energy Type (color)
+PM_ENERGY_ALL						=0xfff			--Include all 11 Energy types
+PM_ENERGY_GRASS						=0x001			--EARTH
+PM_ENERGY_FIRE						=0x002			--WATER
+PM_ENERGY_WATER						=0x004			--FIRE
+PM_ENERGY_LIGHTNING					=0x008			--WIND
+PM_ENERGY_PSYCHIC					=0x010			--LIGHT
+PM_ENERGY_FIGHTING					=0x020			--DARK
+PM_ENERGY_DARKNESS					=0x040			--DIVINE
+PM_ENERGY_METAL						=0x080			--???
+PM_ENERGY_COLORLESS					=0x100			--???
+PM_ENERGY_FAIRY						=0x200			--???
+PM_ENERGY_DRAGON					=0x400			--???
 --Reason
 PM_REASON_KNOCKED_OUT				=REASON_DESTROY		--Knocked Out=Destroy
 --Summon Type
@@ -181,9 +182,9 @@ PM_SUMMON_TYPE_LEVELUP				=0x4d000000			--Pokémon LV.X
 --Status
 PM_STATUS_NO_RETREAT_COST			=STATUS_NO_LEVEL	--Pokémon with no Retreat Cost
 --Player
-PLAYER_OWNER						=nil	--player=PLAYER_OWNER in Duel.Sendto.. (targets, player, reason)
-PLAYER_PLAYER						=0		--player=PLAYER_PLAYER in Effect.SetCondition (Auxiliary.turnpcon(player)), etc.
-PLAYER_OPPONENT						=1		--player=PLAYER_OPPONENT in Effect.SetCondition (Auxiliary.turnpcon(player)), etc.
+PLAYER_OWNER						=nil	--player=PLAYER_OWNER in Duel.Sendto..(targets, player, reason)
+PLAYER_PLAYER						=0		--player=PLAYER_PLAYER in Effect.SetCondition(Auxiliary.turnpcon(player)), etc.
+PLAYER_OPPONENT						=1		--player=PLAYER_OPPONENT in Effect.SetCondition(Auxiliary.turnpcon(player)), etc.
 --Reset
 --↑Reset combinations
 RESETS_STANDARD						=0x1fe0000	--RESET_TURN_SET+RESET_TOGRAVE+RESET_REMOVE+RESET_TEMP_REMOVE+RESET_TOHAND+RESET_TODECK+RESET_LEAVE+RESET_TOFIELD
@@ -375,8 +376,8 @@ SEQUENCE_FIRST_SZONE				=0	--Card.IsLocation(LOCATION_SZONE) and Card.GetSequenc
 SEQUENCE_FIELD_ZONE					=5	--Card.IsLocation(LOCATION_SZONE) and Card.GetSequence()==SEQUENCE_FIELD_ZONE
 SEQUENCE_EXTRA_MZONE				=5	--Card.IsLocation(LOCATION_MZONE) and Card.GetSequence()==SEQUENCE_EXTRA_MZONE
 --Deck Order
-DECK_ORDER_TOP						=0	--seq=DECK_ORDER_TOP in Duel.SendtoDeck (targets, player, seq, reason)
-DECK_ORDER_BOTTOM					=1	--seq=DECK_ORDER_BOTTOM in Duel.SendtoDeck (targets, player, seq, reason)
-DECK_ORDER_SHUFFLE					=2	--seq=DECK_ORDER_SHUFFLE in Duel.SendtoDeck (targets, player, seq, reason)
-DECK_ORDER_UNEXIST					=-2	--seq=DECK_ORDER_UNEXIST in Duel.SendtoDeck (targets, player, seq, reason)
+DECK_ORDER_TOP						=0	--seq=DECK_ORDER_TOP in Duel.SendtoDeck(targets, player, seq, reason)
+DECK_ORDER_BOTTOM					=1	--seq=DECK_ORDER_BOTTOM in Duel.SendtoDeck(targets, player, seq, reason)
+DECK_ORDER_SHUFFLE					=2	--seq=DECK_ORDER_SHUFFLE in Duel.SendtoDeck(targets, player, seq, reason)
+DECK_ORDER_UNEXIST					=-2	--seq=DECK_ORDER_UNEXIST in Duel.SendtoDeck(targets, player, seq, reason)
 return PTCG

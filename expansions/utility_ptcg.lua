@@ -247,6 +247,10 @@ end
 function Card.IsSpecialEnergy(c)
 	return c:IsEnergy() and c:IsSubType(PM_TYPE_SPECIAL)
 end
+--check if an Energy card provides [C][C]
+function Card.IsDoubleColorlessEnergy(c)
+	return c:IsEnergy() and c:IsSetCard(PM_TYPE_DOUBLE_COLORLESS_ENERGY)
+end
 --check if a card can only have one copy of itself in a player's deck
 function Card.IsHasDeckRestriction(c)
 	return c:IsHasEffect(PM_EFFECT_RESTRICT_MIRACLE_ENERGY) or c:IsHasEffect(PM_EFFECT_RESTRICT_ACE_SPEC)
@@ -1360,6 +1364,22 @@ function Auxiliary.EnablePokemonAbility(c,desc_id,cate,targ_func,op_func,con_fun
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
 end
+--"This card provides Double ... Energy." (e.g. "Double Colorless Energy BS 96")
+function Auxiliary.EnableDoubleEnergy(c,val)
+	--val: PM_TYPE_DOUBLE_..._ENERGY
+	local code=c:GetOriginalCode()
+	local m=_G["c"..code]
+	if not m.global_check then
+		m.global_check=true
+		local ge1=Effect.GlobalEffect()
+		ge1:SetType(EFFECT_TYPE_FIELD)
+		ge1:SetCode(PM_EFFECT_ADD_SETCODE)
+		ge1:SetTargetRange(PM_LOCATION_ATTACHED,PM_LOCATION_ATTACHED)
+		ge1:SetTarget(aux.TargetBoolFunction(Card.IsCode,code))
+		ge1:SetValue(val)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
 --"Draw N cards."
 function Auxiliary.DrawTarget(p,ct)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -1686,7 +1706,7 @@ function Auxiliary.AttackCostCondition1(ener1,count1)
 				local c=e:GetHandler()
 				local ct1=c:GetAttachmentGroup():FilterCount(Card.IsEnergy,nil,ener1)
 				local ct2=c:GetAttachmentGroup():FilterCount(Card.IsBasicEnergy,nil)
-				local ct3=c:GetAttachmentGroup():FilterCount(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)*2
+				local ct3=c:GetAttachmentGroup():FilterCount(Card.IsDoubleColorlessEnergy,nil)*2
 				if ener1==CARD_COLORLESS_ENERGY then ct1=0 end
 				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
 					and (ct1>0 or ct2>0 or ct3>0) and ct1+ct2+ct3>=count1
@@ -1701,7 +1721,7 @@ function Auxiliary.AttackCostCondition2(ener1,count1,ener2,count2)
 				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
 				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
 				local g3=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,g1)
-				local g4=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
+				local g4=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
 				local ct1=g1:GetCount()
 				local ct2=g2:GetCount()
 				local ct3=g3:GetCount()
@@ -1725,7 +1745,7 @@ function Auxiliary.AttackCostCondition3(ener1,count1,ener2,count2,ener3,count3)
 				exg:Merge(g2)
 				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergy,exg,ener3)
 				local g4=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,exg)
-				local g5=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
+				local g5=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
 				local ct1=g1:GetCount()
 				local ct2=g2:GetCount()
 				local ct3=g3:GetCount()
@@ -1753,7 +1773,7 @@ function Auxiliary.AttackCostCondition4(ener1,count1,ener2,count2,ener3,count3,e
 				exg:Merge(g3)
 				local g4=c:GetAttachmentGroup():Filter(Card.IsEnergy,exg,ener4)
 				local g5=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,exg)
-				local g6=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
+				local g6=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
 				local ct1=g1:GetCount()
 				local ct2=g2:GetCount()
 				local ct3=g3:GetCount()
@@ -1785,7 +1805,7 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 				exg:Merge(g4)
 				local g5=c:GetAttachmentGroup():Filter(Card.IsEnergy,exg,ener5)
 				local g6=c:GetAttachmentGroup():Filter(Card.IsBasicEnergy,exg)
-				local g7=c:GetAttachmentGroup():Filter(Card.IsCode,nil,CARD_DOUBLE_COLORLESS_ENERGY)
+				local g7=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
 				local ct1=g1:GetCount()
 				local ct2=g2:GetCount()
 				local ct3=g3:GetCount()
