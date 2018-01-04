@@ -12,13 +12,13 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=3.03
-scard.devolve_list={CARD_AXEW}
 scard.evolve_list={CARD_HAXORUS}
+scard.devolve_list={CARD_AXEW}
 function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
-	Duel.AttackDamage(e,20)
+	Duel.AttackDamage(20)
 end
 function scard.damop2(e,tp,eg,ep,ev,re,r,rp)
 	local c1,c2=Duel.TossCoin(tp,2)
 	local ct=c1+c2
-	Duel.AttackDamage(e,ct*30)
+	Duel.AttackDamage(ct*30)
 end

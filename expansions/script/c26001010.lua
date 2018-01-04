@@ -11,13 +11,11 @@ end
 scard.pokemon_card=true
 scard.length=6.07
 scard.weakness_x2=PM_ENERGY_PSYCHIC
---damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetDefendingPokemon(e)
+	local tc=Duel.GetDefendingPokemon()
 	local ct=tc:GetAttachmentGroup():FilterCount(Card.IsEnergy,nil)*10
-	Duel.AttackDamage(e,10+ct)
+	Duel.AttackDamage(10+ct)
 end
---immune
 function scard.imop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetDescription(aux.Stringid(sid,2))

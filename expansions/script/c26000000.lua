@@ -263,7 +263,7 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 	scard.set_prize_cards(e,tp,tp,6)
 	scard.set_prize_cards(e,tp,1-tp,6)
 	--flip
-	scard.flip(e,tp)
+	scard.flip_pokemon(e,tp)
 	--draw extra
 	scard.draw_extra(e,tp,tp)
 	scard.draw_extra(e,tp,1-tp)
@@ -323,7 +323,7 @@ function scard.set_prize_cards(e,tp,player,count)
 	local ct=Duel.GetPrizeGroupCount(tp,player)
 	Duel.SetLP(1-player,ct)
 end
-function scard.flip(e,tp)
+function scard.flip_pokemon(e,tp)
 	local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,PM_LOCATION_IN_PLAY,PM_LOCATION_IN_PLAY,nil)
 	Duel.ChangePosition(g,PM_POS_FACEUP_UPSIDE)
 end
@@ -390,11 +390,11 @@ function scard.prcon2(e,tp,eg,ep,ev,re,r,rp)
 end
 function scard.prop2(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
-	local n=1
-	if ec:IsPokemonEX() or ec:IsPokemonGX() then n=2 end
+	local ct=1
+	if ec:IsPokemonEX() or ec:IsPokemonGX() then ct=2 end
 	local g1=Duel.GetPrizeGroup(tp,tp):Filter(scard.thfilter,nil)
 	local g2=Duel.GetPrizeGroup(tp,1-tp):Filter(scard.thfilter,nil)
-	local rg=g1:RandomSelect(tp,n)
+	local rg=g1:RandomSelect(tp,ct)
 	Duel.SendtoHand(rg,PLAYER_OWNER,REASON_RULE)
 	Duel.RegisterFlagEffect(tp,PM_EFFECT_PRIZE_CARD_CHECK,0,0,0)
 end
@@ -438,7 +438,7 @@ function scard.sudden_death(e,tp,eg,ep,ev,re,r,rp)
 	scard.set_prize_cards(e,tp,turnp,1)
 	scard.set_prize_cards(e,tp,1-turnp,1)
 	--flip
-	scard.flip(e,turnp)
+	scard.flip_pokemon(e,turnp)
 	--draw extra
 	scard.draw_extra(e,tp,turnp)
 	scard.draw_extra(e,tp,1-turnp)

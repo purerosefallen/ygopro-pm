@@ -17,7 +17,7 @@
 --[+Energy]..................................................functions that are included on every Energy card
 --[+Trainer].................................................functions that are included on every Trainer card
 --[+Attack]..................................................attacks that are shared by many pokémon
---[+Ability].................................................non-attack effects that are shared by many cards
+--[+Ability].................................................effects that are shared by many cards
 --[+SpecialCondition]........................................asleep, burned, confused, paralyzed and poisoned
 --[+Conditions]..............................................condition functions
 --[+Costs]...................................................cost functions
@@ -72,70 +72,65 @@ Card.IsSubType=Card.IsSetCard
 Card.IsPreviousSubType=Card.IsPreviousSetCard
 --check what a card's original type is
 Card.IsOriginalSubType=Card.IsOriginalSetCard
---check if a card has an alias
-function Card.IsHasAlias(c)
-	return c:GetCode()~=c:GetOriginalCode()
-		and not (c:IsHasEffect(EFFECT_ADD_CODE) or c:IsHasEffect(EFFECT_CHANGE_CODE))
-end
 --check if a card is a Basic Pokémon
 function Card.IsBasicPokemon(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_BASIC_POKEMON) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_BASIC_POKEMON)
 end
 --check if a card is an Evolution Pokémon
 function Card.IsEvolution(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_EVOLUTION) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_EVOLUTION)
 end
 --check if a card is a Stage 1 Pokémon
 function Card.IsStage1(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_STAGE_1) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_STAGE_1)
 end
 --check if a card is a Stage 2 Pokémon
 function Card.IsStage2(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_STAGE_2) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_STAGE_2)
 end
 --check if a card is a Baby Pokémon
 function Card.IsBabyPokemon(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_BABY_POKEMON) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_BABY_POKEMON)
 end
 --check if a card is a Pokémon-ex
 function Card.IsPokemonex(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX_OLD) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX_OLD)
 end
 --check if a card is a Pokémon star
 function Card.IsPokemonStar(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_POKEMON_STAR) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_POKEMON_STAR)
 end
 --check if a card is a Pokémon LV.X (Pokémon Level-Up)
 function Card.IsPokemonLVX(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEVEL_UP) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEVEL_UP)
 end
 --check if a card is a Pokémon SP
 function Card.IsPokemonSP(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_SP) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_SP)
 end
 --check if a card is a Pokémon LEGEND
 function Card.IsPokemonLEGEND(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEGEND) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEGEND)
 end
 --check if a card is a Pokémon-EX
 function Card.IsPokemonEX(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX)
 end
 --check if a card is a Restored Pokémon
 function Card.IsRestoredPokemon(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_RESTORED) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_RESTORED)
 end
 --check if a card is a Mega Evolution Pokémon
 function Card.IsMegaEvolution(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_MEGA) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_MEGA)
 end
 --check if a card is a Pokémon BREAK
 function Card.IsPokemonBREAK(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_BREAK) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_BREAK)
 end
 --check if a card is a Pokémon-GX
 function Card.IsPokemonGX(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_GX) and not c:IsHasAlias()
+	return c:IsPokemon() and c:IsSubType(PM_TYPE_GX)
 end
 --check if a pokémon has an owner
 function Card.IsOwnerPokemon(c)
@@ -144,7 +139,6 @@ function Card.IsOwnerPokemon(c)
 		or c:IsSetCard(PM_SETNAME_SABRINA) or c:IsSetCard(PM_SETNAME_LT_SURGE) or c:IsSetCard(PM_SETNAME_BLAINE)
 		or c:IsSetCard(PM_SETNAME_GIOVANNI) or c:IsSetCard(PM_SETNAME_KOGA) or c:IsSetCard(PM_SETNAME_TEAM_MAGMA)
 		or c:IsSetCard(PM_SETNAME_TEAM_AQUA) or c:IsSetCard(PM_SETNAME_ROCKETS)) --update with new owners here
-		and not c:IsHasAlias()
 end
 --check if a pokémon has a Pokémon Power/Ability
 function Card.IsHasAbility(c)
@@ -183,31 +177,31 @@ function Card.IsStadium(c)
 end
 --check if a card is an Item
 function Card.IsItem(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_ITEM) and not c:IsHasAlias()
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_ITEM)
 end
 --check if a card is a Pokémon Tool
 function Card.IsPokemonTool(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_POKEMON_TOOL) and not c:IsHasAlias()
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_POKEMON_TOOL)
 end
 --check if a card is an ACE SPEC
 function Card.IsACESPEC(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_ACE_SPEC) and not c:IsHasAlias()
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_ACE_SPEC)
 end
 --check if a card is a Supporter
 function Card.IsSupporter(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_SUPPORTER) and not c:IsHasAlias()
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_SUPPORTER)
 end
 --check if a card is a Technical Machine
 function Card.IsTechnicalMachine(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_TECHNICAL_MACHINE) and not c:IsHasAlias()
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_TECHNICAL_MACHINE)
 end
 --check if a card is a Rocket's Secret Machine
 function Card.IsRocketsSecretMachine(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_ROCKETS_SECRET_MACHINE) and not c:IsHasAlias()
+	return c:IsTrainer() and c:IsSubType(PM_TYPE_ROCKETS_SECRET_MACHINE)
 end
 --check if a card is a basic Energy
 function Card.IsBasicEnergy(c)
-	return c:IsEnergy() and c:IsSubType(PM_TYPE_BASIC_ENERGY) and not c:IsHasAlias()
+	return c:IsEnergy() and c:IsSubType(PM_TYPE_BASIC_ENERGY)
 end
 --check if a card is a [G] Energy
 function Card.IsGrassEnergy(c)
@@ -251,7 +245,7 @@ function Card.IsFairyEnergy(c)
 end
 --check if a card is a Special Energy
 function Card.IsSpecialEnergy(c)
-	return c:IsEnergy() and c:IsSubType(PM_TYPE_SPECIAL) and not c:IsHasAlias()
+	return c:IsEnergy() and c:IsSubType(PM_TYPE_SPECIAL)
 end
 --check if a card can only have one copy of itself in a player's deck
 function Card.IsHasDeckRestriction(c)
@@ -496,29 +490,31 @@ end
 function Duel.GetPrizeGroupCount(tp,player)
 	return Duel.GetPrizeGroup(tp,player):GetCount()
 end
---get your active pokémon that does the attack
-function Duel.GetAttackingPokemon(e)
-	return Duel.GetFirstMatchingCard(Auxiliary.ActivePokemonFilter,e:GetHandlerPlayer(),PM_LOCATION_ACTIVE,0,nil)
+--get the active pokémon that does the attack
+function Duel.GetAttackingPokemon()
+	return Duel.GetFirstMatchingCard(Auxiliary.ActivePokemonFilter,Duel.GetTurnPlayer(),PM_LOCATION_ACTIVE,0,nil)
 end
---get your opponent's active pokémon that receives the attack
-function Duel.GetDefendingPokemon(e)
-	return Duel.GetFirstMatchingCard(Auxiliary.ActivePokemonFilter,e:GetHandlerPlayer(),0,PM_LOCATION_ACTIVE,nil)
+--get the active pokémon that receives the attack
+function Duel.GetDefendingPokemon()
+	return Duel.GetFirstMatchingCard(Auxiliary.ActivePokemonFilter,Duel.GetTurnPlayer(),0,PM_LOCATION_ACTIVE,nil)
 end
---put a damage counter on the defending pokémon for each 10 damage the attacking pokémon does
-function Duel.AttackDamage(e,count,d,bool_weak,bool_resist,bool_effect)
+--put a damage counter on the defending pokémon for each 10 damage the attacking pokémon's attack does
+function Duel.AttackDamage(count,d,bool_weak,bool_resist,bool_effect)
 	--count: attack damage
 	--d: the defending pokémon
 	--bool_weak: false to not apply weakness to the attack target
 	--bool_resist: false to not apply resistance to the attack target
 	--bool_effect: false to not apply effects on the attack target
 	count=count/10
-	local a=Duel.GetAttackingPokemon(e)
-	local d=d or Duel.GetDefendingPokemon(e)
+	local a=Duel.GetAttackingPokemon()
+	local d=d or Duel.GetDefendingPokemon()
 	local bool_weak=bool_weak or true
 	local bool_resist=bool_resist or true
 	local bool_effect=bool_effect or true
 	local turnp=Duel.GetTurnPlayer()
-	Duel.PokemonAttack(a,d)
+	if a:IsActive() and d:IsActive() then
+		Duel.PokemonAttack(a,d)
+	end
 	local energy=a:GetPokemonType()
 	local weakness_x2=d.weakness_x2==energy
 	local weakness_10=d.weakness_10==energy
@@ -553,19 +549,18 @@ function Duel.AttackDamage(e,count,d,bool_weak,bool_resist,bool_effect)
 	d:AddCounter(PM_DAMAGE_COUNTER,ct)
 end
 --put a damage counter(s) on a pokémon due to an effect
-function Duel.EffectDamage(e,count,c1,c2,bool_weak,bool_resist)
+function Duel.EffectDamage(count,c1,c2,bool_weak,bool_resist)
 	--count: the number of damage counters
 	--c1: the pokémon with the effect
 	--c2: the pokémon that receives the damage counters
 	--bool_weak: false to not apply weakness to the attack target
 	--bool_resist: false to not apply resistance to the attack target
 	count=count/10
-	local c1=c1 or Duel.GetAttackingPokemon(e)
-	local c2=c2 or Duel.GetDefendingPokemon(e)
+	local c1=c1 or Duel.GetAttackingPokemon()
+	local c2=c2 or Duel.GetDefendingPokemon()
 	local bool_weak=bool_weak or true
 	local bool_resist=bool_resist or true
-	local bool_effect=bool_effect or true
-	local tp=e:GetHandlerPlayer()
+	local turnp=Duel.GetTurnPlayer()
 	local energy=c1:GetPokemonType()
 	local weakness_x2=c2.weakness_x2==energy
 	local weakness_10=c2.weakness_10==energy
@@ -595,13 +590,13 @@ function Duel.EffectDamage(e,count,c1,c2,bool_weak,bool_resist)
 	end
 	--apply effects after weakness & resistance
 	--reserved
-	if ct>count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE)
-	elseif ct<count then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_DECREASE) end
+	if ct>count then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_INCREASE)
+	elseif ct<count then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
 	d:AddCounter(PM_DAMAGE_COUNTER,ct)
 end
 --remove a special condition affecting a pokémon
 function Duel.RemoveSpecialCondition(c,code)
-	--code: PM_EFFECT_ASLEEP, PM_EFFECT_BURNED, PM_EFFECT_CONFUSED, PM_EFFECT_PARALYZED and/or PM_EFFECT_POISONED
+	--code: PM_EFFECT_ASLEEP, PM_EFFECT_BURNED, PM_EFFECT_CONFUSED, PM_EFFECT_PARALYZED or PM_EFFECT_POISONED
 	if code==PM_EFFECT_ASLEEP or not code then
 		if c:IsPosition(PM_POS_FACEUP_COUNTERCLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_UPSIDE) end
 		if c:IsHasEffect(PM_EFFECT_ASLEEP) then c:ResetEffect(PM_EFFECT_ASLEEP,RESET_EVENT) end
@@ -1317,36 +1312,6 @@ function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
 end
---"[C]Collect Draw a card." (e.g. "Pansage KSS 2")
-function Auxiliary.AttackCollect(c)
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(PM_DESC_C_COLLECT)
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(PM_LOCATION_ACTIVE)
-	e1:SetCondition(Auxiliary.AttackCostCondition1(CARD_COLORLESS_ENERGY,1))
-	e1:SetTarget(Auxiliary.DrawTarget(PLAYER_PLAYER,1))
-	e1:SetOperation(Auxiliary.DrawOperation(PLAYER_PLAYER,1))
-	c:RegisterEffect(e1)
-end
-function Auxiliary.DrawTarget(p,ct)
-	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
-				local player=nil
-				if p==PLAYER_PLAYER or p==tp then player=tp
-				elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
-				if chk==0 then return Duel.IsPlayerCanDraw(player,ct) end
-				if e:GetHandler():IsPokemon() then Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription()) end
-			end
-end
-Auxiliary.drtg=Auxiliary.DrawTarget
-function Auxiliary.DrawOperation(p,ct)
-	return	function(e,tp,eg,ep,ev,re,r,rp)
-				local player=nil
-				if p==PLAYER_PLAYER or p==tp then player=tp
-				elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
-				Duel.Draw(player,ct,REASON_EFFECT)
-			end
-end
-Auxiliary.drop=Auxiliary.DrawOperation
 --"The Defending Pokémon can't retreat during your opponent's next turn." (e.g. "Axew Black Star Promo BW26")
 function Auxiliary.EnableCannotRetreat(c,desc,reset_flag,reset_count,con_func)
 	local reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
@@ -1395,6 +1360,26 @@ function Auxiliary.EnablePokemonAbility(c,desc_id,cate,targ_func,op_func,con_fun
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
 end
+--"Draw N cards."
+function Auxiliary.DrawTarget(p,ct)
+	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
+				local player=nil
+				if p==PLAYER_PLAYER or p==tp then player=tp
+				elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
+				if chk==0 then return Duel.IsPlayerCanDraw(player,ct) end
+				if e:GetHandler():IsPokemon() then Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription()) end
+			end
+end
+Auxiliary.drtg=Auxiliary.DrawTarget
+function Auxiliary.DrawOperation(p,ct)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local player=nil
+				if p==PLAYER_PLAYER or p==tp then player=tp
+				elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
+				Duel.Draw(player,ct,REASON_EFFECT)
+			end
+end
+Auxiliary.drop=Auxiliary.DrawOperation
 --"The Retreat Cost for each [P] and [D] Pokémon is 0." (e.g. "Moonlight Stadium GE 100")
 function Auxiliary.EnableNoRetreatCost(c,range,s_range,o_range,targ_func,con_func)
 	local e1=Effect.CreateEffect(c)
