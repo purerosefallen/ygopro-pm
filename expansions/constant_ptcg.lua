@@ -13,7 +13,8 @@ local PTCG={}
 
 --Card ID
 --↑Rules
-CARD_PTCG_RULES						=26000000	--Pokémon Rules
+CARD_PTCG_RULES						=26000000	--Unofficial card (Pokémon Rules)
+CARD_GX_MARKER						=26000999	--Unofficial card (GX Marker)
 --↑String
 PM_STRING_WIN						=26000001	--Win
 PM_STRING_GAME						=26000002	--Game Progress
@@ -41,7 +42,7 @@ CARD_PSYCHIC_ENERGY					=26001101	--Base Set 101/102
 CARD_FIGHTING_ENERGY				=26001097	--Base Set 97/102
 CARD_DARKNESS_ENERGY				=26032129	--Diamond & Pearl 29/130
 CARD_METAL_ENERGY					=26032130	--Diamond & Pearl 30/130
-CARD_COLORLESS_ENERGY				=nil		--energy=CARD_COLORLESS_ENERGY in Card.IsEnergy (c, energy)
+CARD_COLORLESS_ENERGY				=nil		--energy=CARD_COLORLESS_ENERGY in Card.IsEnergy(c, energy)
 CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 --↑Special Energy cards
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
@@ -54,6 +55,7 @@ CARD_ARCEUS							=26042094	--"Arceus LV.X" (Arceus AR1)
 --↑Pokémon LV.X
 CARD_MEWTWO							=26001010	--"Mewtwo LV.X" (Legends Awakened 144/146)
 --↑Pokémon GX
+CARD_SNORLAX_GX						=2629005	--"Black Star Promo SM05"
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
 --↑Trainer
 CARD_PUZZLE_OF_TIME					=26067109	--"Puzzle of Time" (BREAKpoint 109/122)
@@ -216,6 +218,7 @@ PM_EFFECT_SUDDEN_DEATH_RESTART		=CARD_PTCG_RULES+3			--Workaround for not being 
 PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+4			--Prevent activating more than 1 Supporter card per turn
 PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+5			--Prevent playing more than 1 Stadium card per turn
 PM_EFFECT_LIMIT_ENERGY				=CARD_PTCG_RULES+6			--Prevent attaching more than 1 Energy card per turn
+PM_EFFECT_LIMIT_GX_ATTACK			=CARD_SNORLAX_GX			--You can't use more than 1 GX attack in a game
 PM_EFFECT_RETREAT					=700	--Prevent a player from retreating their Pokémon more than once per turn
 PM_EFFECT_ASLEEP					=701	--"Asleep" Special Condition
 PM_EFFECT_BURNED					=702	--"Burned" Special Condition

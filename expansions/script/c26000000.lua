@@ -156,15 +156,24 @@ function scard.initial_effect(c)
 	e19:SetCode(PM_EVENT_PLAY_SUCCESS)
 	e19:SetCondition(scard.endcon2)
 	c:RegisterEffect(e19)
-	--win
+	--gx attack
 	local e20=Effect.CreateEffect(c)
 	e20:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IMMEDIATELY_APPLY)
 	e20:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e20:SetCode(PM_EVENT_KNOCKED_OUT)
+	e20:SetCode(PM_EVENT_ATTACK_END)
 	e20:SetRange(PM_LOCATION_RULES)
-	e20:SetCondition(scard.wincon)
-	e20:SetOperation(scard.winop)
+	e20:SetCondition(scard.gxcon)
+	e20:SetOperation(scard.gxop)
 	c:RegisterEffect(e20)
+	--win
+	local e21=Effect.CreateEffect(c)
+	e21:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IMMEDIATELY_APPLY)
+	e21:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e21:SetCode(PM_EVENT_KNOCKED_OUT)
+	e21:SetRange(PM_LOCATION_RULES)
+	e21:SetCondition(scard.wincon)
+	e21:SetOperation(scard.winop)
+	c:RegisterEffect(e21)
 	--cannot bp
 	pm.RuleCannotBP(c)
 	--infinite hand
@@ -209,15 +218,24 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 	--apply rules for you
 	Duel.Remove(c,POS_FACEUP,REASON_RULE)
 	Duel.SendtoExtraP(c,tp,REASON_RULE)
+	local gx1=Duel.CreateToken(tp,CARD_GX_MARKER)
+	Duel.Remove(gx1,POS_FACEUP,REASON_RULE)
+	Duel.SendtoExtraP(gx1,tp,REASON_RULE)
 	--apply rules for your opponent
 	local rg=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATIONS_ALL,nil,sid)
 	if rg:GetCount()>0 then
 		Duel.Remove(rg:GetFirst(),POS_FACEUP,REASON_RULE)
 		Duel.SendtoExtraP(rg:GetFirst(),1-tp,REASON_RULE)
+		local gx2=Duel.CreateToken(1-tp,CARD_GX_MARKER)
+		Duel.Remove(gx2,POS_FACEUP,REASON_RULE)
+		Duel.SendtoExtraP(gx2,1-tp,REASON_RULE)
 	else
 		local rules=Duel.CreateToken(1-tp,sid)
 		Duel.Remove(rules,POS_FACEUP,REASON_RULE)
 		Duel.SendtoExtraP(rules,1-tp,REASON_RULE)
+		local gx2=Duel.CreateToken(1-tp,CARD_GX_MARKER)
+		Duel.Remove(gx2,POS_FACEUP,REASON_RULE)
+		Duel.SendtoExtraP(gx2,1-tp,REASON_RULE)
 	end
 	if turnp==1-tp then return end
 	--check for non-pokémon tcg cards
@@ -523,6 +541,17 @@ function scard.endcon2(e,tp,eg,ep,ev,re,r,rp)
 end
 function scard.endop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
+end
+--gx attack
+function scard.gxcon(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
+	return rc:IsActive() and rc:IsControler(tp) and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
+		and rc:IsPokemonGX() and Duel.GetFlagEffect(tp,PM_EFFECT_LIMIT_GX_ATTACK)==0
+end
+function scard.gxop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.RegisterFlagEffect(tp,PM_EFFECT_LIMIT_GX_ATTACK,0,0,1)
+	local tc=Duel.GetFirstMatchingCard(Card.IsCode,tp,PM_LOCATION_RULES,0,nil,CARD_GX_MARKER)
+	if tc then Duel.SendtoDeck(tc,PLAYER_OWNER,DECK_ORDER_UNEXIST,REASON_RULE) end
 end
 --win
 function scard.wincon(e)
