@@ -46,6 +46,8 @@ CARD_COLORLESS_ENERGY				=nil		--energy=CARD_COLORLESS_ENERGY in Card.IsEnergy(c
 CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 --↑Special Energy cards
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
+CARD_DOUBLE_AQUA_ENERGY				=2626033	--EX Team Magma vs Team Aqua 33/95
+CARD_DOUBLE_MAGMA_ENERGY			=2626034	--EX Team Magma vs Team Aqua 34/95
 --↑Pokémon that are part of an evolutionary line
 CARD_AXEW							=2618010	--Axew → Fraxure → Haxorus (Black Star Promo BW10)
 CARD_FRAXURE						=26050087	--Axew → Fraxure → Haxorus (Noble Victories 87/101)
@@ -163,6 +165,8 @@ PM_SETNAME_TEAM_GALACTICS_INVENTION	=0x23			--"Honchkrow G" (Platinum 77/127)
 PM_SETNAME_TEAM_PLASMA					=0x2a		--"Skarmory" (Plasma Storm 87/135)
 --↑Special Energy (for PM_EFFECT_ADD_SETCODE only)
 PM_TYPE_DOUBLE_COLORLESS_ENERGY		=0x999			--Double Colorless Energy (Base Set 96/102)
+PM_TYPE_DOUBLE_WATER_ENERGY			=0x998			--Double Aqua Energy (Double Crisis 33/34)
+PM_TYPE_DOUBLE_FIGHTING_ENERGY		=0x997			--Double Magma Energy (Double Crisis 34/34)
 --Pokémon/Energy Type (color)
 PM_ENERGY_ALL						=0xfff			--Include all 11 Energy types
 PM_ENERGY_GRASS						=0x001			--EARTH
@@ -218,7 +222,7 @@ PM_EFFECT_SUDDEN_DEATH_RESTART		=CARD_PTCG_RULES+3			--Workaround for not being 
 PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+4			--Prevent activating more than 1 Supporter card per turn
 PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+5			--Prevent playing more than 1 Stadium card per turn
 PM_EFFECT_LIMIT_ENERGY				=CARD_PTCG_RULES+6			--Prevent attaching more than 1 Energy card per turn
-PM_EFFECT_LIMIT_GX_ATTACK			=CARD_SNORLAX_GX			--You can't use more than 1 GX attack in a game
+PM_EFFECT_LIMIT_GX_ATTACK			=CARD_SNORLAX_GX			--Prevent using more than 1 GX attack in a game
 PM_EFFECT_RETREAT					=700	--Prevent a player from retreating their Pokémon more than once per turn
 PM_EFFECT_ASLEEP					=701	--"Asleep" Special Condition
 PM_EFFECT_BURNED					=702	--"Burned" Special Condition
