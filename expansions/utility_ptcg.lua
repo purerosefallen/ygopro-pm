@@ -1765,33 +1765,31 @@ Auxiliary.econ0=Auxiliary.AttackCostCondition0
 --condition for attacks with an Energy Cost of 1 Energy
 function Auxiliary.AttackCostCondition1(ener1,count1)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
-				local res=count1
 				local c=e:GetHandler()
-				local ct=c:GetAttachmentGroup():FilterCount(Card.IsEnergy,nil,ener1)
+				local ct1=c:GetAttachmentGroup():FilterCount(Card.IsEnergy,nil,ener1)
 				local cct=c:GetAttachmentGroup():FilterCount(Card.IsDoubleColorlessEnergy,nil)*2
 				local wct=c:GetAttachmentGroup():FilterCount(Card.IsDoubleWaterEnergy,nil)*2
 				local fct=c:GetAttachmentGroup():FilterCount(Card.IsDoubleFightingEnergy,nil)*2
-				local ect=0
-				local sum=ct+cct
-				if ener1==CARD_WATER_ENERGY then
-					sum=sum+wct
-					ect=wct
-				elseif ener1==CARD_FIGHTING_ENERGY then
-					sum=sum+fct
-					ect=fct
+				if wct>0 then
+					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct end
 				end
-				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
-					and (ct>0 or cct>0 or ect>0)
-					and (ct>0 or cct>0 or ect>0)
-					and (ct>0 or cct>0 or ect>0)
-					and sum>=res
+				if fct>0 then
+					if ener1==CARD_FIGHTING_ENERGY then ct1=ct1+fct end
+				end
+				local res=count1
+				local sum=ct1+cct
+				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
+				if cct>0 then
+					return sum>=res
+				else
+					return ct1>=count1
+				end
 			end
 end
 Auxiliary.econ1=Auxiliary.AttackCostCondition1
 --condition for attacks with an Energy Cost of 2 different Energy
 function Auxiliary.AttackCostCondition2(ener1,count1,ener2,count2)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
-				local res=count1+count2
 				local c=e:GetHandler()
 				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
 				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
@@ -1803,26 +1801,28 @@ function Auxiliary.AttackCostCondition2(ener1,count1,ener2,count2)
 				local cct=cg:GetCount()*2
 				local wct=wg:GetCount()*2
 				local fct=fg:GetCount()*2
-				local ect=0
-				local sum=ct1+ct2+cct
-				if ener1==CARD_WATER_ENERGY or ener2==CARD_WATER_ENERGY then
-					sum=sum+wct
-					ect=wct
-				elseif ener1==CARD_FIGHTING_ENERGY or ener2==CARD_FIGHTING_ENERGY then
-					sum=sum+fct
-					ect=fct
+				if wct>0 then
+					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
+					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct end
 				end
-				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
-					and (ct1>0 or cct>0 or ect>0)
-					and (ct2>0 or cct>0 or ect>0)
-					and sum>=res
+				if fct>0 then
+					if ener1==CARD_FIGHTING_ENERGY then ct1=ct1+fct
+					elseif ener2==CARD_FIGHTING_ENERGY then ct2=ct2+fct end
+				end
+				local res=count1+count2
+				local sum=ct1+ct2+cct
+				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
+				if cct>0 then
+					return sum>=res
+				else
+					return ct1>=count1 and ct2>=count2
+				end
 			end
 end
 Auxiliary.econ2=Auxiliary.AttackCostCondition2
 --condition for attacks with an Energy Cost of 3 different Energy
 function Auxiliary.AttackCostCondition3(ener1,count1,ener2,count2,ener3,count3)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
-				local res=count1+count2+count3
 				local c=e:GetHandler()
 				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
 				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
@@ -1836,27 +1836,30 @@ function Auxiliary.AttackCostCondition3(ener1,count1,ener2,count2,ener3,count3)
 				local cct=cg:GetCount()*2
 				local wct=wg:GetCount()*2
 				local fct=fg:GetCount()*2
-				local ect=0
-				local sum=ct1+ct2+ct3+cct
-				if ener1==CARD_WATER_ENERGY or ener2==CARD_WATER_ENERGY or ener3==CARD_WATER_ENERGY then
-					sum=sum+wct
-					ect=wct
-				elseif ener1==CARD_FIGHTING_ENERGY or ener2==CARD_FIGHTING_ENERGY or ener3==CARD_FIGHTING_ENERGY then
-					sum=sum+fct
-					ect=fct
+				if wct>0 then
+					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
+					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct
+					elseif ener3==CARD_WATER_ENERGY then ct3=ct3+wct end
 				end
-				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
-					and (ct1>0 or cct>0 or ect>0)
-					and (ct2>0 or cct>0 or ect>0)
-					and (ct3>0 or cct>0 or ect>0)
-					and sum>=res
+				if fct>0 then
+					if ener1==CARD_FIGHTING_ENERGY then ct1=ct1+fct
+					elseif ener2==CARD_FIGHTING_ENERGY then ct2=ct2+fct
+					elseif ener3==CARD_FIGHTING_ENERGY then ct3=ct3+fct end
+				end
+				local res=count1+count2+count3
+				local sum=ct1+ct2+ct3+cct
+				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
+				if cct>0 then
+					return sum>=res
+				else
+					return ct1>=count1 and ct2>=count2 and ct3>=count3
+				end
 			end
 end
 Auxiliary.econ3=Auxiliary.AttackCostCondition3
 --condition for attacks with an Energy Cost of 4 different Energy
 function Auxiliary.AttackCostCondition4(ener1,count1,ener2,count2,ener3,count3,ener4,count4)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
-				local res=count1+count2+count3+count4
 				local c=e:GetHandler()
 				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
 				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
@@ -1872,30 +1875,32 @@ function Auxiliary.AttackCostCondition4(ener1,count1,ener2,count2,ener3,count3,e
 				local cct=cg:GetCount()*2
 				local wct=wg:GetCount()*2
 				local fct=fg:GetCount()*2
-				local ect=0
-				local sum=ct1+ct2+ct3+ct4+cct
-				if ener1==CARD_WATER_ENERGY or ener2==CARD_WATER_ENERGY or ener3==CARD_WATER_ENERGY
-					or ener4==CARD_WATER_ENERGY then
-					sum=sum+wct
-					ect=wct
-				elseif ener1==CARD_FIGHTING_ENERGY or ener2==CARD_FIGHTING_ENERGY or ener3==CARD_FIGHTING_ENERGY
-					or ener4==CARD_WATER_ENERGY then
-					sum=sum+fct
-					ect=fct
+				if wct>0 then
+					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
+					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct
+					elseif ener3==CARD_WATER_ENERGY then ct3=ct3+wct
+					elseif ener4==CARD_WATER_ENERGY then ct4=ct4+wct end
 				end
-				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
-					and (ct1>0 or cct>0 or ect>0)
-					and (ct2>0 or cct>0 or ect>0)
-					and (ct3>0 or cct>0 or ect>0)
-					and (ct4>0 or cct>0 or ect>0)
-					and sum>=res
+				if fct>0 then
+					if ener1==CARD_FIGHTING_ENERGY then ct1=ct1+fct
+					elseif ener2==CARD_FIGHTING_ENERGY then ct2=ct2+fct
+					elseif ener3==CARD_FIGHTING_ENERGY then ct3=ct3+fct
+					elseif ener4==CARD_FIGHTING_ENERGY then ct4=ct4+fct end
+				end
+				local res=count1+count2+count3+count4
+				local sum=ct1+ct2+ct3+ct4+cct
+				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
+				if cct>0 then
+					return sum>=res
+				else
+					return ct1>=count1 and ct2>=count2 and ct3>=count3 and ct4>=count4
+				end
 			end
 end
 Auxiliary.econ4=Auxiliary.AttackCostCondition4
 --condition for attacks with an Energy Cost of 5 different energy
 function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,ener4,count4,ener5,count5)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
-				local res=count1+count2+count3+count4+count5
 				local c=e:GetHandler()
 				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
 				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
@@ -1913,24 +1918,28 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 				local cct=cg:GetCount()*2
 				local wct=wg:GetCount()*2
 				local fct=fg:GetCount()*2
-				local ect=0
-				local sum=ct1+ct2+ct3+ct4+ct5+cct
-				if ener1==CARD_WATER_ENERGY or ener2==CARD_WATER_ENERGY or ener3==CARD_WATER_ENERGY
-					or ener4==CARD_WATER_ENERGY or ener5==CARD_WATER_ENERGY then
-					sum=sum+wct
-					ect=wct
-				elseif ener1==CARD_FIGHTING_ENERGY or ener2==CARD_FIGHTING_ENERGY or ener3==CARD_FIGHTING_ENERGY
-					or ener4==CARD_WATER_ENERGY or ener5==CARD_WATER_ENERGY then
-					sum=sum+fct
-					ect=fct
+				if wct>0 then
+					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
+					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct
+					elseif ener3==CARD_WATER_ENERGY then ct3=ct3+wct
+					elseif ener4==CARD_WATER_ENERGY then ct4=ct4+wct
+					elseif ener5==CARD_WATER_ENERGY then ct5=ct5+wct end
 				end
-				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
-					and (ct1>0 or cct>0 or ect>0)
-					and (ct2>0 or cct>0 or ect>0)
-					and (ct3>0 or cct>0 or ect>0)
-					and (ct4>0 or cct>0 or ect>0)
-					and (ct5>0 or cct>0 or ect>0)
-					and sum>=res
+				if fct>0 then
+					if ener1==CARD_FIGHTING_ENERGY then ct1=ct1+fct
+					elseif ener2==CARD_FIGHTING_ENERGY then ct2=ct2+fct
+					elseif ener3==CARD_FIGHTING_ENERGY then ct3=ct3+fct
+					elseif ener4==CARD_FIGHTING_ENERGY then ct4=ct4+fct
+					elseif ener5==CARD_FIGHTING_ENERGY then ct5=ct5+fct end
+				end
+				local res=count1+count2+count3+count4+count5
+				local sum=ct1+ct2+ct3+ct4+ct5+cct
+				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
+				if cct>0 then
+					return sum>=res
+				else
+					return ct1>=count1 and ct2>=count2 and ct3>=count3 and ct4>=count4 and ct5>=count5
+				end
 			end
 end
 Auxiliary.econ5=Auxiliary.AttackCostCondition5
