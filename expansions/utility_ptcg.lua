@@ -65,7 +65,7 @@ function Card.IsEnergy(c,energy)
 end
 --check if a card is a Prize card + PM_LOCATION_PRIZE
 function Card.IsPrize(c)
-	return c:IsFacedown()
+	return c:GetFlagEffect(PM_EFFECT_PRIZE_CARD)~=0
 end
 --check if a card is or was a type of Pokémon, Trainer or Energy
 Card.IsSubType=Card.IsSetCard

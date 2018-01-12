@@ -46,8 +46,6 @@ CARD_COLORLESS_ENERGY				=nil		--energy=CARD_COLORLESS_ENERGY in Card.IsEnergy(c
 CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 --↑Special Energy cards
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
-CARD_DOUBLE_AQUA_ENERGY				=2626033	--EX Team Magma vs Team Aqua 33/95
-CARD_DOUBLE_MAGMA_ENERGY			=2626034	--EX Team Magma vs Team Aqua 34/95
 --↑Pokémon that are part of an evolutionary line
 CARD_AXEW							=2618010	--Axew → Fraxure → Haxorus (Black Star Promo BW10)
 CARD_FRAXURE						=26050087	--Axew → Fraxure → Haxorus (Noble Victories 87/101)
@@ -216,12 +214,13 @@ PM_EFFECT_CHANGE_RETREAT_COST		=EFFECT_CHANGE_LEVEL		--Set a Pokémon's Retreat 
 PM_EFFECT_CHANGE_RETREAT_COST_FINAL	=EFFECT_CHANGE_LEVEL_FINAL	--Set a Pokémon's final Retreat Cost (Auxiliary.EnableEvolve)
 PM_EFFECT_ADD_SETCODE				=EFFECT_ADD_SETCODE			--Add a type or archetype to another card
 PM_EFFECT_MULLIGAN_CHECK			=CARD_PTCG_RULES			--Check if a player took a mulligan
-PM_EFFECT_PRIZE_CARD_CHECK			=CARD_PTCG_RULES+1			--Check if a player took a Prize card
-PM_EFFECT_SUDDEN_DEATH_CHECK		=CARD_PTCG_RULES+2			--Check if a card can be reset during Sudden Death
-PM_EFFECT_SUDDEN_DEATH_RESTART		=CARD_PTCG_RULES+3			--Workaround for not being able to change turn counter to 1
-PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+4			--Prevent activating more than 1 Supporter card per turn
-PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+5			--Prevent playing more than 1 Stadium card per turn
-PM_EFFECT_LIMIT_ENERGY				=CARD_PTCG_RULES+6			--Prevent attaching more than 1 Energy card per turn
+PM_EFFECT_PRIZE_CARD				=CARD_PTCG_RULES+1			--Check if a card is a Prize card
+PM_EFFECT_PRIZE_CARD_CHECK			=CARD_PTCG_RULES+2			--Check if a player took a Prize card
+PM_EFFECT_SUDDEN_DEATH_CHECK		=CARD_PTCG_RULES+3			--Check if a card can be reset during Sudden Death
+PM_EFFECT_SUDDEN_DEATH_RESTART		=CARD_PTCG_RULES+4			--Workaround for not being able to change turn counter to 1
+PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+5			--Prevent activating more than 1 Supporter card per turn
+PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+6			--Prevent playing more than 1 Stadium card per turn
+PM_EFFECT_LIMIT_ENERGY				=CARD_PTCG_RULES+7			--Prevent attaching more than 1 Energy card per turn
 PM_EFFECT_LIMIT_GX_ATTACK			=CARD_SNORLAX_GX			--Prevent using more than 1 GX attack in a game
 PM_EFFECT_RETREAT					=700	--Prevent a player from retreating their Pokémon more than once per turn
 PM_EFFECT_ASLEEP					=701	--"Asleep" Special Condition

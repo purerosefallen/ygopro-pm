@@ -338,6 +338,10 @@ function scard.set_prize_cards(e,tp,player,count)
 	if g:GetCount()==0 then return end
 	Duel.DisableShuffleCheck()
 	Duel.SetPrizeCard(g,POS_FACEDOWN,REASON_RULE)
+	local tc=g:GetFirst()
+	for tc in aux.Next(g) do
+		tc:RegisterFlagEffect(PM_EFFECT_PRIZE_CARD,0,0,0)
+	end
 	local ct=Duel.GetPrizeGroupCount(tp,player)
 	Duel.SetLP(1-player,ct)
 end
