@@ -1426,6 +1426,12 @@ function Auxiliary.EnablePokemonAbility(c,desc_id,cate,targ_func,op_func,con_fun
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
 end
+--show a player their deck when they search it for a card
+function Auxiliary.ConfirmDeck(tp,player)
+	local g=Duel.GetFieldGroup(player,LOCATION_DECK,0)
+	if g:GetCount()<=0 then return end
+	Duel.ConfirmCards(player,g)
+end
 --"This card provides Double ... Energy." (e.g. "Double Colorless Energy BS 96")
 function Auxiliary.EnableDoubleEnergy(c,val)
 	--val: PM_TYPE_DOUBLE_..._ENERGY

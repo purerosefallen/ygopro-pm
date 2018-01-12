@@ -272,7 +272,7 @@ PM_DESC_EMPTY_BENCH					=aux.Stringid(PM_STRING_GAME,2)	--"You have no additiona
 PM_DESC_SUDDEN_DEATH				=aux.Stringid(PM_STRING_GAME,3)	--"Sudden Death"
 PM_DESC_DAMAGE_INCREASE				=aux.Stringid(PM_STRING_GAME,4)	--"Damage Increased"
 PM_DESC_DAMAGE_DECREASE				=aux.Stringid(PM_STRING_GAME,5)	--"Damage Decreased"
-PM_DESC_NO_TARGETS					=aux.Stringid(PM_STRING_GAME,6)	--"There are no valid targets to select. Click OK to continue."
+PM_DESC_NO_TARGETS					=aux.Stringid(PM_STRING_GAME,6)	--"Sorry, there are no valid targets to select. Click OK to continue."
 --↑Special Condition
 PM_DESC_ASLEEP						=aux.Stringid(PM_STRING_CONDITION,0)	--"This Pokémon is Asleep."
 PM_DESC_ASLEEP_DESC					=aux.Stringid(PM_STRING_CONDITION,1)	--"While Asleep, a Pokémon cannot attack or retreat."
