@@ -20,4 +20,3 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoHand(g,PLAYER_OWNER,REASON_EFFECT)
 	Duel.ConfirmCards(1-tp,g)
 end
-
