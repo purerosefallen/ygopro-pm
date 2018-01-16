@@ -264,8 +264,12 @@ function Card.IsHasDeckRestriction(c)
 	return c:IsHasEffect(PM_EFFECT_RESTRICT_MIRACLE_ENERGY) or c:IsHasEffect(PM_EFFECT_RESTRICT_ACE_SPEC)
 		or c:IsHasEffect(PM_EFFECT_RESTRICT_POKEMON_STAR) --update with new effects here
 end
---get the cards attached underneath another card
+--get the cards attached to a card
 Card.GetAttachmentGroup=Card.GetOverlayGroup
+--get the number of cards attached to a card
+Card.GetAttachmentCount=Card.GetOverlayCount
+--get the card the attached cards are attached to
+Card.GetAttachmentTarget=Card.GetOverlayTarget
 --get a pokémon's CURRENT type (color)
 Card.GetPokemonType=Card.GetAttribute
 --get a pokémon's ORIGINAL type (color)
@@ -332,6 +336,8 @@ Card.SetMarkerLimit=Card.SetCounterLimit
 Card.IsCanAddMarker=Card.IsCanAddCounter
 --check if a marker can be removed from a card
 Card.IsCanRemoveMarker=Card.IsCanRemoveCounter
+--get the player who put the pokémon in play
+Card.GetPlayPlayer=Card.GetSummonPlayer
 --check if a pokémon can be put in play
 Card.IsCanBePutInPlay=Card.IsCanBeSpecialSummoned
 --set the group underneath a card as attachments that belong to it
@@ -438,12 +444,31 @@ function Card.IsImmuneToDamage(c)
 	return false
 end
 --========== Duel ==========
+--let a player draw cards equal to or less than count with a reason and return the number of cards drawn
+local duel_draw=Duel.Draw
+function Duel.Draw(player,count,reason)
+	local count=count or 1
+	local ct=Duel.GetFieldGroupCount(player,LOCATION_DECK,0)
+	if count>ct and reason~=REASON_RULE then count=ct end
+	return duel_draw(player,count,reason)
+end
+--check if a player can draw cards according to the pokémon trading card game's rules
+local duel_is_player_can_draw=Duel.IsPlayerCanDraw
+function Duel.IsPlayerCanDraw(player,count)
+	local count=count or 1
+	local ct=Duel.GetFieldGroupCount(player,LOCATION_DECK,0)
+	if ct==0 then return end
+	if count>ct then count=ct end
+	return duel_is_player_can_draw(player,count)
+end
 --set aside prize cards face-down
 Duel.SetPrizeCard=Duel.Remove
 --knock out a pokémon
 Duel.KnockOut=Duel.Destroy
 --get all attached cards in a specified location
 Duel.GetAttachmentGroup=Duel.GetOverlayGroup
+--get a player's stadium card
+Duel.GetStadiumCard=Duel.GetFieldCard
 --send targets to the discard pile (discard them)
 Duel.SendtoDiscardPile=Duel.SendtoGrave
 Duel.SendtoDPile=Duel.SendtoDiscardPile
@@ -471,23 +496,6 @@ Duel.IsPlayerCanPutPokemonInPlay=Duel.IsPlayerCanSpecialSummonMonster
 Duel.PokemonAttack=Duel.CalculateDamage
 --negate a pokémon's attack
 Duel.NegatePokemonAttack=Duel.NegateActivation
---let a player draw cards equal to or less than count with a reason and return the number of cards drawn
-local duel_draw=Duel.Draw
-function Duel.Draw(player,count,reason)
-	local count=count or 1
-	local ct=Duel.GetFieldGroupCount(player,LOCATION_DECK,0)
-	if count>ct and reason~=REASON_RULE then count=ct end
-	return duel_draw(player,count,reason)
-end
---check if a player can draw cards according to the pokémon trading card game's rules
-local duel_is_player_can_draw=Duel.IsPlayerCanDraw
-function Duel.IsPlayerCanDraw(player,count)
-	local count=count or 1
-	local ct=Duel.GetFieldGroupCount(player,LOCATION_DECK,0)
-	if ct==0 then return end
-	if count>ct then count=ct end
-	return duel_is_player_can_draw(player,count)
-end
 --check if it is the first turn of the game
 function Duel.IsFirstTurn()
 	return Duel.GetTurnCount()==1
@@ -605,6 +613,64 @@ function Duel.EffectDamage(count,c1,c2,weak,resist)
 	if ct>count then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_INCREASE)
 	elseif ct<count then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
 	d:AddCounter(PM_DAMAGE_COUNTER,ct)
+end
+--let a player switch an active pokémon with a benched pokémon
+function Duel.SwitchPokemon(e,switch_player,target_player)
+	--switch_player: the player who will select the pokémon
+	--target_player: the player whose pokémon will switch
+	local tp=e:GetHandlerPlayer()
+	local g1=Duel.GetMatchingGroup(Auxiliary.ActivePokemonFilter,target_player,PM_LOCATION_ACTIVE,0,nil)
+	local g2=Duel.GetMatchingGroup(Auxiliary.BenchPokemonFilter,target_player,PM_LOCATION_IN_PLAY,0,nil)
+	if g1:GetCount()==0 or g2:GetCount()==0 then return end
+	local tc1=g1:GetFirst()
+	--register active counters
+	local damc1=tc1:GetCounter(PM_DAMAGE_COUNTER)
+	local colc1=tc1:GetCounter(PM_COLORING_COUNTER)
+	local chac1=tc1:GetCounter(PM_CHAR_COUNTER)
+	--register active markers
+	local burm1=tc1:GetMarker(PM_BURN_MARKER)
+	local poim1=tc1:GetMarker(PM_POISON_MARKER)
+	local rodm1=tc1:GetMarker(PM_LIGHTNING_ROD_MARKER)
+	local ivym1=tc1:GetMarker(PM_DARK_IVYSAUR_MARKER)
+	local prim1=tc1:GetMarker(PM_IMPRISON_MARKER)
+	local shom1=tc1:GetMarker(PM_SHOCKWAVE_MARKER)
+	Duel.Hint(HINT_SELECTMSG,switch_player,PM_HINTMSG_PROMOTE)
+	local sg=g2:Select(switch_player,1,1,nil)
+	local tc2=sg:GetFirst()
+	--register bench counters
+	local damc2=tc2:GetCounter(PM_DAMAGE_COUNTER)
+	local colc2=tc2:GetCounter(PM_COLORING_COUNTER)
+	local chac2=tc2:GetCounter(PM_CHAR_COUNTER)
+	--register bench markers
+	local burm2=tc2:GetMarker(PM_BURN_MARKER)
+	local poim2=tc2:GetMarker(PM_POISON_MARKER)
+	local rodm2=tc2:GetMarker(PM_LIGHTNING_ROD_MARKER)
+	local ivym2=tc2:GetMarker(PM_DARK_IVYSAUR_MARKER)
+	local prim2=tc2:GetMarker(PM_IMPRISON_MARKER)
+	local shom2=tc2:GetMarker(PM_SHOCKWAVE_MARKER)
+	Duel.HintSelection(sg)
+	Duel.SwapSequence(tc1,tc2)
+	if not tc1:IsLocation(PM_LOCATION_BENCH_EXTENDED) then return end
+	--retain counters
+	if damc1>0 then tc1:AddCounter(PM_DAMAGE_COUNTER,damc1) end
+	if colc1>0 then tc1:AddCounter(PM_COLORING_COUNTER,colc1) end
+	if chac1>0 then tc1:AddCounter(PM_CHAR_COUNTER,chac1) end
+	if damc2>0 then tc2:AddCounter(PM_DAMAGE_COUNTER,damc2) end
+	if colc2>0 then tc2:AddCounter(PM_COLORING_COUNTER,colc2) end
+	if chac2>0 then tc2:AddCounter(PM_CHAR_COUNTER,chac2) end
+	--retain counters
+	if burm1>0 then tc1:AddMarker(PM_BURN_MARKER,burm1) end
+	if poim1>0 then tc1:AddMarker(PM_POISON_MARKER,poim1) end
+	if rodm1>0 then tc1:AddMarker(PM_LIGHTNING_ROD_MARKER,rodm1) end
+	if ivym1>0 then tc1:AddMarker(PM_DARK_IVYSAUR_MARKER,ivym1) end
+	if prim1>0 then tc1:AddMarker(PM_IMPRISON_MARKER,prim1) end
+	if shom1>0 then tc1:AddMarker(PM_SHOCKWAVE_MARKER,shom1) end
+	if burm2>0 then tc2:AddMarker(PM_BURN_MARKER,burm2) end
+	if poim2>0 then tc2:AddMarker(PM_POISON_MARKER,poim2) end
+	if rodm2>0 then tc2:AddMarker(PM_LIGHTNING_ROD_MARKER,rodm2) end
+	if ivym2>0 then tc2:AddMarker(PM_DARK_IVYSAUR_MARKER,ivym2) end
+	if prim2>0 then tc2:AddMarker(PM_IMPRISON_MARKER,prim2) end
+	if shom2>0 then tc2:AddMarker(PM_SHOCKWAVE_MARKER,shom2) end
 end
 --remove a special condition affecting a pokémon
 function Duel.RemoveSpecialCondition(c,code)

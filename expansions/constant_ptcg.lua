@@ -83,6 +83,7 @@ PM_LOCATION_STADIUM					=LOCATION_FZONE		--Location for Stadium cards
 PM_LOCATION_RULES					=LOCATION_EXTRA		--Location for Pokémon Rules
 PM_LOCATION_ACTIVE_POKEMON			=LOCATION_MZONE		--Location for Active Pokémon
 PM_LOCATION_BENCH					=LOCATION_MZONE		--Location for Benched Pokémon
+PM_LOCATION_BENCH_EXTENDED			=LOCATION_SZONE		--Location for Pokémon on an extended Bench
 PM_LOCATION_IN_PLAY					=LOCATION_MZONE+LOCATION_SZONE	--Location for Active and Benched Pokémon
 PM_LOCATION_ADJACENT_ACTIVE_POKEMON	=LOCATION_SZONE		--Location for Trainer cards that temporarily stay in play
 PM_LOCATION_DISCARD_PILE			=LOCATION_GRAVE		--Location for cards taken out of play
