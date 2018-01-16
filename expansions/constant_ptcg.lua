@@ -185,7 +185,8 @@ PM_REASON_KNOCKED_OUT				=REASON_DESTROY		--Knocked Out=Destroy
 PM_SUMMON_TYPE_EVOLVE				=SUMMON_TYPE_XYZ	--Evolve=Xyz
 PM_SUMMON_TYPE_LEVELUP				=0x4d000000			--Pokémon LV.X
 --Status
-PM_STATUS_NO_RETREAT_COST			=STATUS_NO_LEVEL	--Pokémon with no Retreat Cost
+PM_STATUS_NO_RETREAT_COST			=STATUS_NO_LEVEL		--Pokémon with no Retreat Cost
+PM_STATUS_PLAY_TURN					=STATUS_SPSUMMON_TURN	--Pokémon that was played during the current turn
 --Player
 PLAYER_OWNER						=nil	--player=PLAYER_OWNER in Duel.Sendto..(targets, player, reason)
 PLAYER_PLAYER						=0		--player=PLAYER_PLAYER in Effect.SetCondition(Auxiliary.turnpcon(player)), etc.

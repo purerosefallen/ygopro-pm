@@ -423,6 +423,10 @@ function Card.IsRetreatable(c)
 		return Auxiliary.ActivePokemonFilter(c) and (ct>=rc or rc==0)
 	end
 end
+--check if a pokémon can have an attached energy card to it removed by an attack or trainer card
+function Card.IsAbleToRemoveEnergy(c)
+	return not c:IsHasEffect(PM_EFFECT_CANNOT_REMOVE_ENERGY_ATTACK_TRAINER)
+end
 --check if a pokémon is unaffected by all effects of attacks, including damage
 function Card.IsImmuneToAttack(c)
 	if c:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK) then return true end
@@ -739,6 +743,32 @@ function Duel.RemoveSpecialCondition(c,code)
 		if c:GetFlagEffect(PM_EFFECT_POISONED)~=0 then c:ResetFlagEffect(PM_EFFECT_POISONED) end
 	end
 end
+--discard an energy card(s) attached to a pokémon
+function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2)
+	--ener1: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
+	local max1=max1 or min1
+	local g=c:GetAttachmentGroup()
+	local ener1=ener1 or nil
+	local tp=e:GetHandlerPlayer()
+	if not g or g:GetCount()==0 then return end
+	local dg=Group.CreateGroup()
+	if ener1 then
+		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
+		sg=g:FilterSelect(tp,Card.IsEnergy,min1,max1,nil,ener1)
+		dg:Merge(sg)
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
+		sg=g:FilterSelect(tp,Card.IsEnergy,min1,max1,nil)
+		dg:Merge(sg)
+	end
+	if ener2 then
+		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
+		sg=g:FilterSelect(tp,Card.IsEnergy,min2,max2,nil,ener2)
+		dg:Merge(sg)
+	end
+	return Duel.SendtoDPile(dg,REASON_EFFECT+REASON_DISCARD)
+end
+
 --========== Auxiliary ==========
 function Auxiliary.GetValueType(v)
 	local t=type(v)
@@ -1127,21 +1157,19 @@ function Auxiliary.EnableEvolve(c)
 	e1:SetOperation(Auxiliary.EvolvePokemonOperation)
 	c:RegisterEffect(e1)
 end
-function Auxiliary.EvolvePokemonFilter(c,tcode,tid)
-	return c:IsFaceup() and c.evolve_list and table.unpack(c.evolve_list)==tcode and c:GetTurnID()~=tid
+function Auxiliary.EvolvePokemonFilter(c,tcode)
+	return c:IsFaceup() and c.evolve_list and table.unpack(c.evolve_list)==tcode and not c:IsStatus(PM_STATUS_PLAY_TURN)
 end
 function Auxiliary.EvolvePokemonTarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local tid=Duel.GetTurnCount()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil,c:GetCode(),tid)
+		and Duel.IsExistingMatchingCard(Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil,c:GetCode())
 		and c:IsCanBePutInPlay(e,PM_SUMMON_TYPE_EVOLVE,tp,false,false) end
 end
 function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tid=Duel.GetTurnCount()
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_EVOLVE)
-	local g=Duel.SelectMatchingCard(tp,Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil,c:GetCode(),tid)
+	local g=Duel.SelectMatchingCard(tp,Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil,c:GetCode())
 	local tc=g:GetFirst()
 	if not tc then return end
 	Duel.HintSelection(g)
@@ -1549,6 +1577,11 @@ function Auxiliary.ConfirmDeck(tp,player)
 	if g:GetCount()<=0 then return end
 	Duel.ConfirmCards(player,g)
 end
+--notify a player that there are no valid targets and shuffle their deck after they looked at it
+function Auxiliary.ConfirmInvalid(tp,player)
+	Duel.Hint(HINT_MESSAGE,tp,PM_DESC_NO_TARGETS)
+	Duel.ShuffleDeck(tp)
+end
 --"This card provides Double ... Energy." (e.g. "Double Colorless Energy BS 96")
 function Auxiliary.EnableDoubleEnergy(c,val)
 	--val: PM_TYPE_DOUBLE_..._ENERGY
@@ -1924,6 +1957,8 @@ function Auxiliary.AttackCostCondition2(ener1,count1,ener2,count2)
 				local cct=dcg:GetCount()*2
 				local wct=dwg:GetCount()*2
 				local fct=dfg:GetCount()*2
+				if ener1==CARD_COLORLESS_ENERGY then ct1=count1
+				elseif ener2==CARD_COLORLESS_ENERGY then ct2=count2 end
 				if wct>0 then
 					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
 					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct end
@@ -1935,7 +1970,7 @@ function Auxiliary.AttackCostCondition2(ener1,count1,ener2,count2)
 				local res=count1+count2
 				local sum=ct1+ct2+cct
 				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
-				if cct>0 or ener1==CARD_COLORLESS_ENERGY or ener2==CARD_COLORLESS_ENERGY then
+				if cct>0 then
 					return sum>=res
 				else
 					return ct1>=count1 and ct2>=count2
@@ -1959,6 +1994,9 @@ function Auxiliary.AttackCostCondition3(ener1,count1,ener2,count2,ener3,count3)
 				local cct=dcg:GetCount()*2
 				local wct=dwg:GetCount()*2
 				local fct=dfg:GetCount()*2
+				if ener1==CARD_COLORLESS_ENERGY then ct1=count1
+				elseif ener2==CARD_COLORLESS_ENERGY then ct2=count2
+				elseif ener3==CARD_COLORLESS_ENERGY then ct3=count3 end
 				if wct>0 then
 					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
 					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct
@@ -1972,7 +2010,7 @@ function Auxiliary.AttackCostCondition3(ener1,count1,ener2,count2,ener3,count3)
 				local res=count1+count2+count3
 				local sum=ct1+ct2+ct3+cct
 				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
-				if cct>0 or ener1==CARD_COLORLESS_ENERGY or ener2==CARD_COLORLESS_ENERGY or ener3==CARD_COLORLESS_ENERGY then
+				if cct>0 then
 					return sum>=res
 				else
 					return ct1>=count1 and ct2>=count2 and ct3>=count3
@@ -1998,6 +2036,10 @@ function Auxiliary.AttackCostCondition4(ener1,count1,ener2,count2,ener3,count3,e
 				local cct=dcg:GetCount()*2
 				local wct=dwg:GetCount()*2
 				local fct=dfg:GetCount()*2
+				if ener1==CARD_COLORLESS_ENERGY then ct1=count1
+				elseif ener2==CARD_COLORLESS_ENERGY then ct2=count2
+				elseif ener3==CARD_COLORLESS_ENERGY then ct3=count3
+				elseif ener4==CARD_COLORLESS_ENERGY then ct4=count4 end
 				if wct>0 then
 					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
 					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct
@@ -2013,8 +2055,7 @@ function Auxiliary.AttackCostCondition4(ener1,count1,ener2,count2,ener3,count3,e
 				local res=count1+count2+count3+count4
 				local sum=ct1+ct2+ct3+ct4+cct
 				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
-				if cct>0 or ener1==CARD_COLORLESS_ENERGY or ener2==CARD_COLORLESS_ENERGY or ener3==CARD_COLORLESS_ENERGY
-					or ener4==CARD_COLORLESS_ENERGY then
+				if cct>0 then
 					return sum>=res
 				else
 					return ct1>=count1 and ct2>=count2 and ct3>=count3 and ct4>=count4
@@ -2042,6 +2083,11 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 				local cct=dcg:GetCount()*2
 				local wct=dwg:GetCount()*2
 				local fct=dfg:GetCount()*2
+				if ener1==CARD_COLORLESS_ENERGY then ct1=count1
+				elseif ener2==CARD_COLORLESS_ENERGY then ct2=count2
+				elseif ener3==CARD_COLORLESS_ENERGY then ct3=count3
+				elseif ener4==CARD_COLORLESS_ENERGY then ct4=count4
+				elseif ener5==CARD_COLORLESS_ENERGY then ct5=count5 end
 				if wct>0 then
 					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
 					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct
@@ -2059,8 +2105,7 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 				local res=count1+count2+count3+count4+count5
 				local sum=ct1+ct2+ct3+ct4+ct5+cct
 				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
-				if cct>0 or ener1==CARD_COLORLESS_ENERGY or ener2==CARD_COLORLESS_ENERGY or ener3==CARD_COLORLESS_ENERGY
-					or ener4==CARD_COLORLESS_ENERGY or ener5==CARD_COLORLESS_ENERGY then
+				if cct>0 then
 					return sum>=res
 				else
 					return ct1>=count1 and ct2>=count2 and ct3>=count3 and ct4>=count4 and ct5>=count5
