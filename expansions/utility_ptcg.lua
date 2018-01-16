@@ -627,6 +627,32 @@ function Duel.EffectDamage(count,c1,c2,weak,resist)
 	elseif ct<count and c2==d then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
 	c2:AddCounter(PM_DAMAGE_COUNTER,ct)
 end
+--remove a damage counter(s) from a pokémon
+function Duel.RemoveDamage(e,count,c)
+	local damc=c:GetCounter(PM_DAMAGE_COUNTER)
+	if damc==0 then return end
+	local ct=count
+	if count>damc then ct=damc end
+	c:RemoveCounter(e:GetHandlerPlayer(),PM_DAMAGE_COUNTER,ct,REASON_EFFECT)
+end
+--heal damage from a pokémon
+function Duel.HealDamage(e,count,c)
+	count=count/10
+	local damc=c:GetCounter(PM_DAMAGE_COUNTER)
+	if damc==0 then return end
+	local ct=count
+	if count>damc then ct=damc end
+	c:RemoveCounter(e:GetHandlerPlayer(),PM_DAMAGE_COUNTER,ct,REASON_EFFECT)
+end
+--switch the damage counters between pokémon
+function Duel.SwitchDamage(e,c1,c2)
+	local damc1=c1:GetCounter(PM_DAMAGE_COUNTER)
+	local damc2=c2:GetCounter(PM_DAMAGE_COUNTER)
+	if damc1>0 then c1:RemoveCounter(e:GetHandlerPlayer(),PM_DAMAGE_COUNTER,damc1,REASON_EFFECT) end
+	if damc2>0 then c2:RemoveCounter(e:GetHandlerPlayer(),PM_DAMAGE_COUNTER,damc2,REASON_EFFECT) end
+	if damc2>0 then c1:AddCounter(PM_DAMAGE_COUNTER,damc2) end
+	if damc1>0 then c2:AddCounter(PM_DAMAGE_COUNTER,damc1) end
+end
 --let a player switch an active pokémon with a benched pokémon
 function Duel.SwitchPokemon(e,switch_player,target_player)
 	--switch_player: the player who will select the pokémon
