@@ -1239,7 +1239,7 @@ function Auxiliary.EnergyOperation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,Auxiliary.EnergyFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
 	if g:GetCount()==0 then return end
 	Duel.HintSelection(g)
-	Duel.Attach(g:GetFirst(),Group.FromCards(e:GetHandler()))
+	Duel.Attach(g:GetFirst(),e:GetHandler())
 end
 --Special Energy
 function Auxiliary.EnergyFilter2(c,setname)
@@ -1258,10 +1258,10 @@ function Auxiliary.EnergyOperation2(setname,discard)
 				local c=e:GetHandler()
 				local tc=g:GetFirst()
 				Duel.HintSelection(g)
-				Duel.Attach(tc,Group.FromCards(c))
+				Duel.Attach(tc,c)
 				if not discard then return end
 				c:RegisterFlagEffect(c:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD,0,1)
-				--detach
+				--discard
 				local e1=Effect.CreateEffect(c)
 				e1:SetDescription(PM_DESC_SELF_DETACH)
 				e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -1325,7 +1325,7 @@ function Auxiliary.TrainerDiscardOperation(e,tp,eg,ep,ev,re,r,rp)
 end
 --========== Item ==========
 --Pokémon Tool
-function Auxiliary.EnablePokemonTool(c,desc_id)
+function Auxiliary.EnablePokemonTool(c,desc_id,con_func)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(PM_DESC_TOOL)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -1338,11 +1338,12 @@ function Auxiliary.EnablePokemonTool(c,desc_id)
 	e2:SetType(PM_EFFECT_TYPE_POKEMON_TOOL+EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_ADJUST)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetCondition(Auxiliary.AddToolDescCondition)
+	e2:SetCondition(aux.AND(Auxiliary.AddToolDescCondition,con_func))
 	e2:SetOperation(Auxiliary.AddToolDescOperation(desc_id))
 	e2:SetLabelObject(c)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 	e3:SetCondition(Auxiliary.RemoveToolDescCondition)
 	e3:SetOperation(Auxiliary.RemoveToolDescOperation)
 	c:RegisterEffect(e3)
@@ -1359,7 +1360,7 @@ function Auxiliary.PokemonToolOperation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,Auxiliary.PokemonToolFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
 	if g:GetCount()==0 then return end
 	Duel.HintSelection(g)
-	Duel.Attach(g:GetFirst(),Group.FromCards(e:GetHandler()))
+	Duel.Attach(g:GetFirst(),e:GetHandler())
 end
 function Auxiliary.AddToolDescCondition(e)
 	local c=e:GetLabelObject()
@@ -1367,7 +1368,8 @@ function Auxiliary.AddToolDescCondition(e)
 	return e:GetHandler():GetFlagEffect(code)==0
 end
 function Auxiliary.AddToolDescOperation(desc_id)
-	return	function(e)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				if not desc_id then return end
 				local c=e:GetLabelObject()
 				local code=c:GetOriginalCode()
 				e:GetHandler():RegisterFlagEffect(code,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(code,desc_id))
@@ -1865,14 +1867,14 @@ function Auxiliary.AttackCostCondition2(ener1,count1,ener2,count2)
 				local c=e:GetHandler()
 				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
 				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
-				local cg=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
-				local wg=c:GetAttachmentGroup():Filter(Card.IsDoubleWaterEnergy,nil)
-				local fg=c:GetAttachmentGroup():Filter(Card.IsDoubleFightingEnergy,nil)
+				local dcg=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
+				local dwg=c:GetAttachmentGroup():Filter(Card.IsDoubleWaterEnergy,nil)
+				local dfg=c:GetAttachmentGroup():Filter(Card.IsDoubleFightingEnergy,nil)
 				local ct1=g1:GetCount()
 				local ct2=g2:GetCount()
-				local cct=cg:GetCount()*2
-				local wct=wg:GetCount()*2
-				local fct=fg:GetCount()*2
+				local cct=dcg:GetCount()*2
+				local wct=dwg:GetCount()*2
+				local fct=dfg:GetCount()*2
 				if wct>0 then
 					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
 					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct end
@@ -1884,7 +1886,7 @@ function Auxiliary.AttackCostCondition2(ener1,count1,ener2,count2)
 				local res=count1+count2
 				local sum=ct1+ct2+cct
 				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
-				if cct>0 then
+				if cct>0 or ener1==CARD_COLORLESS_ENERGY or ener2==CARD_COLORLESS_ENERGY then
 					return sum>=res
 				else
 					return ct1>=count1 and ct2>=count2
@@ -1899,15 +1901,15 @@ function Auxiliary.AttackCostCondition3(ener1,count1,ener2,count2,ener3,count3)
 				local g1=c:GetAttachmentGroup():Filter(Card.IsEnergy,nil,ener1)
 				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
 				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergy,g2,ener3)
-				local cg=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
-				local wg=c:GetAttachmentGroup():Filter(Card.IsDoubleWaterEnergy,nil)
-				local fg=c:GetAttachmentGroup():Filter(Card.IsDoubleFightingEnergy,nil)
+				local dcg=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
+				local dwg=c:GetAttachmentGroup():Filter(Card.IsDoubleWaterEnergy,nil)
+				local dfg=c:GetAttachmentGroup():Filter(Card.IsDoubleFightingEnergy,nil)
 				local ct1=g1:GetCount()
 				local ct2=g2:GetCount()
 				local ct3=g3:GetCount()
-				local cct=cg:GetCount()*2
-				local wct=wg:GetCount()*2
-				local fct=fg:GetCount()*2
+				local cct=dcg:GetCount()*2
+				local wct=dwg:GetCount()*2
+				local fct=dfg:GetCount()*2
 				if wct>0 then
 					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
 					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct
@@ -1921,7 +1923,7 @@ function Auxiliary.AttackCostCondition3(ener1,count1,ener2,count2,ener3,count3)
 				local res=count1+count2+count3
 				local sum=ct1+ct2+ct3+cct
 				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
-				if cct>0 then
+				if cct>0 or ener1==CARD_COLORLESS_ENERGY or ener2==CARD_COLORLESS_ENERGY or ener3==CARD_COLORLESS_ENERGY then
 					return sum>=res
 				else
 					return ct1>=count1 and ct2>=count2 and ct3>=count3
@@ -1937,16 +1939,16 @@ function Auxiliary.AttackCostCondition4(ener1,count1,ener2,count2,ener3,count3,e
 				local g2=c:GetAttachmentGroup():Filter(Card.IsEnergy,g1,ener2)
 				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergy,g2,ener3)
 				local g4=c:GetAttachmentGroup():Filter(Card.IsEnergy,g3,ener4)
-				local cg=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
-				local wg=c:GetAttachmentGroup():Filter(Card.IsDoubleWaterEnergy,nil)
-				local fg=c:GetAttachmentGroup():Filter(Card.IsDoubleFightingEnergy,nil)
+				local dcg=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
+				local dwg=c:GetAttachmentGroup():Filter(Card.IsDoubleWaterEnergy,nil)
+				local dfg=c:GetAttachmentGroup():Filter(Card.IsDoubleFightingEnergy,nil)
 				local ct1=g1:GetCount()
 				local ct2=g2:GetCount()
 				local ct3=g3:GetCount()
 				local ct4=g4:GetCount()
-				local cct=cg:GetCount()*2
-				local wct=wg:GetCount()*2
-				local fct=fg:GetCount()*2
+				local cct=dcg:GetCount()*2
+				local wct=dwg:GetCount()*2
+				local fct=dfg:GetCount()*2
 				if wct>0 then
 					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
 					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct
@@ -1962,7 +1964,8 @@ function Auxiliary.AttackCostCondition4(ener1,count1,ener2,count2,ener3,count3,e
 				local res=count1+count2+count3+count4
 				local sum=ct1+ct2+ct3+ct4+cct
 				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
-				if cct>0 then
+				if cct>0 or ener1==CARD_COLORLESS_ENERGY or ener2==CARD_COLORLESS_ENERGY or ener3==CARD_COLORLESS_ENERGY
+					or ener4==CARD_COLORLESS_ENERGY then
 					return sum>=res
 				else
 					return ct1>=count1 and ct2>=count2 and ct3>=count3 and ct4>=count4
@@ -1979,17 +1982,17 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 				local g3=c:GetAttachmentGroup():Filter(Card.IsEnergy,g2,ener3)
 				local g4=c:GetAttachmentGroup():Filter(Card.IsEnergy,g3,ener4)
 				local g5=c:GetAttachmentGroup():Filter(Card.IsEnergy,g4,ener5)
-				local cg=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
-				local wg=c:GetAttachmentGroup():Filter(Card.IsDoubleWaterEnergy,nil)
-				local fg=c:GetAttachmentGroup():Filter(Card.IsDoubleFightingEnergy,nil)
+				local dcg=c:GetAttachmentGroup():Filter(Card.IsDoubleColorlessEnergy,nil)
+				local dwg=c:GetAttachmentGroup():Filter(Card.IsDoubleWaterEnergy,nil)
+				local dfg=c:GetAttachmentGroup():Filter(Card.IsDoubleFightingEnergy,nil)
 				local ct1=g1:GetCount()
 				local ct2=g2:GetCount()
 				local ct3=g3:GetCount()
 				local ct4=g4:GetCount()
 				local ct5=g5:GetCount()
-				local cct=cg:GetCount()*2
-				local wct=wg:GetCount()*2
-				local fct=fg:GetCount()*2
+				local cct=dcg:GetCount()*2
+				local wct=dwg:GetCount()*2
+				local fct=dfg:GetCount()*2
 				if wct>0 then
 					if ener1==CARD_WATER_ENERGY then ct1=ct1+wct
 					elseif ener2==CARD_WATER_ENERGY then ct2=ct2+wct
@@ -2007,7 +2010,8 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 				local res=count1+count2+count3+count4+count5
 				local sum=ct1+ct2+ct3+ct4+ct5+cct
 				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
-				if cct>0 then
+				if cct>0 or ener1==CARD_COLORLESS_ENERGY or ener2==CARD_COLORLESS_ENERGY or ener3==CARD_COLORLESS_ENERGY
+					or ener4==CARD_COLORLESS_ENERGY or ener5==CARD_COLORLESS_ENERGY then
 					return sum>=res
 				else
 					return ct1>=count1 and ct2>=count2 and ct3>=count3 and ct4>=count4 and ct5>=count5
