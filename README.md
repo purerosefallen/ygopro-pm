@@ -1,5 +1,9 @@
 # ygopro-pm
 
+<p align="center">
+	<img src="https://user-images.githubusercontent.com/18324297/35016239-5edc6dca-fb20-11e7-92d3-d5080fbdbfe7.png">
+</p>
+
 ### How to Install
 1. Exit YGOPro.
 2. Put the following files and folders in YGOPro's main folder. **Make a backup of the original files, if you do not want to overwrite them**:<br>
@@ -14,7 +18,7 @@ In Yugioh terms:
 2. Optional: Disable `Auto chain order` in the Settings tab in Deck Editor. If the option is enabled, always choose the chain order from left to right.
 3. Make a main deck of exactly 60 cards:<br>
 	-All 60 cards must be Pokémon cards. If there is at least 1 non-Pokémon card in your deck, you will lose the duel.<br>
-	-There must be at least 1 ["Basic Pokémon"](https://bulbapedia.bulbagarden.net/wiki/Basic_Pok%C3%A9mon_(TCG)) monster in your deck. If there is not, you will lose the duel.<br>
+	-There must be at least 1 "[Basic Pokémon](https://bulbapedia.bulbagarden.net/wiki/Basic_Pok%C3%A9mon_(TCG))" monster in your deck. If there is not, you will lose the duel.<br>
 	-Add 1 *Pokemon Rules* to the extra deck.<br>
 4. Begin the duel by drawing 7 cards, then place 1 "Basic Pokémon" monster from your hand in an extra monster zone face-down as your [Active Pokémon](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Active_Pok.C3.A9mon).<br>
 If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuffle it into the deck, then draw 7 cards. Repeat this until you have a "Basic Pokémon" monster in your hand.<br>
@@ -26,9 +30,9 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 10. Nothing happens during your standby phase.
 11. Optional: During your main phase 1, do any of the following:<br>
 	-Special summon any number of "Basic Pokémon" monsters from your hand.<br>
-	-Special summon any number of ["Evolution"](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Evolution_card) monsters from your hand, by stacking them on top of a card in the main monster zone or extra monster zone that has its name listed in its text, except if that card was special summoned this turn, or if it is the first turn of the duel. (This is treated as an evolution summon.)<br>
-	-Activate the effect of an ["Energy"](https://bulbapedia.bulbagarden.net/wiki/Energy_card_(TCG)) card in your hand and attach it to 1 of your monsters as a material. (You can only do this once per turn.)<br>
-	-Activate any number of ["Trainer"](https://bulbapedia.bulbagarden.net/wiki/Trainer_card_(TCG)) cards from your hand. (You can only activate 1 "Supporter" and 1 "Stadium" card per turn.)<br>
+	-Special summon any number of "[Evolution](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Evolution_card)" monsters from your hand, by stacking them on top of a card in the main monster zone or extra monster zone that has its name listed in its text, except if that card was special summoned this turn, or if it is the first turn of the duel. (This is treated as an evolution summon.)<br>
+	-Activate the effect of an "[Energy](https://bulbapedia.bulbagarden.net/wiki/Energy_card_(TCG))" card in your hand and attach it to 1 of your monsters as a material. (You can only do this once per turn.)<br>
+	-Activate any number of "[Trainer](https://bulbapedia.bulbagarden.net/wiki/Trainer_card_(TCG))" cards from your hand. (You can only activate 1 "Supporter" and 1 "Stadium" card per turn.)<br>
 	-Retreat your Active Pokémon, by switching its place with 1 monster on your Bench and detaching "Energy" cards equal to its Level [(Retreat Cost)](https://bulbapedia.bulbagarden.net/wiki/Retreat_cost). (You can only do this once per turn.)<br>
 	-Activate or apply any monster effects.<br>
 	-If it is not the first turn of the duel and you have the "Energy" cards attached to your Active Pokémon that are listed in its text, you can activate its effect to [attack](https://bulbapedia.bulbagarden.net/wiki/Attack_(TCG)) the opponent's Active Pokémon. Place [Damage Counters](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Damage) on that opponent's monster, equal to the number listed in your monster's text, divide by 10. (Monsters with a Damage Counter lose 10 ATK for each Damage Counter on it, also are destroyed when their ATK become 0 as a result.) If that opponent's monster is destroyed, add 1 Prize card to your hand, then your opponent's life points become equal to the number of Prize cards you have left. Your main phase 1 ends.
@@ -127,7 +131,7 @@ Note - missing information. Text that appears on the card that is not essential 
 - Attack = `During your Main Phase, if this card has [...] attached to it: You can activate this effect; (attack goes here)`
 - Benched Pokémon = `Monster in the Main Monster Zone [or card in the Spell & Trap Zone]`
 - Between-Turns Step = `End Phase`
-- Break Evolution = `Special Summon this card (from your hand) in Defense Position, by stacking it on a monster that is linted in this card's text. (This is treated as an Evolution Summon.) This card can attack while in face-up Defense Position.`
+- Break Evolution = `Special Summon this card (from your hand) in Defense Position, by stacking it on a monster that is listed in this card's text. (This is treated as an Evolution Summon.) This card can attack while in face-up Defense Position.`
 - Burn Marker = `Burn Counter`
 - Damage = `Place a Damage Counter on a monster at the end of the Damage Step. (Monsters with a Damage Counter lose 10 ATK for each Damage Counter on it, also are destroyed when their ATK become 0 as a result.)`
 - Damage Counter = `Damage Counter`
@@ -139,7 +143,7 @@ Note - missing information. Text that appears on the card that is not essential 
 - GX Marker = `A monster can only use its "GX attack" if its controller has "GX Marker" face-up in their Extra Deck. When a monster's "GX attack" effect resolves, its controller removes their "GX Marker" card from the Duel.`
 - Game = `Duel`
 - Hit Points (HP) = `ATK`
-- In Play = `Cards in the Extra Monster Zones and Main Monster Zones [or Spell & Trap Zone as an extended Bench]`
+- In Play = `A card in an Extra Monster Zone or Main Monster Zone [or Spell & Trap Zone as an extended Bench]`
 - Knocked Out = `When a monster on the field is destroyed`
 - Match = `Duel`
 - Poké-Body = `Continuous monster effect [while that monster is in a Monster Zone or Spell & Trap Zone]`
