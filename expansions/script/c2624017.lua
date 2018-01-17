@@ -6,13 +6,14 @@ function scard.initial_effect(c)
 	--evolve
 	pm.EnableEvolve(c)
 	--damage
-	pm.EnablePokemonAttack(c,0,PM_CATEGORY_COIN,pm.econ2(CARD_DARKNESS_ENERGY,1,CARD_COLORLESS_ENERGY,1),pm.hinttg,scard.damop)
+	pm.EnablePokemonAttack(c,0,PM_CATEGORY_COIN,scard.attack_cost,pm.hinttg,scard.damop)
 end
 scard.pokemon_card=true
 scard.height=3.03
 scard.devolve_list={CARD_MIGHTYENA}
 scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.resistance_20=PM_ENERGY_PSYCHIC
+scard.attack_cost=pm.econ2(CARD_DARKNESS_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=40
 	if Duel.TossCoin(tp,1)==RESULT_HEADS then ct=ct+20 end

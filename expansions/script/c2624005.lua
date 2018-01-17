@@ -6,15 +6,17 @@ function scard.initial_effect(c)
 	--evolve
 	pm.EnableEvolve(c)
 	--damage
-	pm.EnablePokemonAttack(c,0,nil,pm.econ2(CARD_GRASS_ENERGY,1,CARD_COLORLESS_ENERGY,2),pm.hinttg,scard.damop1)
+	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.damop1)
 	--damage
-	pm.EnablePokemonAttack(c,1,PM_CATEGORY_COIN,pm.econ2(CARD_GRASS_ENERGY,2,CARD_COLORLESS_ENERGY,2),pm.hinttg,scard.damop2)
+	pm.EnablePokemonAttack(c,1,PM_CATEGORY_COIN,scard.attack_cost2,pm.hinttg,scard.damop2)
 end
 scard.pokemon_card=true
 scard.height=5.03
 scard.evolve_list={CARD_CHESNAUGHT_BREAK}
 scard.devolve_list={CARD_QUILLADIN,CARD_CHESPIN}
 scard.weakness_x2=PM_ENERGY_FIRE
+scard.attack_cost1=pm.econ2(CARD_GRASS_ENERGY,1,CARD_COLORLESS_ENERGY,2)
+scard.attack_cost2=pm.econ2(CARD_GRASS_ENERGY,2,CARD_COLORLESS_ENERGY,2)
 function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(50)
 end

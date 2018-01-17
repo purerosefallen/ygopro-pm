@@ -12,11 +12,12 @@ function scard.initial_effect(c)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
 	c:RegisterEffect(e1)
 	--discard energy
-	pm.EnablePokemonAttack(c,0,nil,pm.econ2(CARD_PSYCHIC_ENERGY,2,CARD_COLORLESS_ENERGY,1),pm.hinttg,scard.deop)
+	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost,pm.hinttg,scard.deop)
 end
 scard.pokemon_card=true
 scard.levelup_list={CARD_MEWTWO}
 scard.weakness_x2=PM_ENERGY_PSYCHIC
+scard.attack_cost=pm.econ2(CARD_PSYCHIC_ENERGY,2,CARD_COLORLESS_ENERGY,1)
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(120)
 	local g=e:GetHandler():GetAttachmentGroup():Filter(Card.IsEnergy,nil)
