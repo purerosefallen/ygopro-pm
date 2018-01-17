@@ -6,14 +6,13 @@
 	Include the following code in your script
 	
 	local PTCG=require "expansions.constant_ptcg"
-	
 ]]
 
 local PTCG={}
 
 --Card ID
 --↑Rules
-CARD_PTCG_RULES						=26000000	--Unofficial card (Pokémon Rules)
+CARD_PTCG_RULES						=26000000	--Unofficial card (Pokemon Rules)
 CARD_GX_MARKER						=26000999	--Unofficial card (GX Marker)
 --↑String
 PM_STRING_WIN						=26000001	--Win
@@ -47,15 +46,36 @@ CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 --↑Special Energy cards
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
 --↑Pokémon that are part of an evolutionary line
+CARD_WEEDLE							=26001069	--Weedle → Kakuna → Beedril (Base Set 69/102)
+CARD_KAKUNA							=26001033	--Weedle → Kakuna → Beedril (Base Set 33/102)
+CARD_BEEDRILL						=26001017	--Weedle → Kakuna → Beedril (Base Set 17/102)
+CARD_SNUBBULL						=26008074	--Snubbull → Granbull (Neo Genesis 74/111)
+CARD_GRANBULL						=26008037	--Snubbull → Granbull (Neo Genesis 37/111)
+CARD_POOCHYENA						=26016063	--Poochyena → Mightyena (EX Ruby & Sapphire 63/109)
+CARD_MIGHTYENA						=26016010	--Poochyena → Mightyena (EX Ruby & Sapphire 10/109)
 CARD_AXEW							=2618010	--Axew → Fraxure → Haxorus (Black Star Promo BW10)
 CARD_FRAXURE						=26050087	--Axew → Fraxure → Haxorus (Noble Victories 87/101)
 CARD_HAXORUS						=26050088	--Axew → Fraxure → Haxorus (Noble Victories 88/101)
+CARD_PAWNIARD						=26050075	--Pawniard → Bisharp (Noble Victories 75/101)
+CARD_BISHARP						=2624020	--Pawniard → Bisharp (Kalos Starter Set 20/39)
+CARD_CHESPIN						=2623001	--Chespin → Quilladin → Chesnaught → Chesnaught BREAK (Black Star Promo XY01)
+CARD_QUILLADIN						=2624004	--Chespin → Quilladin → Chesnaught → Chesnaught BREAK (Kalos Starter Set 4/39)
+CARD_CHESNAUGHT						=2624005	--Chespin → Quilladin → Chesnaught → Chesnaught BREAK (Kalos Starter Set 5/39)
+CARD_CHESNAUGHT_BREAK				=26066012	--Chespin → Quilladin → Chesnaught → Chesnaught BREAK (BREAKthrough 12/162)
+CARD_FENNEKIN						=2623002	--Fennekin → Braixen → Delphox → Delphox BREAK (Black Star Promo XY02)
+CARD_BRAIXEN						=2624009	--Fennekin → Braixen → Delphox → Delphox BREAK (Kalos Starter Set 9/39)
+CARD_DELPHOX						=2624010	--Fennekin → Braixen → Delphox → Delphox BREAK (Kalos Starter Set 10/39)
+CARD_DELPHOX_BREAK					=26066014	--Fennekin → Braixen → Delphox → Delphox BREAK (BREAKthrough 14/162)
+CARD_FROAKIE						=2623003	--Froakie → Frogadier → Greninja → Greninja BREAK (Black Star Promo XY03)
+CARD_FROGADIER						=2624013	--Froakie → Frogadier → Greninja → Greninja BREAK (Kalos Starter Set 13/39)
+CARD_GRENINJA						=2624014	--Froakie → Frogadier → Greninja → Greninja BREAK (Kalos Starter Set 14/39)
+CARD_GRENINJA_BREAK					=26067041	--Froakie → Frogadier → Greninja → Greninja BREAK (BREAKpoint 41/122)
 --↑You may have as many of the following cards in your deck as you like
 CARD_ARCEUS							=26042094	--"Arceus LV.X" (Arceus AR1)
 --↑Pokémon LV.X
 CARD_MEWTWO							=26001010	--"Mewtwo LV.X" (Legends Awakened 144/146)
 --↑Pokémon GX
-CARD_SNORLAX_GX						=2629005	--"Black Star Promo SM05"
+CARD_SNORLAX_GX						=2629005	--"You can't use more than 1 GX attack in a game." (Black Star Promo SM05)
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
 --↑Trainer
 CARD_PUZZLE_OF_TIME					=26067109	--"Puzzle of Time" (BREAKpoint 109/122)
@@ -70,7 +90,7 @@ PM_DARK_IVYSAUR_MARKER				=0x1606		--"Dark Ivysaur" (Best of Game 6/9)
 PM_IMPRISON_MARKER					=0x1607		--"Tropius δ" (Dragon Frontiers 23/101)
 PM_SHOCKWAVE_MARKER					=0x1608		--"Tropius δ" (Dragon Frontiers 23/101)
 --Win Reason
-PM_WIN_REASON_INVALID				=0x4d		--"Your opponent had an invalid deck."
+PM_WIN_REASON_INVALID				=0x4d		--"Your opponent had an invalid deck!"
 PM_WIN_REASON_KNOCKOUT				=0x6a		--"Your opponent had no more Pokémon left in play!"
 PM_WIN_REASON_PRIZE					=0x6b		--"Your opponent collected all the Prize cards to win the game!"
 PM_WIN_REASON_LOST_WORLD			=0x6c		--"Once during each player's turn, if that player's opponent has 6 or more Pokémon in the Lost Zone, the player may choose to win the game."
@@ -80,7 +100,7 @@ MAX_NUMBER							=999999999	--Max number allowed in YGOPro
 --Locations (for SetRange)
 PM_LOCATION_STADIUM					=LOCATION_FZONE		--Location for Stadium cards
 --Locations
-PM_LOCATION_RULES					=LOCATION_EXTRA		--Location for Pokémon Rules
+PM_LOCATION_RULES					=LOCATION_EXTRA		--Location for Pokemon Rules
 PM_LOCATION_ACTIVE_POKEMON			=LOCATION_MZONE		--Location for Active Pokémon
 PM_LOCATION_BENCH					=LOCATION_MZONE		--Location for Benched Pokémon
 PM_LOCATION_BENCH_EXTENDED			=LOCATION_SZONE		--Location for Pokémon on an extended Bench
@@ -93,7 +113,7 @@ PM_LOCATION_ATTACHED				=LOCATION_OVERLAY	--Location for cards under other cards
 --↑Location combinations
 LOCATIONS_ALL						=0xff		--All locations
 --Positions
-PM_POS_FACEUP_UPSIDE				=POS_FACEUP_ATTACK		--The default position of an in play Pokémon
+PM_POS_FACEUP_UPSIDE				=POS_FACEUP_ATTACK		--The default position of an In Play Pokémon
 PM_POS_FACEDOWN_UPSIDE				=POS_FACEDOWN_ATTACK	--The temporary position of the starting Active Pokémon
 PM_POS_FACEUP_COUNTERCLOCKWISE		=POS_FACEUP_DEFENSE		--The default position of an Asleep Pokémon
 PM_POS_FACEDOWN_COUNTERCLOCKWISE	=POS_FACEDOWN_DEFENSE	--N/A
@@ -102,7 +122,7 @@ PM_POS_FACEDOWN_CLOCKWISE			=POS_FACEDOWN_DEFENSE	--N/A
 PM_POS_FACEUP_SIDEWAYS				=POS_FACEUP_DEFENSE		--The default position of a Pokémon BREAK
 PM_POS_FACEDOWN_SIDEWAYS			=POS_FACEDOWN_DEFENSE	--N/A
 --Types
-PM_TYPE_RULE						=TYPE_FUSION+TYPE_PENDULUM	--The type of Pokémon Rules to exist face-up in the extra deck
+PM_TYPE_RULE						=TYPE_FUSION+TYPE_PENDULUM	--The type of Pokemon Rules to exist face-up in the extra deck
 PM_TYPE_ABILITY						=TYPE_EFFECT	--A special effect that is not an attack
 PM_TYPE_ANCIENT_TRAIT				=TYPE_SPIRIT	--A special effect that is not an ability
 PM_TYPE_POKE_BODY					=TYPE_CONTINUOUS--A Pokémon Power/Ability that is always active
@@ -138,7 +158,6 @@ PM_TYPE_ENERGY						=TYPE_TRAP		--Energy=Trap
 PM_TYPE_BASIC_ENERGY				=0x5			--"Energy Retrieval" (Base Set 81/102)
 PM_TYPE_SPECIAL_ENERGY				=0xf			--"Smoochum" (Neo Revelation 54/64)
 PM_TYPE_HOLON_ENERGY					=0x1020		--"Flareon δ" (EX Delta Species 5/113) (+PM_TYPE_SPECIAL_ENERGY)
---new special energy goes here
 --↑Setname
 PM_SETNAME_MISTY						=0x6		--"Misty" (Gym Heroes 18/132) (+PM_SETNAME_OWNER)
 PM_SETNAME_BROCK						=0x7		--"Brock's Geodude" (Gym Heroes 66/132) (+PM_SETNAME_OWNER)
@@ -206,7 +225,7 @@ PM_EFFECT_FLAG_POKEMON_ATTACK		=0x10000000					--Included on all Pokémon attack
 PM_EFFECT_CANNOT_PLAY				=EFFECT_CANNOT_ACTIVATE		--Prevent a card from being played or attached
 PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Put a Pokémon onto the Bench
 PM_EFFECT_KNOCK_OUT_REPLACE			=EFFECT_DESTROY_REPLACE		--Prevent a Pokémon from being Knocked Out
-PM_EFFECT_UPDATE_HIT_POINTS			=EFFECT_UPDATE_ATTACK		--Increase or decreas a Pokémon's HP
+PM_EFFECT_UPDATE_HIT_POINTS			=EFFECT_UPDATE_ATTACK		--Increase or decrease a Pokémon's HP
 PM_EFFECT_SELF_KNOCK_OUT			=EFFECT_SELF_DESTROY		--A Pokémon knocks itself out 
 PM_EFFECT_CHANGE_ENERGY				=EFFECT_CHANGE_CODE			--Change an Energy type
 PM_EFFECT_ADD_POKEMON_TYPE			=EFFECT_ADD_ATTRIBUTE		--Add a Pokémon type
@@ -262,7 +281,7 @@ PM_CATEGORY_COIN					=CATEGORY_COIN	--"Sabrina's ESP" (Gym Heroes 117/132)
 PM_CATEGORY_RECYCLE					=0x80000000		--"Pokémon Tower" (Black Star Promo Wizards of the Coast 42)
 --Descriptions
 --↑Win (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)
-PM_DESC_INVALID						=aux.Stringid(PM_STRING_WIN,0)	--"You have an invalid deck."
+PM_DESC_INVALID						=aux.Stringid(PM_STRING_WIN,0)	--"You have an invalid deck!"
 PM_DESC_KNOCKOUT					=aux.Stringid(PM_STRING_WIN,1)	--"You have no more Pokémon left in play!"
 PM_DESC_PRIZE						=aux.Stringid(PM_STRING_WIN,2)	--"You collected all the Prize cards to win the game!"
 PM_DESC_LOST_WORLD					=aux.Stringid(PM_STRING_WIN,3)	--"Once during each player's turn, if that player's opponent has 6 or more Pokémon in the Lost Zone, the player may choose to win the game."
