@@ -23,8 +23,7 @@ function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(scard.thfilter,tp,PM_LOCATION_DPILE,0,1,nil) end
 end
 function scard.thop(e,tp,eg,ep,ev,re,r,rp)
-	local res=Duel.TossCoin(tp,1)
-	if res==RESULT_HEADS then
+	if Duel.TossCoin(tp,1)==RESULT_HEADS then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOHAND)
 		local g=Duel.SelectMatchingCard(tp,scard.thfilter,tp,PM_LOCATION_DPILE,0,1,1,nil)
 		if g:GetCount()==0 then return end

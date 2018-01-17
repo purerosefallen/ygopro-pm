@@ -17,6 +17,5 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.drop(e,tp,eg,ep,ev,re,r,rp)
-	local res=Duel.TossCoin(tp,1)
-	if res==RESULT_HEADS then Duel.Draw(tp,1,REASON_EFFECT) end
+	if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.Draw(tp,1,REASON_EFFECT) end
 end
