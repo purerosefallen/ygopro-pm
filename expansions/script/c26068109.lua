@@ -20,5 +20,5 @@ function scard.healcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsBasicPokemon() and Duel.GetTurnPlayer()~=tp
 end
 function scard.healop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RemoveCounter(tp,PM_DAMAGE_COUNTER,2,REASON_EFFECT)
+	Duel.HealDamage(e,20,e:GetHandler())
 end
