@@ -213,7 +213,6 @@ function scard.condition(e)
 	end
 end
 function scard.operation(e,tp,eg,ep,ev,re,r,rp)
-	local turnp=Duel.GetTurnPlayer()
 	local c=e:GetHandler()
 	--apply rules for you
 	Duel.Remove(c,POS_FACEUP,REASON_RULE)
@@ -237,7 +236,6 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(gx2,POS_FACEUP,REASON_RULE)
 		Duel.SendtoExtraP(gx2,1-tp,REASON_RULE)
 	end
-	if turnp==1-tp then return end
 	--check for non-pokémon tcg cards
 	local g1=Duel.GetMatchingGroup(scard.filter,tp,LOCATIONS_ALL,0,nil)
 	local g2=Duel.GetMatchingGroup(scard.filter,tp,0,LOCATIONS_ALL,nil)
@@ -251,10 +249,12 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 	local dg1=Duel.GetMatchingGroup(nil,tp,LOCATION_HAND+LOCATION_DECK,0,nil)
 	local dg2=Duel.GetMatchingGroup(nil,tp,0,LOCATION_HAND+LOCATION_DECK,nil)
 	--create group for sudden death
-	dg1:Merge(dg2)
-	local dc=dg1:GetFirst()
-	for dc in aux.Next(dg1) do
-		dc:RegisterFlagEffect(PM_EFFECT_SUDDEN_DEATH_CHECK,0,0,0)
+	local sdg=Group.CreateGroup()
+	sdg:Merge(dg1)
+	sdg:Merge(dg2)
+	local sdc=sdg:GetFirst()
+	for sdc in aux.Next(sdg) do
+		sdc:RegisterFlagEffect(PM_EFFECT_SUDDEN_DEATH_CHECK,0,0,0)
 	end
 	if (g1:GetCount()>0 and g2:GetCount()>0) or (g3:GetCount()==0 and g4:GetCount()==0)
 		or (g5:GetCount()>1 and g6:GetCount()>1) or (dg1:GetCount()~=60 and dg2:GetCount()~=60) then
