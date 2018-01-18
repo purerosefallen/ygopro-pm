@@ -33,6 +33,28 @@ PM_LOCATION_PRIZE=PM_LOCATION_PRIZE_CARDS
 PM_LOCATION_ADJACENT_ACTIVE=PM_LOCATION_ADJACENT_ACTIVE_POKEMON
 PM_LOCATION_LOST=PM_LOCATION_LOST_ZONE
 PM_EFFECT_UPDATE_HP=PM_EFFECT_UPDATE_HIT_POINTS
+PM_EFFECT_RESIST_20_GRASS=PM_EFFECT_RESISTANCE_20_GRASS
+PM_EFFECT_RESIST_30_GRASS=PM_EFFECT_RESISTANCE_30_GRASS
+PM_EFFECT_RESIST_20_FIRE=PM_EFFECT_RESISTANCE_20_FIRE
+PM_EFFECT_RESIST_30_FIRE=PM_EFFECT_RESISTANCE_30_FIRE
+PM_EFFECT_RESIST_20_WATER=PM_EFFECT_RESISTANCE_20_WATER
+PM_EFFECT_RESIST_30_WATER=PM_EFFECT_RESISTANCE_30_WATER
+PM_EFFECT_RESIST_20_LIGHTNING=PM_EFFECT_RESISTANCE_20_LIGHTNING
+PM_EFFECT_RESIST_30_LIGHTNING=PM_EFFECT_RESISTANCE_30_LIGHTNING
+PM_EFFECT_RESIST_20_PSYCHIC=PM_EFFECT_RESISTANCE_20_PSYCHIC
+PM_EFFECT_RESIST_30_PSYCHIC=PM_EFFECT_RESISTANCE_30_PSYCHIC
+PM_EFFECT_RESIST_20_FIGHTING=PM_EFFECT_RESISTANCE_20_FIGHTING
+PM_EFFECT_RESIST_30_FIGHTING=PM_EFFECT_RESISTANCE_30_FIGHTING
+PM_EFFECT_RESIST_20_DARKNESS=PM_EFFECT_RESISTANCE_20_DARKNESS
+PM_EFFECT_RESIST_30_DARKNESS=PM_EFFECT_RESISTANCE_30_DARKNESS
+PM_EFFECT_RESIST_20_METAL=PM_EFFECT_RESISTANCE_20_METAL
+PM_EFFECT_RESIST_30_METAL=PM_EFFECT_RESISTANCE_30_METAL
+PM_EFFECT_RESIST_20_COLORLESS=PM_EFFECT_RESISTANCE_20_COLORLESS
+PM_EFFECT_RESIST_30_COLORLESS=PM_EFFECT_RESISTANCE_30_COLORLESS
+PM_EFFECT_RESIST_20_FAIRY=PM_EFFECT_RESISTANCE_20_FAIRY
+PM_EFFECT_RESIST_30_FAIRY=PM_EFFECT_RESISTANCE_30_FAIRY
+PM_EFFECT_RESIST_20_DRAGON=PM_EFFECT_RESISTANCE_20_DRAGON
+PM_EFFECT_RESIST_30_DRAGON=PM_EFFECT_RESISTANCE_30_DRAGON
 PM_EVENT_TO_DPILE=PM_EVENT_TO_DISCARDPILE
 
 --==========[+UniversalFunctions]==========
@@ -585,7 +607,7 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 	elseif ct<count and tc==d then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
 	for tc in aux.Next(targets) do
 		if tc~=d then ct=count end
-		tc:AddCounter(PM_DAMAGE_COUNTER,ct)
+		tc:AddCounter(PM_DAMAGE_COUNTER,ct,PM_REASON_ATTACK)
 	end
 end
 --put a damage counter(s) on a pokémon due to an effect
@@ -1197,7 +1219,9 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	end
 	c:SetAttachment(g)
 	Duel.Evolve(c,g)
-	Duel.PutInPlay(c,PM_SUMMON_TYPE_EVOLVE,tp,tp,false,false,PM_POS_FACEUP_UPSIDE)
+	local pos=PM_POS_FACEUP_UPSIDE
+	if c:IsPokemonBREAK() then pos=PM_POS_FACEUP_SIDEWAYS end
+	Duel.PutInPlay(c,PM_SUMMON_TYPE_EVOLVE,tp,tp,false,false,pos)
 	--retain sequence
 	if c:GetSequence()~=seq then Duel.MoveSequence(c,seq) end
 	--retain counters
@@ -1211,6 +1235,118 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	if ivym>0 then c:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
 	if prim>0 then c:AddCounter(PM_IMPRISON_MARKER,prim) end
 	if shom>0 then c:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
+	--pokémon break
+	if not c:IsPokemonBREAK() then return end
+	--retain attack & abilities
+	c:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD,1)
+	local wt={}
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_GRASS then table.insert(wt,PM_EFFECT_WEAKNESS_X2_GRASS) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_GRASS then table.insert(wt,PM_EFFECT_WEAKNESS_10_GRASS) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_GRASS then table.insert(wt,PM_EFFECT_WEAKNESS_20_GRASS) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_GRASS then table.insert(wt,PM_EFFECT_WEAKNESS_30_GRASS) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_GRASS then table.insert(wt,PM_EFFECT_WEAKNESS_40_GRASS) end
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_FIRE then table.insert(wt,PM_EFFECT_WEAKNESS_X2_FIRE) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_FIRE then table.insert(wt,PM_EFFECT_WEAKNESS_10_FIRE) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_FIRE then table.insert(wt,PM_EFFECT_WEAKNESS_20_FIRE) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_FIRE then table.insert(wt,PM_EFFECT_WEAKNESS_30_FIRE) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_FIRE then table.insert(wt,PM_EFFECT_WEAKNESS_40_FIRE) end
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_WATER then table.insert(wt,PM_EFFECT_WEAKNESS_X2_WATER) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_WATER then table.insert(wt,PM_EFFECT_WEAKNESS_10_WATER) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_WATER then table.insert(wt,PM_EFFECT_WEAKNESS_20_WATER) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_WATER then table.insert(wt,PM_EFFECT_WEAKNESS_30_WATER) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_WATER then table.insert(wt,PM_EFFECT_WEAKNESS_40_WATER) end
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_LIGHTNING then table.insert(wt,PM_EFFECT_WEAKNESS_X2_LIGHTNING) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_LIGHTNING then table.insert(wt,PM_EFFECT_WEAKNESS_10_LIGHTNING) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_LIGHTNING then table.insert(wt,PM_EFFECT_WEAKNESS_20_LIGHTNING) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_LIGHTNING then table.insert(wt,PM_EFFECT_WEAKNESS_30_LIGHTNING) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_LIGHTNING then table.insert(wt,PM_EFFECT_WEAKNESS_40_LIGHTNING) end
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_PSYCHIC then table.insert(wt,PM_EFFECT_WEAKNESS_X2_PSYCHIC) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_PSYCHIC then table.insert(wt,PM_EFFECT_WEAKNESS_10_PSYCHIC) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_PSYCHIC then table.insert(wt,PM_EFFECT_WEAKNESS_20_PSYCHIC) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_PSYCHIC then table.insert(wt,PM_EFFECT_WEAKNESS_30_PSYCHIC) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_PSYCHIC then table.insert(wt,PM_EFFECT_WEAKNESS_40_PSYCHIC) end
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_FIGHTING then table.insert(wt,PM_EFFECT_WEAKNESS_X2_FIGHTING) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_FIGHTING then table.insert(wt,PM_EFFECT_WEAKNESS_10_FIGHTING) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_FIGHTING then table.insert(wt,PM_EFFECT_WEAKNESS_20_FIGHTING) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_FIGHTING then table.insert(wt,PM_EFFECT_WEAKNESS_30_FIGHTING) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_FIGHTING then table.insert(wt,PM_EFFECT_WEAKNESS_40_FIGHTING) end
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_DARKNESS then table.insert(wt,PM_EFFECT_WEAKNESS_X2_DARKNESS) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_DARKNESS then table.insert(wt,PM_EFFECT_WEAKNESS_10_DARKNESS) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_DARKNESS then table.insert(wt,PM_EFFECT_WEAKNESS_20_DARKNESS) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_DARKNESS then table.insert(wt,PM_EFFECT_WEAKNESS_30_DARKNESS) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_DARKNESS then table.insert(wt,PM_EFFECT_WEAKNESS_40_DARKNESS) end
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_METAL then table.insert(wt,PM_EFFECT_WEAKNESS_X2_METAL) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_METAL then table.insert(wt,PM_EFFECT_WEAKNESS_10_METAL) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_METAL then table.insert(wt,PM_EFFECT_WEAKNESS_20_METAL) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_METAL then table.insert(wt,PM_EFFECT_WEAKNESS_30_METAL) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_METAL then table.insert(wt,PM_EFFECT_WEAKNESS_40_METAL) end
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_COLORLESS then table.insert(wt,PM_EFFECT_WEAKNESS_X2_COLORLESS) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_COLORLESS then table.insert(wt,PM_EFFECT_WEAKNESS_10_COLORLESS) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_COLORLESS then table.insert(wt,PM_EFFECT_WEAKNESS_20_COLORLESS) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_COLORLESS then table.insert(wt,PM_EFFECT_WEAKNESS_30_COLORLESS) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_COLORLESS then table.insert(wt,PM_EFFECT_WEAKNESS_40_COLORLESS) end
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_FAIRY then table.insert(wt,PM_EFFECT_WEAKNESS_X2_FAIRY) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_FAIRY then table.insert(wt,PM_EFFECT_WEAKNESS_10_FAIRY) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_FAIRY then table.insert(wt,PM_EFFECT_WEAKNESS_20_FAIRY) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_FAIRY then table.insert(wt,PM_EFFECT_WEAKNESS_30_FAIRY) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_FAIRY then table.insert(wt,PM_EFFECT_WEAKNESS_40_FAIRY) end
+	if tc.weakness_x2 and tc.weakness_x2==PM_ENERGY_DRAGON then table.insert(wt,PM_EFFECT_WEAKNESS_X2_DRAGON) end
+	if tc.weakness_10 and tc.weakness_10==PM_ENERGY_DRAGON then table.insert(wt,PM_EFFECT_WEAKNESS_10_DRAGON) end
+	if tc.weakness_20 and tc.weakness_20==PM_ENERGY_DRAGON then table.insert(wt,PM_EFFECT_WEAKNESS_20_DRAGON) end
+	if tc.weakness_30 and tc.weakness_30==PM_ENERGY_DRAGON then table.insert(wt,PM_EFFECT_WEAKNESS_30_DRAGON) end
+	if tc.weakness_40 and tc.weakness_40==PM_ENERGY_DRAGON then table.insert(wt,PM_EFFECT_WEAKNESS_40_DRAGON) end
+	--update with new weakness here
+	for i1,v1 in pairs(wt) do
+		--retain weakness
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(v1)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		c:RegisterEffect(e1)
+	end
+	local rt={}
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_GRASS then table.insert(rt,PM_EFFECT_RESIST_20_GRASS) end
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_FIRE then table.insert(rt,PM_EFFECT_RESIST_20_FIRE) end
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_WATER then table.insert(rt,PM_EFFECT_RESIST_20_WATER) end
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_LIGHTNING then table.insert(rt,PM_EFFECT_RESIST_20_LIGHTNING) end
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_PSYCHIC then table.insert(rt,PM_EFFECT_RESIST_20_PSYCHIC) end
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_FIGHTING then table.insert(rt,PM_EFFECT_RESIST_20_FIGHTING) end
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_DARKNESS then table.insert(rt,PM_EFFECT_RESIST_20_DARKNESS) end
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_METAL then table.insert(rt,PM_EFFECT_RESIST_20_METAL) end
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_COLORLESS then table.insert(rt,PM_EFFECT_RESIST_20_COLORLESS) end
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_FAIRY then table.insert(rt,PM_EFFECT_RESIST_20_FAIRY) end
+	if tc.resistance_20 and tc.resistance_20==PM_ENERGY_DRAGON then table.insert(rt,PM_EFFECT_RESIST_20_DRAGON) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_GRASS then table.insert(rt,PM_EFFECT_RESIST_30_GRASS) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_FIRE then table.insert(rt,PM_EFFECT_RESIST_30_FIRE) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_WATER then table.insert(rt,PM_EFFECT_RESIST_30_WATER) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_LIGHTNING then table.insert(rt,PM_EFFECT_RESIST_30_LIGHTNING) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_PSYCHIC then table.insert(rt,PM_EFFECT_RESIST_30_PSYCHIC) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_FIGHTING then table.insert(rt,PM_EFFECT_RESIST_30_FIGHTING) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_DARKNESS then table.insert(rt,PM_EFFECT_RESIST_30_DARKNESS) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_METAL then table.insert(rt,PM_EFFECT_RESIST_30_METAL) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_COLORLESS then table.insert(rt,PM_EFFECT_RESIST_30_COLORLESS) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_FAIRY then table.insert(rt,PM_EFFECT_RESIST_30_FAIRY) end
+	if tc.resistance_30 and tc.resistance_30==PM_ENERGY_DRAGON then table.insert(rt,PM_EFFECT_RESIST_30_DRAGON) end
+	--update with new resistance here
+	---UNTESTED
+	for i2,v2 in pairs(rt) do
+		--retain resistance
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(v2)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		c:RegisterEffect(e2)
+	end
+	--retain retreat cost
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(PM_EFFECT_CHANGE_RETREAT_COST_FINAL)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e3:SetValue(tc:GetRetreatCost())
+	e3:SetReset(RESET_EVENT+RESETS_STANDARD)
+	c:RegisterEffect(e3)
 end
 
 --==========[+LVX]==========
