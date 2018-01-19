@@ -445,6 +445,10 @@ function Card.IsRetreatable(c)
 		return Auxiliary.ActivePokemonFilter(c) and (ct>=rc or rc==0)
 	end
 end
+--check if a pokémon can evolve
+function Card.IsCanEvolve(c)
+	return not c:IsHasEffect(PM_EFFECT_CANNOT_EVOLVE)
+end
 --check if a pokémon can have an attached energy card to it removed by an attack or trainer card
 function Card.IsAbleToRemoveEnergy(c)
 	return not c:IsHasEffect(PM_EFFECT_CANNOT_REMOVE_ENERGY_ATTACK_TRAINER)
@@ -1184,7 +1188,8 @@ function Auxiliary.EnableEvolve(c)
 	c:RegisterEffect(e1)
 end
 function Auxiliary.EvolvePokemonFilter(c,tcode)
-	return c:IsFaceup() and c.evolve_list and table.unpack(c.evolve_list)==tcode and not c:IsStatus(PM_STATUS_PLAY_TURN)
+	return c:IsFaceup() and c.evolve_list and table.unpack(c.evolve_list)==tcode
+		and c:IsCanEvolve() and not c:IsStatus(PM_STATUS_PLAY_TURN)
 end
 function Auxiliary.EvolvePokemonTarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -1214,6 +1219,7 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	local shom=tc:GetMarker(PM_SHOCKWAVE_MARKER)
 	local mg=tc:GetAttachmentGroup()
 	if tc:IsActive() then Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) end --workaround
+	--retain attached cards
 	if mg:GetCount()~=0 then
 		Duel.Attach(c,mg)
 	end
@@ -1828,6 +1834,7 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				local shom=tc1:GetMarker(PM_SHOCKWAVE_MARKER)
 				local mg=tc1:GetAttachmentGroup()
 				if tc1:IsActive() then Duel.SendtoExtraP(tc2,PLAYER_OWNER,REASON_RULE) end --workaround
+				--retain attached cards
 				if mg:GetCount()~=0 then
 					Duel.Attach(tc2,mg)
 				end

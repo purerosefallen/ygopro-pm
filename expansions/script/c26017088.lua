@@ -8,7 +8,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.cfilter(c,e,tp)
-	if not c:IsFaceup() or not c:IsBasicPokemon() or c:IsStatus(PM_STATUS_PLAY_TURN) then return false end
+	if not (c:IsFaceup() and c:IsBasicPokemon() and c:IsCanEvolve()) or c:IsStatus(PM_STATUS_PLAY_TURN) then return false end
 	local code=c:GetOriginalCode()
 	local class=_G["c"..code]
 	if class==nil or class.evolve_list==nil then return false end
