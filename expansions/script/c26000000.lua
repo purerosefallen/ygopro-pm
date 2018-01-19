@@ -51,14 +51,14 @@ function scard.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetCode(PM_EVENT_LEAVE_PLAY)
 	e5:SetRange(PM_LOCATION_RULES)
-	e5:SetCondition(scard.prcon1)
-	e5:SetOperation(scard.prop1)
+	e5:SetCondition(scard.procon)
+	e5:SetOperation(scard.proop)
 	c:RegisterEffect(e5)
 	--take prize
 	local e6=e5:Clone()
 	e6:SetDescription(aux.Stringid(sid,5))
-	e6:SetCondition(scard.prcon2)
-	e6:SetOperation(scard.prop2)
+	e6:SetCondition(scard.pricon)
+	e6:SetOperation(scard.priop)
 	c:RegisterEffect(e6)
 	--prize check
 	local e7=Effect.CreateEffect(c)
@@ -236,7 +236,7 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(gx2,POS_FACEUP,REASON_RULE)
 		Duel.SendtoExtraP(gx2,1-tp,REASON_RULE)
 	end
-	--check for non-pokémon tcg cards
+	--check for non-pokémon cards
 	local g1=Duel.GetMatchingGroup(scard.filter,tp,LOCATIONS_ALL,0,nil)
 	local g2=Duel.GetMatchingGroup(scard.filter,tp,0,LOCATIONS_ALL,nil)
 	--check for basic pokémon
@@ -373,7 +373,7 @@ function scard.hpval(e,c)
 end
 --knock out
 function scard.kofilter(c)
-	return c:IsFaceup() and c:GetHP()==0
+	return c:IsFaceup() and c:IsPokemon() and c:GetHP()==0
 end
 function scard.kocon(e)
 	return Duel.IsExistingMatchingCard(scard.kofilter,e:GetHandlerPlayer(),PM_LOCATION_IN_PLAY,PM_LOCATION_IN_PLAY,1,nil)
@@ -383,34 +383,34 @@ function scard.koop(e)
 	Duel.KnockOut(g,REASON_RULE)
 end
 --promote
-function scard.prfilter1(c,tp)
+function scard.profilter(c,tp)
 	return c:IsPokemon() and c:IsPreviousLocation(PM_LOCATION_ACTIVE)
 		and c:GetPreviousSequence()==SEQUENCE_EXTRA_MZONE and c:GetOwner()==tp
 end
-function scard.prcon1(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(scard.prfilter1,1,nil,tp)
+function scard.procon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(scard.profilter,1,nil,tp)
 		and Duel.GetLocationCount(tp,PM_LOCATION_ACTIVE)>0
 		and Duel.CheckLocation(tp,PM_LOCATION_ACTIVE,SEQUENCE_EXTRA_MZONE)
 		and Duel.IsExistingMatchingCard(pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil)
 end
-function scard.prop1(e,tp,eg,ep,ev,re,r,rp)
+function scard.proop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_PROMOTE)
 	local g=Duel.SelectMatchingCard(tp,pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
 	Duel.HintSelection(g)
 	Duel.MoveSequence(g:GetFirst(),SEQUENCE_EXTRA_MZONE)
 end
 --take prize
-function scard.prfilter2(c,tp)
+function scard.prifilter(c,tp)
 	return c:IsPokemon() and c:IsPreviousLocation(PM_LOCATION_IN_PLAY) and c:GetOwner()==1-tp
 end
 function scard.thfilter(c)
 	return c:IsPrize() and c:IsAbleToHand()
 end
-function scard.prcon2(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(scard.prfilter2,1,nil,tp)
+function scard.pricon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(scard.prifilter,1,nil,tp)
 		and Duel.IsExistingMatchingCard(scard.thfilter,tp,PM_LOCATION_PRIZE,0,1,nil)
 end
-function scard.prop2(e,tp,eg,ep,ev,re,r,rp)
+function scard.priop(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
 	local ct=1
 	if ec:IsPokemonEX() or ec:IsPokemonGX() then ct=2 end
@@ -485,7 +485,7 @@ end
 --limit evolve
 function scard.evolimit(e,re,tp)
 	local rc=re:GetHandler()
-	return Duel.IsFirstTurn() and (rc:IsEvolution() or rc:IsPokemonLVX())
+	return Duel.IsFirstTurn() and (rc:IsEvolution() or rc:IsPokemonLVX()) and not rc:IsLocation(PM_LOCATION_IN_PLAY)
 end
 --limit supporter
 function scard.supreg(e,tp,eg,ep,ev,re,r,rp)
