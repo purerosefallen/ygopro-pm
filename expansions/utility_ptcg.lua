@@ -432,7 +432,7 @@ function Card.IsCanAttack(c)
 	return not (Duel.IsFirstTurn() or c:IsAsleep() or c:IsParalyzed() or c:IsHasEffect(PM_EFFECT_CANNOT_ATTACK))
 end
 --check if an active pokémon can be retreated to the bench
-function Card.IsRetreatable(c)
+function Card.IsCanRetreat(c)
 	local rc=c:GetRetreatCost()
 	local ct=c:GetAttachmentGroup():FilterCount(Card.IsEnergy,nil)
 	if c:IsHasEffect(PM_EFFECT_NO_RETREAT_COST) then rc=0 end
@@ -1134,7 +1134,7 @@ function Auxiliary.BenchOperation(e,tp,eg,ep,ev,re,r,rp)
 end
 ]]
 function Auxiliary.RetreatCondition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp,PM_EFFECT_RETREAT)==0 and e:GetHandler():IsRetreatable()
+	return Duel.GetFlagEffect(tp,PM_EFFECT_RETREAT)==0 and e:GetHandler():IsCanRetreat()
 end
 function Auxiliary.RetreatCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Auxiliary.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil) end
@@ -1856,6 +1856,71 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 			end
 end
 Auxiliary.evoop=Auxiliary.EffectEvolveOperation
+--"Put the highest stage Evolution card on a Pokémon into your hand." (e.g. "Devolution Spray BS 72")
+function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq)
+	--dest_loc: destination location
+	--deck_seq: DECK_ORDER_TOP, DECK_ORDER_BOTTOM or DECK_ORDER_SHUFFLE
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local dest_loc=dest_loc or LOCATION_HAND
+				local deck_seq=deck_seq or DECK_ORDER_SHUFFLE
+				Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DEVOLVE)
+				local g1=Duel.SelectMatchingCard(tp,f,tp,s,o,1,1,nil)
+				local tc1=g1:GetFirst()
+				if not tc1 then return end
+				Duel.HintSelection(g1)
+				--register sequence
+				local seq=tc1:GetSequence()
+				--register counters
+				local damc=tc1:GetCounter(PM_DAMAGE_COUNTER)
+				local colc=tc1:GetCounter(PM_COLORING_COUNTER)
+				local chac=tc1:GetCounter(PM_CHAR_COUNTER)
+				--register markers
+				local burm=tc1:GetMarker(PM_BURN_MARKER)
+				local poim=tc1:GetMarker(PM_POISON_MARKER)
+				local rodm=tc1:GetMarker(PM_LIGHTNING_ROD_MARKER)
+				local ivym=tc1:GetMarker(PM_DARK_IVYSAUR_MARKER)
+				local prim=tc1:GetMarker(PM_IMPRISON_MARKER)
+				local shom=tc1:GetMarker(PM_SHOCKWAVE_MARKER)
+				--register attached cards
+				local g2=Group.CreateGroup()
+				local ag=tc1:GetAttachmentGroup()
+				local ac=ag:GetFirst()
+				for ac in aux.Next(ag) do
+					g2:AddCard(ac)
+				end
+				if dest_loc==LOCATION_HAND then
+					Duel.SendtoHand(g1,PLAYER_OWNER,REASON_EFFECT)
+				elseif dest_loc==LOCATION_DECK then
+					Duel.SendtoDeck(g1,PLAYER_OWNER,deck_seq,REASON_EFFECT)
+				end
+				--retain attached cards
+				local tc2=g2:GetFirst()
+				Duel.MoveToField(ac,tp,tp,LOCATION_MZONE,PM_POS_FACEUP_UPSIDE,true)
+				g2:RemoveCard(tc2)
+				--retain sequence
+				if tc2:GetSequence()~=seq then Duel.MoveSequence(tc2,seq) end
+				if g2:GetCount()>0 then Duel.Attach(tc2,g2) end
+				--retain counters
+				if damc>0 then tc2:AddCounter(PM_DAMAGE_COUNTER,damc) end
+				if colc>0 then tc2:AddCounter(PM_COLORING_COUNTER,colc) end
+				if chac>0 then tc2:AddCounter(PM_CHAR_COUNTER,chac) end
+				--retain markers
+				if burm>0 then tc2:AddCounter(PM_BURN_MARKER,burm) end
+				if poim>0 then tc2:AddCounter(PM_POISON_MARKER,poim) end
+				if rodm>0 then tc2:AddCounter(PM_LIGHTNING_ROD_MARKER,rodm) end
+				if ivym>0 then tc2:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
+				if prim>0 then tc2:AddCounter(PM_IMPRISON_MARKER,prim) end
+				if shom>0 then tc2:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
+				--cannot evolve
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(PM_EFFECT_CANNOT_EVOLVE)
+				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+				tc2:RegisterEffect(e1)
+			end
+end
+Auxiliary.devop=Auxiliary.EffectDevolveOperation
 --"The Retreat Cost for each [P] and [D] Pokémon is 0." (e.g. "Moonlight Stadium GE 100")
 function Auxiliary.EnableNoRetreatCost(c,range,s_range,o_range,targ_func,con_func)
 	local e1=Effect.CreateEffect(c)
