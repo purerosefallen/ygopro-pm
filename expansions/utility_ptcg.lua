@@ -1785,7 +1785,7 @@ function Auxiliary.DrawOperation(p,ct)
 			end
 end
 Auxiliary.drop=Auxiliary.DrawOperation
---"Put a card onto a Basic Pokémon to evolve it." (e.g. "Rare Candy SS 88")
+--"Put a card onto a Basic Pokémon to evolve it." (e.g. "Rare Candy SS 88", "Evosoda XY 116")
 function Auxiliary.EffectEvolveTarget(f,s,o)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
 				if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
@@ -1802,10 +1802,17 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				local code=tc1:GetOriginalCode()
 				local class=_G["c"..code]
 				Duel.HintSelection(g1)
+				if s2==LOCATION_DECK or o2==LOCATION_DECK then
+					Auxiliary.ConfirmDeck(tp,tp)
+				end
 				Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_EVOLUTION)
 				local g2=Duel.SelectMatchingCard(tp,f2,tp,s2,o2,1,1,nil,e,tp,class)
 				local tc2=g2:GetFirst()
-				if not tc2 then return end
+				if s2==LOCATION_DECK or o2==LOCATION_DECK then
+					if not tc2 then return Auxiliary.ConfirmInvalid(tp,tp) end
+				else
+					if not tc2 then return end
+				end
 				--register sequence
 				local seq=tc1:GetSequence()
 				--register counters
