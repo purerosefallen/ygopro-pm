@@ -1765,7 +1765,7 @@ function Auxiliary.EnableDoubleEnergy(c,val)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
---"Draw N cards."
+--"Draw N cards." (e.g. "Bill BS 91")
 function Auxiliary.DrawTarget(p,ct)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
 				local player=nil
@@ -1785,6 +1785,63 @@ function Auxiliary.DrawOperation(p,ct)
 			end
 end
 Auxiliary.drop=Auxiliary.DrawOperation
+--"Put a card onto a Basic Pokémon to evolve it." (e.g. "Rare Candy SS 88")
+function Auxiliary.EffectEvolveTarget(f,s,o)
+	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
+				if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
+					and Duel.IsExistingMatchingCard(f,tp,s,o,1,nil,e,tp) end
+			end
+end
+Auxiliary.evotg=Auxiliary.EffectEvolveTarget
+function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_EVOLVE)
+				local g1=Duel.SelectMatchingCard(tp,f1,tp,s1,o1,1,1,nil,e,tp)
+				local tc1=g1:GetFirst()
+				if not tc1 then return end
+				local code=tc1:GetOriginalCode()
+				local class=_G["c"..code]
+				Duel.HintSelection(g1)
+				Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_EVOLUTION)
+				local g2=Duel.SelectMatchingCard(tp,f2,tp,s2,o2,1,1,nil,e,tp,class)
+				local tc2=g2:GetFirst()
+				if not tc2 then return end
+				--register sequence
+				local seq=tc1:GetSequence()
+				--register counters
+				local damc=tc1:GetCounter(PM_DAMAGE_COUNTER)
+				local colc=tc1:GetCounter(PM_COLORING_COUNTER)
+				local chac=tc1:GetCounter(PM_CHAR_COUNTER)
+				--register markers
+				local burm=tc1:GetMarker(PM_BURN_MARKER)
+				local poim=tc1:GetMarker(PM_POISON_MARKER)
+				local rodm=tc1:GetMarker(PM_LIGHTNING_ROD_MARKER)
+				local ivym=tc1:GetMarker(PM_DARK_IVYSAUR_MARKER)
+				local prim=tc1:GetMarker(PM_IMPRISON_MARKER)
+				local shom=tc1:GetMarker(PM_SHOCKWAVE_MARKER)
+				local mg=tc1:GetAttachmentGroup()
+				if tc1:IsActive() then Duel.SendtoExtraP(tc2,PLAYER_OWNER,REASON_RULE) end --workaround
+				if mg:GetCount()~=0 then
+					Duel.Attach(tc2,mg)
+				end
+				tc2:SetAttachment(g1)
+				Duel.Evolve(tc2,g1)
+				Duel.PutInPlay(tc2,PM_SUMMON_TYPE_EVOLVE,tp,tp,false,false,PM_POS_FACEUP_UPSIDE)
+				if tc2:GetSequence()~=seq then Duel.MoveSequence(tc2,seq) end
+				--retain counters
+				if damc>0 then tc2:AddCounter(PM_DAMAGE_COUNTER,damc) end
+				if colc>0 then tc2:AddCounter(PM_COLORING_COUNTER,colc) end
+				if chac>0 then tc2:AddCounter(PM_CHAR_COUNTER,chac) end
+				--retain markers
+				if burm>0 then tc2:AddCounter(PM_BURN_MARKER,burm) end
+				if poim>0 then tc2:AddCounter(PM_POISON_MARKER,poim) end
+				if rodm>0 then tc2:AddCounter(PM_LIGHTNING_ROD_MARKER,rodm) end
+				if ivym>0 then tc2:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
+				if prim>0 then tc2:AddCounter(PM_IMPRISON_MARKER,prim) end
+				if shom>0 then tc2:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
+			end
+end
+Auxiliary.evoop=Auxiliary.EffectEvolveOperation
 --"The Retreat Cost for each [P] and [D] Pokémon is 0." (e.g. "Moonlight Stadium GE 100")
 function Auxiliary.EnableNoRetreatCost(c,range,s_range,o_range,targ_func,con_func)
 	local e1=Effect.CreateEffect(c)
@@ -2313,6 +2370,11 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 			end
 end
 Auxiliary.econ5=Auxiliary.AttackCostCondition5
+--condition to omit the first turn (e.g. "Rare Candy SS 88")
+function Auxiliary.NotFirstTurnCondition()
+	return not Duel.IsFirstTurn()
+end
+Auxiliary.nfturncon=Auxiliary.NotFirstTurnCondition
 
 --==========[+Costs]==========
 --cost for discarding Energy to a pokémon
