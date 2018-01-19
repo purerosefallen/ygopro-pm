@@ -489,11 +489,11 @@ function scard.evolimit(e,re,tp)
 end
 --limit supporter
 function scard.supreg(e,tp,eg,ep,ev,re,r,rp)
-	if ep~=tp or not re:GetHandler():IsSupporter() then return end
+	if ep~=tp or not re:GetHandler():IsSupporter() or re:IsHasType(EFFECT_TYPE_ACTIVATE) then return end
 	e:GetHandler():RegisterFlagEffect(PM_EFFECT_LIMIT_SUPPORTER,RESET_EVENT+RESETS_STANDARD_DISCONTROL+RESET_PHASE+PHASE_END,0,1)
 end
 function scard.supreset(e,tp,eg,ep,ev,re,r,rp)
-	if ep~=tp or not re:GetHandler():IsSupporter() then return end
+	if ep~=tp or not re:GetHandler():IsSupporter() or re:IsHasType(EFFECT_TYPE_ACTIVATE) then return end
 	e:GetHandler():ResetFlagEffect(PM_EFFECT_LIMIT_SUPPORTER)
 end
 function scard.supcon(e)
@@ -504,11 +504,11 @@ function scard.suplimit(e,te,tp)
 end
 --limit stadium
 function scard.stadreg(e,tp,eg,ep,ev,re,r,rp)
-	if ep~=tp or not re:GetHandler():IsStadium() then return end
+	if ep~=tp or not re:GetHandler():IsStadium() or re:IsHasType(EFFECT_TYPE_ACTIVATE) then return end
 	e:GetHandler():RegisterFlagEffect(PM_EFFECT_LIMIT_STADIUM,RESET_EVENT+RESETS_STANDARD_DISCONTROL+RESET_PHASE+PHASE_END,0,1)
 end
 function scard.stadreset(e,tp,eg,ep,ev,re,r,rp)
-	if ep~=tp or not re:GetHandler():IsStadium() then return end
+	if ep~=tp or not re:GetHandler():IsStadium() or re:IsHasType(EFFECT_TYPE_ACTIVATE) then return end
 	e:GetHandler():ResetFlagEffect(PM_EFFECT_LIMIT_STADIUM)
 end
 function scard.stadcon(e)
