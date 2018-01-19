@@ -136,7 +136,7 @@ Note - missing information. Text that appears on the card that is not essential 
 - Damage = `Place a Damage Counter on a monster at the end of the Damage Step. (Monsters with a Damage Counter lose 10 ATK for each Damage Counter on it, also are destroyed when their ATK become 0 as a result.)`
 - Damage Counter = `Damage Counter`
 - Defending Pokémon = `Attack target in an Extra Monster Zone`
-- Devolve = *Not yet implemented*
+- Devolve = `Take 1 "Evolution" monster you control, and either return it to the hand or shuffle it into the Deck, then place the monster that was stacked underneath it, in the same zone the returned monster was in, in face-up Attack Position, but it cannot be "Evolved" this turn. (Attach all lost materials to that monster.)`
 - Discard = `Send a card to the Graveyard or detach a material from a monster`
 - Evolve = `Special Summon this card (from your hand) in Attack Position, by stacking it on a monster that is listed in this card's text. (This is treated as an Evolution Summon.)`
 - Evolved Pokémon = `"Evolution" monster whose name is included in the text of 1 of its materials`
