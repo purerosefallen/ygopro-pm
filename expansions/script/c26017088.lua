@@ -15,6 +15,6 @@ function scard.cfilter(c,e,tp)
 	return Duel.IsExistingMatchingCard(scard.evofilter,tp,LOCATION_HAND,0,1,nil,e,tp,class)
 end
 function scard.evofilter(c,e,tp,class)
-	return c:IsStage2() and c:IsCode(table.unpack(class.evolve_list))
+	return c:IsStage2() and c:IsCode(class.evolve_list[2])
 		and c:IsCanBePutInPlay(e,PM_SUMMON_TYPE_EVOLVE,tp,false,false)
 end
