@@ -12,7 +12,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=4.07
-scard.devolve_list={CARD_SNUBBULL}
+scard.devolve_list={[1]=CARD_SNUBBULL}
 scard.weakness_x2=PM_ENERGY_METAL
 scard.resistance_20=PM_ENERGY_DARKNESS
 scard.attack_cost1=pm.econ2(CARD_FAIRY_ENERGY,1,CARD_COLORLESS_ENERGY,1)

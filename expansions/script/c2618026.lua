@@ -8,7 +8,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=2.00
-scard.evolve_list={CARD_FRAXURE}
+scard.evolve_list={[1]=CARD_FRAXURE}
 scard.attack_cost=pm.econ1(CARD_COLORLESS_ENERGY,2)
 function scard.abop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(20)

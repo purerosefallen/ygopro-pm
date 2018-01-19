@@ -10,7 +10,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=1.08
-scard.evolve_list={CARD_BISHARP}
+scard.evolve_list={[1]=CARD_BISHARP}
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.resistance_20=PM_ENERGY_PSYCHIC
 scard.attack_cost1=pm.econ1(CARD_METAL_ENERGY,1)

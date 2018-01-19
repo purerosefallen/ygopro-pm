@@ -9,11 +9,11 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost,pm.hinttg,scard.damop)
 end
 scard.pokemon_card=true
-scard.devolve_list={CARD_CHESNAUGHT}
+scard.devolve_list={[1]=CARD_CHESNAUGHT,[2]=CARD_QUILLADIN,[3]=CARD_CHESPIN}
 scard.attack_cost=pm.econ2(CARD_GRASS_ENERGY,2,CARD_COLORLESS_ENERGY,2)
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	Duel.AttackDamage(160)
+	local c=e:GetHandler()
 	Duel.EffectDamage(30,c,c)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_BENCHEDPOKEMON)
 	local g=Duel.SelectMatchingCard(tp,pm.BenchPokemonFilter,tp,0,PM_LOCATION_IN_PLAY,1,1,nil)

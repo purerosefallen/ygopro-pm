@@ -12,8 +12,8 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=3.03
-scard.evolve_list={CARD_DELPHOX,CARD_DELPHOX_BREAK}
-scard.devolve_list={CARD_FENNEKIN}
+scard.evolve_list={[1]=CARD_DELPHOX,[2]=CARD_DELPHOX_BREAK}
+scard.devolve_list={[1]=CARD_FENNEKIN}
 scard.weakness_x2=PM_ENERGY_WATER
 scard.attack_cost1=pm.econ2(CARD_FIRE_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_FIRE_ENERGY,1,CARD_COLORLESS_ENERGY,2)

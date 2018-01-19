@@ -12,8 +12,8 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=4.11
-scard.evolve_list={CARD_GRENINJA_BREAK}
-scard.devolve_list={CARD_FROGADIER,CARD_FROAKIE}
+scard.evolve_list={[1]=CARD_GRENINJA_BREAK}
+scard.devolve_list={[1]=CARD_FROGADIER,[2]=CARD_FROAKIE}
 scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost1=pm.econ1(CARD_WATER_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_WATER_ENERGY,2,CARD_COLORLESS_ENERGY,1)

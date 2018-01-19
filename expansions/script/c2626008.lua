@@ -12,7 +12,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=3.11
-scard.devolve_list={CARD_TEAM_AQUAS_GRIMER}
+scard.devolve_list={[1]=CARD_TEAM_AQUAS_GRIMER}
 scard.weakness_x2=PM_ENERGY_PSYCHIC
 scard.attack_cost=pm.econ2(CARD_PSYCHIC_ENERGY,1,CARD_COLORLESS_ENERGY,2)
 function scard.rctg(e,c)

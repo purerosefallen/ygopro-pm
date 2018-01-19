@@ -8,7 +8,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=1.00
-scard.evolve_list={CARD_KAKUNA,CARD_BEEDRIL}
+scard.evolve_list={[1]=CARD_KAKUNA,[2]=CARD_BEEDRIL}
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost=pm.econ1(CARD_GRASS_ENERGY,1)
 function scard.parop(e,tp,eg,ep,ev,re,r,rp)

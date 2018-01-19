@@ -12,7 +12,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=5.11
-scard.devolve_list={CARD_FRAXURE,CARD_AXEW}
+scard.devolve_list={[1]=CARD_FRAXURE,[2]=CARD_AXEW}
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,3)
 scard.attack_cost2=pm.econ1(CARD_COLORLESS_ENERGY,4)
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)

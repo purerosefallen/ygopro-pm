@@ -8,7 +8,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=2.00
-scard.evolve_list={CARD_GRANBULL}
+scard.evolve_list={[1]=CARD_GRANBULL}
 scard.weakness_x2=PM_ENERGY_METAL
 scard.resistance_20=PM_ENERGY_DARKNESS
 scard.attack_cost=pm.econ2(CARD_FAIRY_ENERGY,1,CARD_COLORLESS_ENERGY,1)

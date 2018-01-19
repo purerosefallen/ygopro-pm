@@ -12,8 +12,8 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=3.03
-scard.evolve_list={CARD_HAXORUS}
-scard.devolve_list={CARD_AXEW}
+scard.evolve_list={[1]=CARD_HAXORUS}
+scard.devolve_list={[1]=CARD_AXEW}
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ1(CARD_COLORLESS_ENERGY,2)
 function scard.damop1(e,tp,eg,ep,ev,re,r,rp)

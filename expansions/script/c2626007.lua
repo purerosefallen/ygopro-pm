@@ -10,7 +10,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=2.11
-scard.evolve_list={CARD_TEAM_AQUAS_MUK}
+scard.evolve_list={[1]=CARD_TEAM_AQUAS_MUK}
 scard.weakness_x2=PM_ENERGY_PSYCHIC
 scard.attack_cost1=pm.econ1(CARD_PSYCHIC_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_PSYCHIC_ENERGY,1,CARD_COLORLESS_ENERGY,2)

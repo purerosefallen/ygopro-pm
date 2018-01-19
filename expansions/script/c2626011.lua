@@ -12,7 +12,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=4.11
-scard.devolve_list={CARD_TEAM_MAGMAS_BALTOY}
+scard.devolve_list={[1]=CARD_TEAM_MAGMAS_BALTOY}
 scard.weakness_x2=PM_ENERGY_PSYCHIC
 scard.attack_cost=pm.econ2(CARD_PSYCHIC_ENERGY,1,CARD_COLORLESS_ENERGY,2)
 function scard.cfilter1(c)

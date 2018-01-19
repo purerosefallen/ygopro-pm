@@ -12,8 +12,8 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=2.11
-scard.evolve_list={CARD_TEAM_MAGMAS_AGGRON}
-scard.devolve_list={CARD_TEAM_MAGMAS_ARON}
+scard.evolve_list={[1]=CARD_TEAM_MAGMAS_AGGRON}
+scard.devolve_list={[1]=CARD_TEAM_MAGMAS_ARON}
 scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost1=pm.econ2(CARD_FIGHTING_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_FIGHTING_ENERGY,1,CARD_COLORLESS_ENERGY,2)

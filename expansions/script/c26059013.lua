@@ -12,8 +12,8 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=2.04
-scard.evolve_list={CARD_CHESNAUGHT,CARD_CHESNAUGHT_BREAK}
-scard.devolve_list={CARD_CHESPIN}
+scard.evolve_list={[1]=CARD_CHESNAUGHT,[2]=CARD_CHESNAUGHT_BREAK}
+scard.devolve_list={[1]=CARD_CHESPIN}
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_GRASS_ENERGY,2,CARD_COLORLESS_ENERGY,1)

@@ -8,7 +8,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.height=1.04
-scard.evolve_list={CARD_QUILLADIN,CARD_CHESNAUGHT,CARD_CHESNAUGHT_BREAK}
+scard.evolve_list={[1]=CARD_QUILLADIN,[2]=CARD_CHESNAUGHT,[3]=CARD_CHESNAUGHT_BREAK}
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost=pm.econ2(CARD_GRASS_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
