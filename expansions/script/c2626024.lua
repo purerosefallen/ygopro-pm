@@ -15,6 +15,6 @@ function scard.damfilter(c)
 end
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_POKEMON)
-	local tc=Duel.SelectMatchingCard(tp,scard.damfilter,tp,0,PM_LOCATION_IN_PLAY,1,1,nil):GetFirst()
-	Duel.AttackDamage(20,tc)
+	local g=Duel.SelectMatchingCard(tp,scard.damfilter,tp,0,PM_LOCATION_IN_PLAY,1,1,nil)
+	Duel.AttackDamage(20,g)
 end
