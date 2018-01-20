@@ -19,7 +19,10 @@ function scard.opttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	else
 		opt=Duel.SelectOption(tp,aux.Stringid(sid,1))+1
 	end
-	if opt==1 then e:SetCategory(PM_CATEGORY_RECYCLE) end
+	if opt==1 then
+		e:SetCategory(PM_CATEGORY_TOHAND)
+		Duel.SetOperationInfo(0,PM_CATEGORY_TOHAND,nil,1,tp,PM_LOCATION_DPILE)
+	end
 	e:SetLabel(opt)
 end
 function scard.optop(e,tp,eg,ep,ev,re,r,rp)

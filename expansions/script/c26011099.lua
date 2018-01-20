@@ -6,7 +6,7 @@ function scard.initial_effect(c)
 	--to hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
-	e1:SetCategory(PM_CATEGORY_COIN+PM_CATEGORY_RECYCLE)
+	e1:SetCategory(PM_CATEGORY_COIN+PM_CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_BOTH_SIDE)
 	e1:SetRange(PM_LOCATION_STADIUM)
@@ -21,6 +21,7 @@ function scard.thfilter(c)
 end
 function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(scard.thfilter,tp,PM_LOCATION_DPILE,0,1,nil) end
+	Duel.SetOperationInfo(0,PM_CATEGORY_TOHAND,nil,1,tp,PM_LOCATION_DPILE)
 end
 function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.TossCoin(tp,1)==RESULT_HEADS then

@@ -377,8 +377,8 @@ PM_EVENT_PRE_ATTACK					=EVENT_CHAIN_ACTIVATING	--Before a Confused Pokémon att
 PM_EVENT_ATTACK_END					=EVENT_CHAIN_SOLVED		--When a Pokémon finishes its attack
 PM_EVENT_ADD_COUNTER				=EVENT_ADD_COUNTER		--When a counter/marker is put on a card
 --Categories
-PM_CATEGORY_COIN					=CATEGORY_COIN	--"Sabrina's ESP" (Gym Heroes 117/132)
-PM_CATEGORY_RECYCLE					=0x80000000		--"Pokémon Tower" (Black Star Promo Wizards of the Coast 42)
+PM_CATEGORY_COIN					=CATEGORY_COIN		--"Sabrina's ESP" (Gym Heroes 117/132)
+PM_CATEGORY_TOHAND					=CATEGORY_TOHAND	--"Pokémon Tower" (Black Star Promo Wizards of the Coast 42)
 --Descriptions
 --↑Win (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)
 PM_DESC_INVALID						=aux.Stringid(PM_STRING_WIN,0)	--"You have an invalid deck!"
