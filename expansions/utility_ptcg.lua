@@ -555,9 +555,9 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 	--weak: false to not apply weakness to the defending pokémon
 	--resist: false to not apply resistance to the defending pokémon
 	--effect: false to not apply effects on the defending pokémon
-	count=count/10
+	local count=count/10
 	local d=Duel.GetDefendingPokemon()
-	targets=targets or d
+	local targets=targets or d
 	local weak=weak or true
 	local resist=resist or true
 	local effect=effect or true
@@ -621,7 +621,7 @@ function Duel.EffectDamage(count,c1,c2,weak,resist)
 	--c2: the pokémon that receives the damage
 	--weak: false to not apply weakness to c2
 	--resist: false to not apply resistance c2
-	count=count/10
+	local count=count/10
 	local c1=c1 or Duel.GetAttackingPokemon()
 	local d=Duel.GetDefendingPokemon()
 	local c2=c2 or d
@@ -1373,21 +1373,20 @@ function Auxiliary.EnableLevelUp(c)
 	e1:SetOperation(Auxiliary.LVXOperation)
 	c:RegisterEffect(e1)
 end
-function Auxiliary.LVXFilter(c,tcode,tid)
-	return Auxiliary.ActivePokemonFilter(c) and c.levelup_list and table.unpack(c.levelup_list)==tcode and c:GetTurnID()~=tid
+function Auxiliary.LVXFilter(c,tcode)
+	return Auxiliary.ActivePokemonFilter(c) and c.levelup_list and table.unpack(c.levelup_list)==tcode
+		and not c:IsStatus(PM_STATUS_PLAY_TURN)
 end
 function Auxiliary.LVXTarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local tid=Duel.GetTurnCount()
 	if chk==0 then return Duel.GetLocationCount(tp,PM_LOCATION_ACTIVE)>-1
-		and Duel.IsExistingMatchingCard(Auxiliary.LVXFilter,tp,PM_LOCATION_ACTIVE,0,1,nil,c:GetCode(),tid)
+		and Duel.IsExistingMatchingCard(Auxiliary.LVXFilter,tp,PM_LOCATION_ACTIVE,0,1,nil,c:GetCode())
 		and c:IsCanBePutInPlay(e,PM_SUMMON_TYPE_LEVELUP,tp,false,false) end
 end
 function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tid=Duel.GetTurnCount()
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_LEVELUP)
-	local g=Duel.SelectMatchingCard(tp,Auxiliary.LVXFilter,tp,PM_LOCATION_ACTIVE,0,1,1,nil,c:GetCode(),tid)
+	local g=Duel.SelectMatchingCard(tp,Auxiliary.LVXFilter,tp,PM_LOCATION_ACTIVE,0,1,1,nil,c:GetCode())
 	local tc=g:GetFirst()
 	if not tc then return end
 	Duel.HintSelection(g)
@@ -1406,6 +1405,7 @@ function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	local shom=tc:GetMarker(PM_SHOCKWAVE_MARKER)
 	local mg=tc:GetAttachmentGroup()
 	Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) --workaround
+	--retain attached cards
 	if mg:GetCount()~=0 then
 		Duel.Attach(c,mg)
 	end
@@ -1893,11 +1893,10 @@ function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq)
 				elseif dest_loc==LOCATION_DECK then
 					Duel.SendtoDeck(g1,PLAYER_OWNER,deck_seq,REASON_EFFECT)
 				end
-				--retain attached cards
+				--retain attached cards and sequence
 				local tc2=g2:GetFirst()
 				Duel.MoveToField(ac,tp,tp,LOCATION_MZONE,PM_POS_FACEUP_UPSIDE,true)
 				g2:RemoveCard(tc2)
-				--retain sequence
 				if tc2:GetSequence()~=seq then Duel.MoveSequence(tc2,seq) end
 				if g2:GetCount()>0 then Duel.Attach(tc2,g2) end
 				--retain counters
@@ -1953,7 +1952,7 @@ If a Pokémon is Asleep, it cannot attack or retreat. Between turns, flip a coin
 ]]
 function Auxiliary.EnableAsleep(c,con_func,reset_flag)
 	if c:IsAsleep() or not c:IsCanBeAsleep() then return end
-	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	local reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
 	if not c:IsPosition(PM_POS_FACEUP_COUNTERCLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_COUNTERCLOCKWISE) end
 	--asleep
 	local e1=Effect.CreateEffect(c)
@@ -2004,7 +2003,7 @@ the old one."
 ]]
 function Auxiliary.EnableBurned(c,con_func,reset_flag)
 	if not c:IsCanBeBurned() then return end
-	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	local reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
 	if c:GetMarker(PM_BURN_MARKER)==1 then
 		c:RemoveMarker(c:GetControler(),PM_BURN_MARKER,1,REASON_RULE)
 		c:AddMarker(PM_BURN_MARKER,1)
@@ -2061,7 +2060,7 @@ the attack does nothing, and put 3 damage counters on your Confused Pokémon."
 ]]
 function Auxiliary.EnableConfused(c,con_func,reset_flag)
 	if c:IsConfused() or not c:IsCanBeConfused() then return end
-	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	local reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
 	--confused
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -2108,7 +2107,7 @@ if your Pokémon was Paralyzed since the beginning of your last turn."
 ]]
 function Auxiliary.EnableParalyzed(c,con_func,reset_flag)
 	if c:IsParalyzed() or not c:IsCanBeParalyzed() then return end
-	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	local reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
 	if not c:IsPosition(PM_POS_FACEUP_CLOCKWISE) then Duel.ChangePosition(c,PM_POS_FACEUP_CLOCKWISE) end
 	--paralyzed
 	local e1=Effect.CreateEffect(c)
@@ -2155,7 +2154,7 @@ replaces the old one."
 ]]
 function Auxiliary.EnablePoisoned(c,con_func,reset_flag)
 	if not c:IsCanBePoisoned() then return end
-	reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
+	local reset_flag=reset_flag or RESET_EVENT+RESETS_STANDARD
 	if c:GetMarker(PM_POISON_MARKER)==1 then
 		c:RemoveMarker(c:GetControler(),PM_POISON_MARKER,1,REASON_RULE)
 		c:AddMarker(PM_POISON_MARKER,1)
