@@ -2556,6 +2556,34 @@ function Auxiliary.BenchPokemonFilter(c)
 end
 
 --==========[+Lists]==========
+--energy list for Duel.SelectOption
+Auxiliary.select_list={
+	[1]=PM_SELECT_GRASS,
+	[2]=PM_SELECT_FIRE,
+	[3]=PM_SELECT_WATER,
+	[4]=PM_SELECT_LIGHTNING,
+	[5]=PM_SELECT_PSYCHIC,
+	[6]=PM_SELECT_FIGHTING,
+	[7]=PM_SELECT_DARKNESS,
+	[8]=PM_SELECT_METAL,
+	[9]=PM_SELECT_FAIRY,
+	[10]=PM_SELECT_DRAGON,
+	--update with new energy here
+}
+--energy list for Effect.SetValue
+Auxiliary.energy_list={
+	[1]=PM_ENERGY_GRASS,
+	[2]=PM_ENERGY_FIRE,
+	[3]=PM_ENERGY_WATER,
+	[4]=PM_ENERGY_LIGHTNING,
+	[5]=PM_ENERGY_PSYCHIC,
+	[6]=PM_ENERGY_FIGHTING,
+	[7]=PM_ENERGY_DARKNESS,
+	[8]=PM_ENERGY_METAL,
+	[9]=PM_ENERGY_FAIRY,
+	[10]=PM_ENERGY_DRAGON,
+	--update with new energy here
+}
 --length list for "Blaine's Quiz #1" (Gym Heroes 97/132)
 Auxiliary.length_list={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
 31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,}
