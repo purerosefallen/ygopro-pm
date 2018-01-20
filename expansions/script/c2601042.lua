@@ -16,8 +16,8 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.effcon(e,tp,eg,ep,ev,re,r,rp)
-	local ex2,g2,gc2,dp2,dv2=Duel.GetOperationInfo(ev,PM_CATEGORY_TOHAND)
-	return ex2 and bit.band(dv2,PM_LOCATION_DPILE)==PM_LOCATION_DPILE and not e:GetHandler():IsStatus(STATUS_CHAINING)
+	local ex1,g1,gc1,dp1,dv1=Duel.GetOperationInfo(ev,PM_CATEGORY_TOHAND)
+	return ex1 and bit.band(dv1,PM_LOCATION_DPILE)==PM_LOCATION_DPILE and not e:GetHandler():IsStatus(STATUS_CHAINING)
 end
 function scard.effop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
