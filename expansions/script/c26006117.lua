@@ -17,15 +17,12 @@ function scard.cfilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:IsSetCard(PM_SETNAME_SABRINA)
 end
 function scard.coincon(e,tp,eg,ep,ev,re,r,rp)
-	local code=e:GetHandler():GetOriginalCode()
-	return ep==tp and Duel.GetFlagEffect(tp,code)==0 and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
+	return ep==tp and Duel.GetFlagEffect(tp,CARD_SABRINAS_ESP)==0 and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
 end
 function scard.coinop(e,tp,eg,ep,ev,re,r,rp)
-	local code=e:GetHandler():GetOriginalCode()
-	if Duel.GetFlagEffect(tp,code)~=0 then return end
-	if Duel.SelectYesNo(tp,aux.Stringid(code,2)) then
-		Duel.Hint(HINT_CARD,0,code)
-		Duel.RegisterFlagEffect(tp,code,RESET_PHASE+PHASE_END,0,1)
-		Duel.TossCoin(tp,ev)
-	end
+	if Duel.GetFlagEffect(tp,CARD_SABRINAS_ESP)~=0 then return end
+	if not Duel.SelectYesNo(tp,aux.Stringid(CARD_SABRINAS_ESP,2)) then return end
+	Duel.Hint(HINT_CARD,0,CARD_SABRINAS_ESP)
+	Duel.RegisterFlagEffect(tp,CARD_SABRINAS_ESP,RESET_PHASE+PHASE_END,0,1)
+	Duel.TossCoin(tp,ev)
 end

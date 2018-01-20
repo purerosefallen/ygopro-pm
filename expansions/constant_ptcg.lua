@@ -96,6 +96,7 @@ CARD_MEWTWO							=26001010	--"Mewtwo LV.X" (Legends Awakened 144/146)
 CARD_SNORLAX_GX						=2629005	--"You can't use more than 1 GX attack in a game." (Black Star Promo SM05)
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
 --↑Trainer
+CARD_SABRINAS_ESP					=26006117	--"Sabrina's ESP" (Gym Heroes 117/132)
 CARD_PUZZLE_OF_TIME					=26067109	--"Puzzle of Time" (BREAKpoint 109/122)
 --Counters/Markers
 PM_DAMAGE_COUNTER					=0x1600		--A Pokémon loses 10 HP for each Damage Counter on it
