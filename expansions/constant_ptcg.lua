@@ -237,6 +237,7 @@ RESETS_STANDARD_DISCONTROL			=0x3ff0000	--0x1ff0000+RESET_CONTROL
 --Types
 PM_EFFECT_TYPE_PLAY					=EFFECT_TYPE_ACTIVATE		--Trainer cards that a player can play each turn
 PM_EFFECT_TYPE_POKEMON_TOOL			=EFFECT_TYPE_XMATERIAL		--Pokémon Tools that give Pokémon attacks or effects
+PM_EFFECT_TYPE_ATTACHED_TRAINER		=EFFECT_TYPE_XMATERIAL		--Trainer cards that give Pokémon attacks or effects
 --Flags
 PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.EnablePokemonAttribute
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x10000000					--Included on all Pokémon attacks
@@ -375,9 +376,9 @@ PM_EVENT_KNOCKED_OUT				=EVENT_DESTROYED		--When a Pokémon is Knocked Out
 PM_EVENT_PLAY_SUCCESS				=EVENT_SPSUMMON_SUCCESS	--When a Pokémon is put In Play
 PM_EVENT_PRE_ATTACK					=EVENT_CHAIN_ACTIVATING	--Before a Confused Pokémon attacks
 PM_EVENT_ATTACK_END					=EVENT_CHAIN_SOLVED		--When a Pokémon finishes its attack
+PM_EVENT_TOSS_COIN_NEGATE			=EVENT_TOSS_COIN_NEGATE	--When a coin is flipped, the player may choose to re-flip it
 PM_EVENT_ADD_COUNTER				=EVENT_ADD_COUNTER		--When a counter/marker is put on a card
 --Categories
-PM_CATEGORY_COIN					=CATEGORY_COIN		--"Sabrina's ESP" (Gym Heroes 117/132)
 PM_CATEGORY_TOHAND					=CATEGORY_TOHAND	--"Pokémon Tower" (Black Star Promo Wizards of the Coast 42)
 --Descriptions
 --↑Win (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)

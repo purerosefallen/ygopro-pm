@@ -1434,6 +1434,8 @@ end
 --Energy card
 function Auxiliary.EnableEnergyAttribute(c,setname,discard)
 	--discard: true to discard at the end of the turn
+	local setname=setname or false
+	local discard=discard or false
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(PM_DESC_ENERGY)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -1475,28 +1477,27 @@ function Auxiliary.EnergyTarget2(setname)
 end
 function Auxiliary.EnergyOperation2(setname,discard)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local c=e:GetHandler()
 				Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_ATTACHENERGY)
 				local g=Duel.SelectMatchingCard(tp,Auxiliary.EnergyFilter2,tp,PM_LOCATION_IN_PLAY,0,1,1,nil,setname)
 				if g:GetCount()==0 then return end
-				local c=e:GetHandler()
-				local tc=g:GetFirst()
 				Duel.HintSelection(g)
-				Duel.Attach(tc,c)
+				Duel.Attach(g:GetFirst(),c)
 				if not discard then return end
 				c:RegisterFlagEffect(c:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD,0,1)
 				--discard
 				local e1=Effect.CreateEffect(c)
-				e1:SetDescription(PM_DESC_SELF_DETACH)
+				e1:SetDescription(PM_DESC_SELF_DISCARD)
 				e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 				e1:SetCode(EVENT_PHASE+PHASE_END)
 				e1:SetCountLimit(1)
 				e1:SetLabelObject(c)
-				e1:SetCondition(Auxiliary.SpecialEnergyDiscardCondition)
-				e1:SetOperation(Auxiliary.SpecialEnergyDiscardOperation)
+				e1:SetCondition(Auxiliary.SelfAttachedDiscardCondition)
+				e1:SetOperation(Auxiliary.SelfAttachedDiscardOperation)
 				Duel.RegisterEffect(e1,tp)
 			end
 end
-function Auxiliary.SpecialEnergyDiscardCondition(e)
+function Auxiliary.SelfAttachedDiscardCondition(e)
 	local tc=e:GetLabelObject()
 	local code=e:GetHandler():GetOriginalCode()
 	if tc:GetFlagEffect(code)~=0 then
@@ -1506,7 +1507,7 @@ function Auxiliary.SpecialEnergyDiscardCondition(e)
 		return false
 	end
 end
-function Auxiliary.SpecialEnergyDiscardOperation(e,tp,eg,ep,ev,re,r,rp)
+function Auxiliary.SelfAttachedDiscardOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDPile(e:GetLabelObject(),REASON_EFFECT+REASON_DISCARD)
 end
 
@@ -1546,9 +1547,62 @@ end
 function Auxiliary.TrainerDiscardOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDPile(e:GetHandler(),REASON_RULE+REASON_DISCARD)
 end
+--Non-Pokémon Tool Trainer card that attaches to Pokémon
+function Auxiliary.EnableTrainerAttach(c,desc_id,f,s,o,select_msg,discard,con_func)
+	--discard: true to discard at the end of the turn
+	local desc_id=desc_id or 0
+	local f=f or aux.AND(Card.IsFaceup,Card.IsPokemon)
+	local s=s or LOCATION_IN_PLAY
+	local o=o or 0
+	local select_msg=select_msg or PM_HINTMSG_POKEMON
+	local discard=discard or false
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(c:GetOriginalCode(),desc_id))
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(aux.AND(Auxiliary.AddAttachedDescCondition,con_func))
+	e1:SetTarget(Auxiliary.TrainerAttachTarget(f,s,o))
+	e1:SetOperation(Auxiliary.TrainerAttachOperation(f,s,o,select_msg,discard))
+	e1:SetLabelObject(c)
+	c:RegisterEffect(e1)
+end
+function Auxiliary.AddAttachedDescCondition(e)
+	local c=e:GetLabelObject()
+	local code=c:GetOriginalCode()
+	return e:GetHandler():GetFlagEffect(code)==0
+end
+function Auxiliary.TrainerAttachTarget(f,s,o)
+	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
+				if chk==0 then return Duel.IsExistingMatchingCard(f,tp,s,o,1,nil) end
+			end
+end
+function Auxiliary.TrainerAttachOperation(f,s,o,select_msg,discard)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local c=e:GetHandler()
+				Duel.Hint(HINT_SELECTMSG,tp,select_msg)
+				local g=Duel.SelectMatchingCard(tp,f,tp,s,o,1,1,nil)
+				if g:GetCount()==0 then return end
+				Duel.HintSelection(g)
+				Duel.Attach(g:GetFirst(),c)
+				if not discard then return end
+				c:RegisterFlagEffect(c:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD,0,1)
+				--discard
+				local e1=Effect.CreateEffect(c)
+				e1:SetDescription(PM_DESC_SELF_DISCARD)
+				e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+				e1:SetCode(EVENT_PHASE+PHASE_END)
+				e1:SetCountLimit(1)
+				e1:SetLabelObject(c)
+				e1:SetCondition(Auxiliary.SelfAttachedDiscardCondition)
+				e1:SetOperation(Auxiliary.SelfAttachedDiscardOperation)
+				Duel.RegisterEffect(e1,tp)
+			end
+end
 --========== Item ==========
 --Pokémon Tool
 function Auxiliary.EnablePokemonTool(c,desc_id,con_func)
+	local con_func=con_func or aux.TRUE
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(PM_DESC_TOOL)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -1557,11 +1611,12 @@ function Auxiliary.EnablePokemonTool(c,desc_id,con_func)
 	e1:SetTarget(Auxiliary.PokemonToolTarget)
 	e1:SetOperation(Auxiliary.PokemonToolOperation)
 	c:RegisterEffect(e1)
+	if not desc_id then return end
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(PM_EFFECT_TYPE_POKEMON_TOOL+EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_ADJUST)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetCondition(aux.AND(Auxiliary.AddToolDescCondition,con_func))
+	e2:SetCondition(aux.AND(Auxiliary.AddAttachedDescCondition,con_func))
 	e2:SetOperation(Auxiliary.AddToolDescOperation(desc_id))
 	e2:SetLabelObject(c)
 	c:RegisterEffect(e2)
@@ -1585,14 +1640,8 @@ function Auxiliary.PokemonToolOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.HintSelection(g)
 	Duel.Attach(g:GetFirst(),e:GetHandler())
 end
-function Auxiliary.AddToolDescCondition(e)
-	local c=e:GetLabelObject()
-	local code=c:GetOriginalCode()
-	return e:GetHandler():GetFlagEffect(code)==0
-end
 function Auxiliary.AddToolDescOperation(desc_id)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
-				if not desc_id then return end
 				local c=e:GetLabelObject()
 				local code=c:GetOriginalCode()
 				e:GetHandler():RegisterFlagEffect(code,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(code,desc_id))
