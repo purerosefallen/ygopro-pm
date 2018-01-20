@@ -4,7 +4,7 @@ local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--paralyzed
-	pm.EnablePokemonAttack(c,0,PM_CATEGORY_COIN,scard.attack_cost,pm.hinttg,scard.parop)
+	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost,pm.hinttg,scard.parop)
 end
 scard.pokemon_card=true
 scard.height=1.00

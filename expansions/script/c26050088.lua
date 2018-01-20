@@ -6,7 +6,7 @@ function scard.initial_effect(c)
 	--evolve
 	pm.EnableEvolve(c)
 	--damage
-	pm.EnablePokemonAttack(c,0,PM_CATEGORY_COIN,scard.attack_cost1,pm.hinttg,scard.damop)
+	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.damop)
 	--cannot attack
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.effop)
 end

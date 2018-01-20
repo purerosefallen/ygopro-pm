@@ -4,7 +4,7 @@ local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--poisoned
-	pm.EnablePokemonAttack(c,0,PM_CATEGORY_COIN,scard.attack_cost1,pm.hinttg,scard.poiop)
+	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.poiop)
 	--discard energy
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.deop)
 end

@@ -6,7 +6,7 @@ function scard.initial_effect(c)
 	--draw
 	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.drtg(PLAYER_PLAYER,1),pm.drop(PLAYER_PLAYER,1))
 	--damage
-	pm.EnablePokemonAttack(c,1,PM_CATEGORY_COIN,scard.attack_cost2,pm.hinttg,scard.damop)
+	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.damop)
 end
 scard.pokemon_card=true
 scard.height=2.00

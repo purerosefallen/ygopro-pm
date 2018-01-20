@@ -3,7 +3,7 @@ local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	--discard energy
-	pm.EnableTrainerPlay(c,PM_CATEGORY_COIN,scard.detg,scard.deop)
+	pm.EnableTrainerPlay(c,nil,scard.detg,scard.deop)
 end
 scard.pokemon_card=true
 function scard.defilter(c)

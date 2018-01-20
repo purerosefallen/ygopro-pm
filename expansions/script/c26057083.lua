@@ -3,7 +3,7 @@ local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	--switch
-	pm.EnableTrainerPlay(c,PM_CATEGORY_COIN,scard.swtg,scard.swop)
+	pm.EnableTrainerPlay(c,nil,scard.swtg,scard.swop)
 end
 scard.pokemon_card=true
 function scard.swtg(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -8,7 +8,7 @@ function scard.initial_effect(c)
 	--damage
 	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.damop)
 	--paralyzed
-	pm.EnablePokemonAttack(c,1,PM_CATEGORY_COIN,scard.attack_cost2,pm.hinttg,scard.parop)
+	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.parop)
 end
 scard.pokemon_card=true
 scard.height=5.11

@@ -8,7 +8,7 @@ function scard.initial_effect(c)
 	--damage
 	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.damop1)
 	--damage
-	pm.EnablePokemonAttack(c,1,PM_CATEGORY_COIN,scard.attack_cost2,pm.hinttg,scard.damop2)
+	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.damop2)
 end
 scard.pokemon_card=true
 scard.height=2.04
