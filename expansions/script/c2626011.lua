@@ -6,7 +6,14 @@ function scard.initial_effect(c)
 	--evolve
 	pm.EnableEvolve(c)
 	--move energy
-	pm.EnablePokemonAbility(c,0,nil,scard.metg,scard.meop)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(sid,0))
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(PM_LOCATION_IN_PLAY)
+	e1:SetCountLimit(1)
+	e1:SetTarget(scard.metg)
+	e1:SetOperation(scard.meop)
+	c:RegisterEffect(e1)
 	--damage
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost,pm.hinttg,scard.damop)
 end

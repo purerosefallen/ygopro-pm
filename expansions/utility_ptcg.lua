@@ -1772,26 +1772,6 @@ function Auxiliary.EnableCannotAttack(c,desc,reset_flag,reset_count,con_func)
 end
 
 --==========[+Ability]==========
---Pokémon ability
-function Auxiliary.EnablePokemonAbility(c,desc_id,cate,targ_func,op_func,con_func,count,cost_func,prop)
-	--targ_func: include Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(c:GetOriginalCode(),desc_id))
-	if cate then e1:SetCategory(cate) end
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	if prop then e1:SetProperty(prop) end
-	e1:SetRange(PM_LOCATION_IN_PLAY)
-	if count then
-		e1:SetCountLimit(count)
-	else
-		e1:SetCountLimit(1)
-	end
-	if con_func then e1:SetCondition(con_func) end
-	if cost_func then e1:SetCost(cost_func) end
-	if targ_func then e1:SetTarget(targ_func) end
-	e1:SetOperation(op_func)
-	c:RegisterEffect(e1)
-end
 --show a player their deck when they search it for a card
 function Auxiliary.ConfirmDeck(tp,player)
 	local g=Duel.GetFieldGroup(player,LOCATION_DECK,0)
