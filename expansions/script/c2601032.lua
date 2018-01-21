@@ -43,7 +43,6 @@ function scard.typeop(e,tp,eg,ep,ev,re,r,rp)
 	tc:AddCounter(PM_COLORING_COUNTER,1)
 	--change type
 	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetDescription(desc)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(PM_EFFECT_CHANGE_POKEMON_TYPE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
