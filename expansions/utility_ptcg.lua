@@ -75,7 +75,7 @@ function Card.IsPokemon(c)
 end
 --check if a card is a Trainer
 function Card.IsTrainer(c)
-	return c:IsType(PM_TYPE_TRAINER) and not c:IsHasEffect(PM_EFFECT_REMOVE_TRAINER)
+	return c:IsType(PM_TYPE_TRAINER)
 end
 --check if a card is an Energy (or what type of Energy a card is)
 function Card.IsEnergy(c,energy)
@@ -1434,7 +1434,6 @@ end
 --Energy card
 function Auxiliary.EnableEnergyAttribute(c,setname,discard)
 	--discard: true to discard at the end of the turn
-	local setname=setname or false
 	local discard=discard or false
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(PM_DESC_ENERGY)
@@ -1552,7 +1551,7 @@ function Auxiliary.EnableTrainerAttach(c,desc_id,f,s,o,select_msg,discard,con_fu
 	--discard: true to discard at the end of the turn
 	local desc_id=desc_id or 0
 	local f=f or aux.AND(Card.IsFaceup,Card.IsPokemon)
-	local s=s or LOCATION_IN_PLAY
+	local s=s or PM_LOCATION_IN_PLAY
 	local o=o or 0
 	local select_msg=select_msg or PM_HINTMSG_POKEMON
 	local discard=discard or false
