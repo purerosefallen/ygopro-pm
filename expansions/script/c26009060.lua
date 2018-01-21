@@ -20,8 +20,8 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.length=1.40
-scard.weakness_x2=PM_ENERGY_GRASS
 scard.devolve_list={[1]=CARD_MYSTERIOUS_FOSSIL}
+scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost=pm.econ1(PM_ENERGY_WATER,1)
 function scard.tbcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
