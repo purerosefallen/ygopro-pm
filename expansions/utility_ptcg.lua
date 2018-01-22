@@ -1524,27 +1524,6 @@ function Auxiliary.EnableTrainerPlay(c,cate,targ_func,op_func,con_func,cost_func
 	if targ_func then e1:SetTarget(targ_func) end
 	e1:SetOperation(op_func)
 	c:RegisterEffect(e1)
-	if not c.old_supporter then return end
-	--remain field
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_REMAIN_FIELD)
-	c:RegisterEffect(e2)
-	--self discard
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e3:SetCode(EVENT_PHASE+PHASE_END)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e3:SetRange(PM_LOCATION_ADJACENT_ACTIVE)
-	e3:SetCondition(Auxiliary.TrainerDiscardCondition)
-	e3:SetOperation(Auxiliary.TrainerDiscardOperation)
-	c:RegisterEffect(e3)
-end
-function Auxiliary.TrainerDiscardCondition(e)
-	return e:GetHandler():IsOnField() and Duel.GetTurnPlayer()==e:GetHandlerPlayer()
-end
-function Auxiliary.TrainerDiscardOperation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SendtoDPile(e:GetHandler(),REASON_RULE+REASON_DISCARD)
 end
 --Non-Pokémon Tool Trainer card that attaches to Pokémon
 function Auxiliary.EnableTrainerAttach(c,desc_id,f,s,o,select_msg,discard,con_func)
