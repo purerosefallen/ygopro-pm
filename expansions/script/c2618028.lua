@@ -21,7 +21,7 @@ function scard.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=7-Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
-	if ct==0 then return end
+	if ct<=0 then return end
 	if Duel.Draw(tp,ct,REASON_EFFECT)==0 then return end
 	Duel.BreakEffect()
 	Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
