@@ -93,6 +93,9 @@ CARD_GRENINJA						=2624014	--Froakie → Frogadier → Greninja → Greninja BR
 CARD_GRENINJA_BREAK					=26067041	--Froakie → Frogadier → Greninja → Greninja BREAK (BREAKpoint 41/122)
 CARD_TEAM_AQUAS_GRIMER				=2626007	--Team Aqua's Grimer → Team Aqua's Muk (Double Crisis 7/34)
 CARD_TEAM_AQUAS_MUK					=2626008	--Team Aqua's Grimer → Team Aqua's Muk (Double Crisis 8/34)
+--↑Restored Pokémon
+CARD_AMAURA							=26061025	--"Fossil Researcher" (Furious Fists 92/111)
+CARD_TYRUNT							=26061061	--"Fossil Researcher" (Furious Fists 92/111)
 --↑You may have as many of the following cards in your deck as you like
 CARD_ARCEUS							=26042094	--"Arceus LV.X" (Arceus AR1)
 --↑Pokémon LV.X
@@ -249,6 +252,7 @@ PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.En
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x10000000					--Included on all Pokémon attacks
 --Codes
 PM_EFFECT_CANNOT_PLAY				=EFFECT_CANNOT_ACTIVATE		--Prevent a card from being played or attached
+PM_EFFECT_PUT_IN_PLAY_CONDITION		=EFFECT_SPSUMMON_CONDITION	--Limit the ways a Pokémon can be put In Play
 PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Put a Pokémon onto the Bench
 PM_EFFECT_KNOCK_OUT_REPLACE			=EFFECT_DESTROY_REPLACE		--Prevent a Pokémon from being Knocked Out
 PM_EFFECT_UPDATE_HIT_POINTS			=EFFECT_UPDATE_ATTACK		--Increase or decrease a Pokémon's HP

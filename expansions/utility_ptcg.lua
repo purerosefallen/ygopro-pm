@@ -14,6 +14,7 @@
 --[+Pokémon].................................................functions that are included on every Pokémon card
 --[+Evolution]...............................................functions that are included on every Evolution card
 --[+LVX].....................................................functions that are included on every Pokémon LV.X card
+--[+Restored]................................................functions that are included on every Restored Pokémon card
 --[+Energy]..................................................functions that are included on every Energy card
 --[+Trainer].................................................functions that are included on every Trainer card
 --[+Attack]..................................................attacks that are shared by many pokémon
@@ -1428,6 +1429,16 @@ function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	--gain attack & effect
 	local code=tc:GetOriginalCode()
 	c:CopyEffect(code,RESET_EVENT+RESETS_STANDARD_DISABLE,1)
+end
+
+--==========[+Restored]==========
+--Restored Pokémon
+function Auxiliary.EnableRestoredAttribute(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(PM_EFFECT_PUT_IN_PLAY_CONDITION)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	c:RegisterEffect(e1)
 end
 
 --==========[+Energy]==========
