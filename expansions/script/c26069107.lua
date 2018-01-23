@@ -6,11 +6,11 @@ function scard.initial_effect(c)
 	pm.EnableTrainerPlay(c,nil,scard.thtg,scard.thop)
 end
 scard.pokemon_card=true
-function scard.thfilter(c)
-	return c:IsBasicPokemon() and c:IsAbleToHand()
-end
 function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
+end
+function scard.thfilter(c)
+	return c:IsBasicPokemon() and c:IsAbleToHand()
 end
 function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	pm.ConfirmDeck(tp,tp)

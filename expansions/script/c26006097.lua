@@ -8,15 +8,15 @@ function scard.initial_effect(c)
 	pm.EnableTrainerPlay(c,nil,scard.drtg,scard.drop)
 end
 scard.pokemon_card=true
-function scard.filter(c)
+function scard.drfilter(c)
 	return c.length and (c:IsBasicPokemon() or c:IsEvolution()) and c:IsSecret()
 end
 function scard.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(scard.filter,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(scard.drfilter,tp,LOCATION_HAND,0,1,nil) end
 end
 function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(sid,0))
-	local g=Duel.SelectMatchingCard(tp,scard.filter,tp,LOCATION_HAND,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,scard.drfilter,tp,LOCATION_HAND,0,1,1,nil)
 	if g:GetCount()==0 then return end
 	local tc=g:GetFirst()
 	Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEDOWN,true)

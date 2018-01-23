@@ -6,14 +6,14 @@ function scard.initial_effect(c)
 	pm.EnableTrainerPlay(c,nil,scard.thtg,scard.thop)
 end
 scard.pokemon_card=true
+function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
+end
 function scard.thfilter1(c)
 	return c:IsBasicPokemon() and c:IsSetCard(PM_SETNAME_TEAM_AQUA) and c:IsAbleToHand()
 end
 function scard.thfilter2(c)
 	return c:IsBasicEnergy() and c:IsEnergy(CARD_WATER_ENERGY) and c:IsAbleToHand()
-end
-function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
 end
 function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	pm.ConfirmDeck(tp,tp)

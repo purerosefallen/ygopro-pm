@@ -14,12 +14,12 @@ scard.evolve_list={[1]=CARD_QUILLADIN,[2]=CARD_CHESNAUGHT,[3]=CARD_CHESNAUGHT_BR
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_GRASS_ENERGY,1,CARD_COLORLESS_ENERGY,2)
-function scard.thfilter(c)
-	return c:IsEnergy(CARD_GRASS_ENERGY) and c:IsAbleToHand()
-end
 function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+end
+function scard.thfilter(c)
+	return c:IsEnergy(CARD_GRASS_ENERGY) and c:IsAbleToHand()
 end
 function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	pm.ConfirmDeck(tp,tp)

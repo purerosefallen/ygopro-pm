@@ -14,13 +14,13 @@ scard.devolve_list={[1]=CARD_TEAM_AQUAS_CARVANHA}
 scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ1(CARD_COLORLESS_ENERGY,3)
-function scard.tbfilter(c,e,tp)
-	return c:IsBasicPokemon() and c:IsSetCard(PM_SETNAME_TEAM_MAGMA) and c:IsCanBePutInPlay(e,0,tp,false,false)
-end
 function scard.tbtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+end
+function scard.tbfilter(c,e,tp)
+	return c:IsBasicPokemon() and c:IsSetCard(PM_SETNAME_TEAM_MAGMA) and c:IsCanBePutInPlay(e,0,tp,false,false)
 end
 function scard.tbop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,PM_LOCATION_BENCH)
