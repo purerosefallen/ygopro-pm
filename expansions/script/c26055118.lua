@@ -13,7 +13,7 @@ function scard.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
-	if g:GetCount()>0 then Duel.SendtoDeck(g,PLAYER_OWNER,DECK_ORDER_SHUFFLE,REASON_EFFECT) end
+	Duel.SendtoDeck(g,PLAYER_OWNER,DECK_ORDER_SHUFFLE,REASON_EFFECT)
 	Duel.ShuffleDeck(tp)
 	Duel.BreakEffect()
 	local ct=Duel.GetMatchingGroupCount(pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,PM_LOCATION_IN_PLAY,nil)
