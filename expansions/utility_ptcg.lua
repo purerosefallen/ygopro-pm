@@ -2462,6 +2462,30 @@ end
 Auxiliary.nfturncon=Auxiliary.NotFirstTurnCondition
 
 --==========[+Costs]==========
+--cost for discarding cards from the player's hand
+function Auxiliary.DiscardHandCost(min,max)
+	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
+				local max=max or min
+				if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,min,e:GetHandler()) end
+				Duel.DiscardHand(tp,Card.IsDiscardable,min,max,REASON_COST+REASON_DISCARD)
+			end
+end
+Auxiliary.dhcost=Auxiliary.DiscardHandCost
+--cost for shuffling cards into the player's deck
+function Auxiliary.SendToDeckCost(loc,min,max,seq)
+	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
+				local max=max or min
+				local seq=seq or DECK_ORDER_SHUFFLE
+				if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeckAsCost,tp,loc,0,min,e:GetHandler()) end
+				local desc=PM_HINTMSG_TODECK
+				if seq==DECK_ORDER_TOP then desc=PM_HINTMSG_TODECKTOP
+				elseif seq==DECK_ORDER_BOTTOM then desc=PM_HINTMSG_TODECKBOT end
+				Duel.Hint(HINT_SELECTMSG,tp,desc)
+				local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeckAsCost,tp,loc,0,min,max,e:GetHandler())
+				Duel.SendtoDeck(g,PLAYER_OWNER,seq,REASON_COST)
+			end
+end
+Auxiliary.tdcost=Auxiliary.SendToDeckCost
 --cost for discarding Energy to a pokémon
 function Auxiliary.DiscardEnergyCost(c,min,max,energy)
 	--energy: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
