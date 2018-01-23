@@ -24,8 +24,7 @@ scard.devolve_list={[1]=CARD_MYSTERIOUS_FOSSIL}
 scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost=pm.econ1(PM_ENERGY_WATER,1)
 function scard.tbcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return not (c:IsHasEffect(PM_EFFECT_ASLEEP) or c:IsHasEffect(PM_EFFECT_CONFUSED) or c:IsHasEffect(PM_EFFECT_PARALYZED))
+	return not e:GetHandler():IsAffectedBySpecialCondition()
 end
 function scard.tbtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0
