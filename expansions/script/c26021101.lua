@@ -7,7 +7,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.healfilter(c)
-	return c:IsFaceup() and c:GetCounter(PM_DAMAGE_COUNTER)>0
+	return c:IsFaceup() and c:IsPokemon() and c:GetCounter(PM_DAMAGE_COUNTER)>0
 end
 function scard.healtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(scard.healfilter,tp,PM_LOCATION_IN_PLAY,0,1,nil) end
