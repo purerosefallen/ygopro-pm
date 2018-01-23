@@ -16,7 +16,7 @@ function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,max,nil)
 	if g:GetCount()==0 then return end
 	Duel.SendtoDeck(g,PLAYER_OWNER,DECK_ORDER_TOP,REASON_EFFECT)
-	local ct=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_DECK):GetCount()
+	local ct=Duel.GetOperatedGroup():FilterCount(Card.IsLocation,nil,LOCATION_DECK)
 	if ct==0 then return end
 	if ct>1 then Duel.SortDecktop(tp,tp,ct) end
 	for i=1,ct do
