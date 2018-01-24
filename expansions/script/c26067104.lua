@@ -24,5 +24,5 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(sg,PLAYER_OWNER,REASON_EFFECT)
 		Duel.ShuffleHand(tp)
 		Duel.ShuffleDeck(tp)
-	else pm.ConfirmInvalid(tp,tp) end
+	else pm.SearchFailed(tp,tp) end
 end

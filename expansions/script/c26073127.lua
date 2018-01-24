@@ -14,7 +14,7 @@ function scard.tdop(e,tp,eg,ep,ev,re,r,rp)
 	pm.ConfirmDeck(tp,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TODECKTOP)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_DECK,0,2,2,nil)
-	if g:GetCount()==0 then return pm.ConfirmInvalid(tp,tp) end
+	if g:GetCount()==0 then return pm.SearchFailed(tp,tp) end
 	Duel.ShuffleDeck(tp)
 	local tc=g:GetFirst()
 	for tc in aux.Next(g) do

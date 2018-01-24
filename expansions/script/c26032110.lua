@@ -17,7 +17,7 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 		pm.ConfirmDeck(tp,tp)
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOHAND)
 		local g=Duel.SelectMatchingCard(tp,scard.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if g:GetCount()==0 then return pm.ConfirmInvalid(tp,tp) end
+		if g:GetCount()==0 then return pm.SearchFailed(tp,tp) end
 		Duel.SendtoHand(g,PLAYER_OWNER,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end

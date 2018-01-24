@@ -24,5 +24,5 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,sg)
 			Duel.ShuffleHand(tp)
 		end
-	else pm.ConfirmInvalid(tp,tp) end
+	else pm.SearchFailed(tp,tp) end
 end

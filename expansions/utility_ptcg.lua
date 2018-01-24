@@ -1782,7 +1782,7 @@ function Auxiliary.ConfirmDeck(tp,player)
 	Duel.ConfirmCards(player,g)
 end
 --notify a player that there are no valid targets and shuffle their deck after they looked at it
-function Auxiliary.ConfirmInvalid(tp,player)
+function Auxiliary.SearchFailed(tp,player)
 	Duel.Hint(HINT_MESSAGE,tp,PM_DESC_NO_TARGETS)
 	Duel.ShuffleDeck(tp)
 end

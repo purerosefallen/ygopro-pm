@@ -30,7 +30,7 @@ function scard.tbop(e,tp,eg,ep,ev,re,r,rp)
 		opt=Duel.SelectOption(tp,aux.Stringid(sid,0))
 	elseif g2:GetCount()>0 then
 		opt=Duel.SelectOption(tp,aux.Stringid(sid,1))+1
-	else return pm.ConfirmInvalid(tp,tp) end
+	else return pm.SearchFailed(tp,tp) end
 	local sg=nil
 	if opt==0 then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOBENCH)

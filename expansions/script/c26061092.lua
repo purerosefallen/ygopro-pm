@@ -11,7 +11,7 @@ function scard.tbtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
 end
 function scard.tbfilter(c,e,tp)
-	return (c:IsCode(CARD_AMAURA) or c:IsCode(CARD_TYRUNT)) and c:IsCanBePutInPlay(e,0,tp,true,false)
+	return c:IsCode(CARD_AMAURA,CARD_TYRUNT) and c:IsCanBePutInPlay(e,0,tp,true,false)
 end
 function scard.tbop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,PM_LOCATION_BENCH)
@@ -19,7 +19,7 @@ function scard.tbop(e,tp,eg,ep,ev,re,r,rp)
 	if ft>2 then ft=2 end
 	pm.ConfirmDeck(tp,tp)
 	local g=Duel.GetMatchingGroup(scard.tbfilter,tp,LOCATION_DECK,0,nil,e,tp)
-	if g:GetCount()==0 then return pm.ConfirmInvalid(tp,tp) end
+	if g:GetCount()==0 then return pm.SearchFailed(tp,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOBENCH)
 	local sg=g:Select(tp,1,ft,nil)
 	Duel.PutInPlay(sg,0,tp,tp,true,false,PM_POS_FACEUP_UPSIDE)

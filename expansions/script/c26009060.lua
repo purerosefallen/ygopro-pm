@@ -41,7 +41,7 @@ function scard.tbop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOBENCH)
 	local g=Duel.SelectMatchingCard(tp,scard.tbfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
-	if not tc then return pm.ConfirmInvalid(tp,tp) end
+	if not tc then return pm.SearchFailed(tp,tp) end
 	if not Duel.PutInPlayStep(tc,0,tp,tp,false,false,PM_POS_FACEUP_UPSIDE) then return end
 	--treat as basic pokémon
 	local e1=Effect.CreateEffect(e:GetHandler())

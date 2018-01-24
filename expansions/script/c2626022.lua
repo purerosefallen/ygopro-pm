@@ -28,7 +28,7 @@ function scard.tbop(e,tp,eg,ep,ev,re,r,rp)
 	if ft>2 then ft=2 end
 	pm.ConfirmDeck(tp,tp)
 	local g=Duel.GetMatchingGroup(scard.tbfilter,tp,LOCATION_DECK,0,nil,e,tp)
-	if g:GetCount()==0 then return pm.ConfirmInvalid(tp,tp) end
+	if g:GetCount()==0 then return pm.SearchFailed(tp,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOBENCH)
 	local sg=g:Select(tp,1,ft,nil)
 	Duel.PutInPlay(sg,0,tp,tp,false,false,PM_POS_FACEUP_UPSIDE)
