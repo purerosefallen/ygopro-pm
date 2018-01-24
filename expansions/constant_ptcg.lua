@@ -101,10 +101,10 @@ CARD_ARCEUS							=26042094	--"Arceus LV.X" (Arceus AR1)
 --↑Pokémon LV.X
 CARD_MEWTWO							=26001010	--"Mewtwo LV.X" (Legends Awakened 144/146)
 --↑Pokémon GX
-CARD_SNORLAX_GX						=2629005	--"You can't use more than 1 GX attack in a game." (Black Star Promo SM05)
+CARD_SNORLAX_GX						=2629005	--"Pokemon Rules"
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
 --↑Trainer
-CARD_SABRINAS_ESP					=26006117	--"Sabrina's ESP" (Gym Heroes 117/132)
+CARD_BROCKS_PROTECTION				=26007101	--Duel.DiscardEnergy
 CARD_PUZZLE_OF_TIME					=26067109	--"Puzzle of Time" (BREAKpoint 109/122)
 --Counters/Markers
 PM_DAMAGE_COUNTER					=0x1600		--A Pokémon loses 10 HP for each Damage Counter on it
@@ -429,9 +429,10 @@ PM_DESC_RETREAT						=aux.Stringid(PM_STRING_DESC,0)			--"Retreat"
 PM_DESC_LVX							=aux.Stringid(PM_STRING_DESC,1)			--"Level Up"
 PM_DESC_EVOLVE						=aux.Stringid(PM_STRING_DESC,2)			--"Evolve"
 PM_DESC_ENERGY						=aux.Stringid(PM_STRING_DESC,3)			--"Attach the Energy to your Pokémon."
-PM_DESC_TOOL						=aux.Stringid(PM_STRING_DESC,4)			--"Attach the Pokémon Tool to your Pokémon."
-PM_DESC_SELF_DISCARD				=aux.Stringid(PM_STRING_DESC,5)			--"Discard this card."
-PM_DESC_SELF_DETACH					=aux.Stringid(PM_STRING_DESC,6)			--"Detach this card."
+PM_DESC_ATTACH_TRAINER				=aux.Stringid(PM_STRING_DESC,4)			--"Attach the Trainer to your Pokémon."
+PM_DESC_TOOL						=aux.Stringid(PM_STRING_DESC,5)			--"Attach the Pokémon Tool to your Pokémon."
+PM_DESC_SELF_DISCARD				=aux.Stringid(PM_STRING_DESC,6)			--"Discard this card."
+PM_DESC_SELF_DETACH					=aux.Stringid(PM_STRING_DESC,7)			--"Detach this card."
 --Hint Message
 PM_HINTMSG_CARD						=aux.Stringid(PM_STRING_HINTMSG,0)		--"Select a card."
 PM_HINTMSG_POKEMON					=aux.Stringid(PM_STRING_HINTMSG,1)		--"Select a Pokémon."
@@ -480,18 +481,21 @@ PM_HINTMSG_EVOLVE					=aux.Stringid(PM_STRING_HINTMSG7,5)		--"Select a Pokémon 
 PM_HINTMSG_DEVOLVE					=aux.Stringid(PM_STRING_HINTMSG7,6)		--"Select a Pokémon to devolve."
 PM_HINTMSG_LEVELUP					=aux.Stringid(PM_STRING_HINTMSG7,7)		--"Select a Pokémon to Level Up."
 PM_HINTMSG_ATTACHENERGY				=aux.Stringid(PM_STRING_HINTMSG7,8)		--"Select a Pokémon to attach the Energy to."
-PM_HINTMSG_MOVEENERGY				=aux.Stringid(PM_STRING_HINTMSG7,9)		--"Select a Pokémon to move the Energy to."
-PM_HINTMSG_ATTACHTOOL				=aux.Stringid(PM_STRING_HINTMSG7,10)	--"Select a Pokémon to attach the Pokémon Tool to."
-PM_HINTMSG_MOVETOOL					=aux.Stringid(PM_STRING_HINTMSG7,11)	--"Select a Pokémon to move the Pokémon Tool to."
-PM_HINTMSG_ENERGYTYPE				=aux.Stringid(PM_STRING_HINTMSG7,12)	--"Choose a type."
-PM_HINTMSG_TOHAND					=aux.Stringid(PM_STRING_HINTMSG7,13)	--"Select a card to put into your hand."
-PM_HINTMSG_HEAL						=aux.Stringid(PM_STRING_HINTMSG7,14)	--"Select a Pokémon to heal."
-PM_HINTMSG_TOBENCH					=aux.Stringid(PM_STRING_HINTMSG7,15)	--"Select a Pokémon to put onto the Bench."
-PM_HINTMSG_DISCARD					=aux.Stringid(PM_STRING_HINTMSG8,0)		--"Select a card to discard."
-PM_HINTMSG_TODECK					=aux.Stringid(PM_STRING_HINTMSG8,1)		--"Select a card to shuffle into the deck."
-PM_HINTMSG_TODECKTOP				=aux.Stringid(PM_STRING_HINTMSG8,2)		--"Select a card to put on top of the deck."
-PM_HINTMSG_TODECKBOT				=aux.Stringid(PM_STRING_HINTMSG8,3)		--"Select a card to put on the bottom of the deck."
-PM_HINTMSG_TODISCARD				=aux.Stringid(PM_STRING_HINTMSG8,4)		--"Select a card to put into the discard pile."
+PM_HINTMSG_DISCARDENERGYFROM		=aux.Stringid(PM_STRING_HINTMSG7,9)		--"Select a Pokémon to discard an Energy from."
+PM_HINTMSG_MOVEENERGY				=aux.Stringid(PM_STRING_HINTMSG7,10)	--"Select a Pokémon to move the Energy to."
+PM_HINTMSG_ATTACHTOOL				=aux.Stringid(PM_STRING_HINTMSG7,11)	--"Select a Pokémon to attach the Pokémon Tool to."
+PM_HINTMSG_DISCARDTOOLFROM			=aux.Stringid(PM_STRING_HINTMSG7,12)	--"Select a Pokémon to discard a Pokémon Tool from."
+PM_HINTMSG_DISCARDTOOL				=aux.Stringid(PM_STRING_HINTMSG7,13)	--"Select a Pokémon Tool to discard."
+PM_HINTMSG_MOVETOOL					=aux.Stringid(PM_STRING_HINTMSG7,14)	--"Select a Pokémon to move the Pokémon Tool to."
+PM_HINTMSG_ENERGYTYPE				=aux.Stringid(PM_STRING_HINTMSG7,15)	--"Choose a type."
+PM_HINTMSG_TOHAND					=aux.Stringid(PM_STRING_HINTMSG8,0)		--"Select a card to put into your hand."
+PM_HINTMSG_HEAL						=aux.Stringid(PM_STRING_HINTMSG8,1)		--"Select a Pokémon to heal."
+PM_HINTMSG_TOBENCH					=aux.Stringid(PM_STRING_HINTMSG8,2)		--"Select a Pokémon to put onto the Bench."
+PM_HINTMSG_DISCARD					=aux.Stringid(PM_STRING_HINTMSG8,3)		--"Select a card to discard."
+PM_HINTMSG_TODECK					=aux.Stringid(PM_STRING_HINTMSG8,4)		--"Select a card to shuffle into the deck."
+PM_HINTMSG_TODECKTOP				=aux.Stringid(PM_STRING_HINTMSG8,5)		--"Select a card to put on top of the deck."
+PM_HINTMSG_TODECKBOT				=aux.Stringid(PM_STRING_HINTMSG8,6)		--"Select a card to put on the bottom of the deck."
+PM_HINTMSG_TODISCARD				=aux.Stringid(PM_STRING_HINTMSG8,7)		--"Select a card to put into the discard pile."
 --Question Hint Message
 PM_QHINTMSG_DRAW					=aux.Stringid(PM_STRING_QHINTMSG,0)		--"Would you like to draw a card?"
 --Select Message

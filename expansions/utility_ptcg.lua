@@ -779,7 +779,6 @@ function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2)
 	--ener1: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
 	local tp=e:GetHandlerPlayer()
 	local max1=max1 or min1
-	local ener1=ener1 or nil
 	local g=c:GetAttachmentGroup()
 	if not g or g:GetCount()==0 then return end
 	local dg=Group.CreateGroup()
@@ -1546,7 +1545,7 @@ function Auxiliary.EnableTrainerAttach(c,desc_id,f,s,o,select_msg,discard,con_fu
 	local select_msg=select_msg or PM_HINTMSG_POKEMON
 	local discard=discard or false
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(c:GetOriginalCode(),desc_id))
+	e1:SetDescription(PM_DESC_ATTACH_TRAINER)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND)
@@ -1555,11 +1554,20 @@ function Auxiliary.EnableTrainerAttach(c,desc_id,f,s,o,select_msg,discard,con_fu
 	e1:SetOperation(Auxiliary.TrainerAttachOperation(f,s,o,select_msg,discard))
 	e1:SetLabelObject(c)
 	c:RegisterEffect(e1)
-end
-function Auxiliary.AddAttachedDescCondition(e)
-	local c=e:GetLabelObject()
-	local code=c:GetOriginalCode()
-	return e:GetHandler():GetFlagEffect(code)==0
+	if not desc_id then return end
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(PM_EFFECT_TYPE_ATTACHED_TRAINER+EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_ADJUST)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e2:SetCondition(aux.AND(Auxiliary.AddAttachedDescCondition,con_func))
+	e2:SetOperation(Auxiliary.AddToolDescOperation(desc_id))
+	e2:SetLabelObject(c)
+	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e3:SetCondition(Auxiliary.RemoveAttachedDescCondition)
+	e3:SetOperation(Auxiliary.RemoveAttachedDescOperation)
+	c:RegisterEffect(e3)
 end
 function Auxiliary.TrainerAttachTarget(f,s,o)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -1588,6 +1596,28 @@ function Auxiliary.TrainerAttachOperation(f,s,o,select_msg,discard)
 				Duel.RegisterEffect(e1,tp)
 			end
 end
+function Auxiliary.AddAttachedDescCondition(e)
+	local c=e:GetLabelObject()
+	local code=c:GetOriginalCode()
+	return e:GetHandler():GetFlagEffect(code)==0
+end
+function Auxiliary.AddToolDescOperation(desc_id)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local c=e:GetLabelObject()
+				local code=c:GetOriginalCode()
+				e:GetHandler():RegisterFlagEffect(code,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(code,desc_id))
+			end
+end
+function Auxiliary.RemoveAttachedDescCondition(e)
+	local c=e:GetLabelObject()
+	local code=c:GetOriginalCode()
+	return e:GetHandler():GetFlagEffect(code)~=0 and e:GetHandler():GetLocation()~=PM_LOCATION_ATTACHED
+end
+function Auxiliary.RemoveAttachedDescOperation(e)
+	local c=e:GetLabelObject()
+	local code=c:GetOriginalCode()
+	e:GetHandler():ResetFlagEffect(code)
+end
 --========== Item ==========
 --Pokémon Tool
 function Auxiliary.EnablePokemonToolAttribute(c,desc_id,con_func)
@@ -1611,8 +1641,8 @@ function Auxiliary.EnablePokemonToolAttribute(c,desc_id,con_func)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e3:SetCondition(Auxiliary.RemoveToolDescCondition)
-	e3:SetOperation(Auxiliary.RemoveToolDescOperation)
+	e3:SetCondition(Auxiliary.RemoveAttachedDescCondition)
+	e3:SetOperation(Auxiliary.RemoveAttachedDescOperation)
 	c:RegisterEffect(e3)
 end
 function Auxiliary.PokemonToolFilter(c)
@@ -1628,23 +1658,6 @@ function Auxiliary.PokemonToolOperation(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	Duel.HintSelection(g)
 	Duel.Attach(g:GetFirst(),e:GetHandler())
-end
-function Auxiliary.AddToolDescOperation(desc_id)
-	return	function(e,tp,eg,ep,ev,re,r,rp)
-				local c=e:GetLabelObject()
-				local code=c:GetOriginalCode()
-				e:GetHandler():RegisterFlagEffect(code,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(code,desc_id))
-			end
-end
-function Auxiliary.RemoveToolDescCondition(e)
-	local c=e:GetLabelObject()
-	local code=c:GetOriginalCode()
-	return e:GetHandler():GetFlagEffect(code)~=0 and e:GetHandler():GetLocation()~=PM_LOCATION_ATTACHED
-end
-function Auxiliary.RemoveToolDescOperation(e)
-	local c=e:GetLabelObject()
-	local code=c:GetOriginalCode()
-	e:GetHandler():ResetFlagEffect(code)
 end
 --give a pokémon attacks while it has a Pokémon Tool attached to it
 function Auxiliary.AddPokemonToolAttack(c,desc_id,cate,con_func,targ_func,op_func,cost_func,prop)
@@ -2503,7 +2516,6 @@ function Auxiliary.DiscardEnergyCost(c,min,max,energy)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
 				local max=max or min
 				local g=c:GetAttachmentGroup()
-				local energy=energy or nil
 				if chk==0 then
 					if energy then
 						return g:IsExists(Card.IsEnergy,min,energy)

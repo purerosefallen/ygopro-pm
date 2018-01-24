@@ -19,5 +19,7 @@ function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 end
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(50)
-	if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.DiscardEnergy(e,Duel.GetDefendingPokemon(),1) end
+	local tc=Duel.GetDefendingPokemon()
+	if not tc:IsAbleToRemoveEnergy() then return Duel.Hint(HINT_CARD,0,CARD_BROCKS_PROTECTION) end
+	if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.DiscardEnergy(e,tc,1) end
 end
