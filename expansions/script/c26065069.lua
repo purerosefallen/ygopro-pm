@@ -10,8 +10,8 @@ function scard.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetPrizeGroupCount(tp,tp)>Duel.GetPrizeGroupCount(tp,1-tp)
 end
 function scard.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,6) or Duel.IsPlayerCanDraw(1-tp,3)
-		or Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,1,e:GetHandler())
+		or Duel.IsPlayerCanDraw(tp,6) or Duel.IsPlayerCanDraw(1-tp,3) end
 end
 function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,LOCATION_HAND)
