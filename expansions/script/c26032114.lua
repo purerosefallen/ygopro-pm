@@ -6,7 +6,6 @@ function scard.initial_effect(c)
 	--draw
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
-	e1:SetCategory(PM_CATEGORY_COIN)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_BOTH_SIDE)
 	e1:SetRange(PM_LOCATION_STADIUM)
@@ -17,10 +16,10 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.drop(e,tp,eg,ep,ev,re,r,rp)
-	local n=0
+	local ct=0
 	repeat
 		local res=Duel.TossCoin(tp,1)
-		if res==RESULT_HEADS then n=n+1 end
+		if res==RESULT_HEADS then ct=ct+1 end
 	until res==RESULT_TAILS
-	Duel.Draw(tp,n,REASON_EFFECT)
+	Duel.Draw(tp,ct,REASON_EFFECT)
 end

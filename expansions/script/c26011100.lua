@@ -6,7 +6,6 @@ function scard.initial_effect(c)
 	--draw
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
-	e1:SetCategory(PM_CATEGORY_COIN)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_BOTH_SIDE)
 	e1:SetRange(PM_LOCATION_STADIUM)
