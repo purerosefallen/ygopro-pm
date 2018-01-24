@@ -2,7 +2,7 @@
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
-	pm.EnableStadium(c)
+	pm.EnableStadiumAttribute(c)
 	--no ability
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)

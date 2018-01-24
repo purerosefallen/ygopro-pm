@@ -2,7 +2,7 @@
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
-	pm.EnableStadium(c)
+	pm.EnableStadiumAttribute(c)
 	--discard hand & draw
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))

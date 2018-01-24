@@ -1178,7 +1178,7 @@ of your turn, you may play that card in your hand on top of Pokémon X.
 This is called "evolving" a Pokémon."
 ]]
 --Not fully implemented: Incompatible with Pokémon in LOCATION_SZONE
-function Auxiliary.EnableEvolve(c)
+function Auxiliary.EnableEvolutionAttribute(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(PM_DESC_EVOLVE)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -1364,7 +1364,7 @@ end
 - A Pokémon LV.X shares the same name as the Pokémon it is put on top of.
 - A Pokémon LV.X is not considered an Evolution card."
 ]]
-function Auxiliary.EnableLevelUp(c)
+function Auxiliary.EnableLevelUpAttribute(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(PM_DESC_LVX)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -1590,7 +1590,7 @@ function Auxiliary.TrainerAttachOperation(f,s,o,select_msg,discard)
 end
 --========== Item ==========
 --Pokémon Tool
-function Auxiliary.EnablePokemonTool(c,desc_id,con_func)
+function Auxiliary.EnablePokemonToolAttribute(c,desc_id,con_func)
 	local con_func=con_func or aux.TRUE
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(PM_DESC_TOOL)
@@ -1675,7 +1675,7 @@ function Auxiliary.PokemonToolAttackCondition(e,tp,eg,ep,ev,re,r,rp)
 end
 --========== Stadium ==========
 --Stadium card
-function Auxiliary.EnableStadium(c)
+function Auxiliary.EnableStadiumAttribute(c)
 	--play
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(PM_EFFECT_TYPE_PLAY)

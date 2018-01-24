@@ -5,7 +5,7 @@ function scard.initial_effect(c)
 	c:SetStatus(PM_STATUS_NO_RETREAT_COST,true)
 	pm.EnablePokemonAttribute(c)
 	--evolve
-	pm.EnableEvolve(c)
+	pm.EnableEvolutionAttribute(c)
 	--search
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))

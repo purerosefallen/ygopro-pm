@@ -4,7 +4,7 @@ local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--evolve
-	pm.EnableEvolve(c)
+	pm.EnableEvolutionAttribute(c)
 	--heal
 	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.healop)
 	--damage

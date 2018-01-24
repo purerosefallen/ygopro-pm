@@ -2,7 +2,7 @@
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
-	pm.EnableStadium(c)
+	pm.EnableStadiumAttribute(c)
 	--retreat cost down
 	pm.EnableRetreatCostChange(c,-1,PM_LOCATION_STADIUM,PM_LOCATION_IN_PLAY,PM_LOCATION_IN_PLAY,scard.rctg1)
 	pm.EnableNoRetreatCost(c,PM_LOCATION_STADIUM,PM_LOCATION_IN_PLAY,PM_LOCATION_IN_PLAY,scard.rctg2)

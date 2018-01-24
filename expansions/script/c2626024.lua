@@ -2,7 +2,7 @@
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
-	pm.EnablePokemonTool(c,1,scard.damcon)
+	pm.EnablePokemonToolAttribute(c,1,scard.damcon)
 	--gain attack
 	pm.AddPokemonToolAttack(c,0,nil,aux.AND(scard.damcon,pm.econ1(CARD_FIGHTING_ENERGY,1)),pm.hinttg,scard.damop)
 end

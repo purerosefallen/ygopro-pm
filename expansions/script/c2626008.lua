@@ -4,7 +4,7 @@ local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--evolve
-	pm.EnableEvolve(c)
+	pm.EnableEvolutionAttribute(c)
 	--retreat cost up
 	pm.EnableRetreatCostChange(c,1,PM_LOCATION_IN_PLAY,PM_LOCATION_IN_PLAY,PM_LOCATION_IN_PLAY,scard.rctg)
 	--damage

@@ -2,7 +2,7 @@
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
-	pm.EnablePokemonTool(c,1,scard.spcon)
+	pm.EnablePokemonToolAttribute(c,1,scard.spcon)
 	--gain attack
 	pm.AddPokemonToolAttack(c,0,nil,aux.AND(pm.econ1(CARD_WATER_ENERGY,1),scard.spcon),pm.hinttg,scard.spop,PM_TYPE_TEAM_AQUA)
 end
