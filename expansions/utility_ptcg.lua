@@ -1080,7 +1080,7 @@ function Auxiliary.EnablePokemonAttribute(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(PM_EFFECT_BENCH_PROC)
-	e1:SetProperty(PM_EFFECT_FLAG_BENCH_PARAM+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+PM_EFFECT_FLAG_BENCH_PARAM)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetTargetRange(PM_POS_FACEUP_UPSIDE,0)
 	e1:SetCondition(Auxiliary.BenchCondition)
@@ -1089,7 +1089,7 @@ function Auxiliary.EnablePokemonAttribute(c)
 	--[[
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(PM_EFFECT_FLAG_BENCH_PARAM+EFFECT_FLAG_UNCOPYABLE)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+PM_EFFECT_FLAG_BENCH_PARAM)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCondition(Auxiliary.BenchCondition2)
 	e2:SetTarget(Auxiliary.BenchTarget)
@@ -1723,9 +1723,9 @@ function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func
 	if cate then e1:SetCategory(cate) end
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	if prop then
-		e1:SetProperty(PM_EFFECT_FLAG_POKEMON_ATTACK+prop)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+PM_EFFECT_FLAG_POKEMON_ATTACK+prop)
 	else
-		e1:SetProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+PM_EFFECT_FLAG_POKEMON_ATTACK)
 	end
 	e1:SetRange(PM_LOCATION_ACTIVE)
 	if con_func then e1:SetCondition(con_func) end

@@ -139,6 +139,7 @@ PM_LOCATION_LOST_ZONE				=LOCATION_REMOVED	--Location for cards no longer playab
 PM_LOCATION_ATTACHED				=LOCATION_OVERLAY	--Location for cards under other cards 
 --↑Location combinations
 LOCATIONS_ALL						=0xff		--All locations
+PM_LOCATIONS_PHDP					=PM_LOCATION_IN_PLAY+LOCATION_HAND+PM_LOCATION_DISCARD_PILE	--"Silent Lab" (Primal Clash 140/160)
 --Positions
 PM_POS_FACEUP_UPSIDE				=POS_FACEUP_ATTACK		--The default position of an In Play Pokémon
 PM_POS_FACEDOWN_UPSIDE				=POS_FACEDOWN_ATTACK	--The temporary position of the starting Active Pokémon
@@ -251,6 +252,7 @@ PM_EFFECT_TYPE_ATTACHED_TRAINER		=EFFECT_TYPE_XMATERIAL		--Trainer cards that gi
 PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.EnablePokemonAttribute
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x10000000					--Included on all Pokémon attacks
 --Codes
+PM_EFFECT_NO_ABILITY				=EFFECT_DISABLE				--A Pokémon has no abilities
 PM_EFFECT_CANNOT_PLAY				=EFFECT_CANNOT_ACTIVATE		--Prevent a card from being played or attached
 PM_EFFECT_PUT_IN_PLAY_CONDITION		=EFFECT_SPSUMMON_CONDITION	--Limit the ways a Pokémon can be put In Play
 PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Put a Pokémon onto the Bench
