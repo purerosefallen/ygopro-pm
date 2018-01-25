@@ -394,9 +394,9 @@ PM_EVENT_ADD_COUNTER				=EVENT_ADD_COUNTER		--When a counter/marker is put on a 
 PM_CATEGORY_TOHAND					=CATEGORY_TOHAND	--"Pokémon Tower" (Black Star Promo Wizards of the Coast 42)
 --Descriptions
 --↑Win (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)
-PM_DESC_INVALID						=aux.Stringid(PM_STRING_WIN,0)	--"You have an invalid deck!"
-PM_DESC_KNOCKOUT					=aux.Stringid(PM_STRING_WIN,1)	--"You have no more Pokémon left in play!"
-PM_DESC_PRIZE						=aux.Stringid(PM_STRING_WIN,2)	--"You collected all the Prize cards to win the game!"
+PM_DESC_INVALID						=aux.Stringid(PM_STRING_WIN,0)	--"Invalid deck!"
+PM_DESC_KNOCKOUT					=aux.Stringid(PM_STRING_WIN,1)	--"No more Pokémon left in play!"
+PM_DESC_PRIZE						=aux.Stringid(PM_STRING_WIN,2)	--"Collected all the Prize cards!"
 PM_DESC_LOST_WORLD					=aux.Stringid(PM_STRING_WIN,3)	--"Once during each player's turn, if that player's opponent has 6 or more Pokémon in the Lost Zone, the player may choose to win the game."
 PM_DESC_SLOWBRO						=aux.Stringid(PM_STRING_WIN,4)	--"If you use this attack when you have only 1 Prize card left, you win this game."
 --↑Game Progress (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)

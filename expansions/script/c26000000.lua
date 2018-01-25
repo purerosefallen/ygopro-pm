@@ -204,6 +204,9 @@ scard.pokemon_card=true
 function scard.filter(c)
 	return not c.pokemon_card
 end
+function scard.filter2(c)
+	return c.clone
+end
 function scard.condition(e)
 	local tp=e:GetHandlerPlayer()
 	if Duel.IsExistingMatchingCard(Card.IsCode,tp,0,LOCATIONS_ALL,1,nil,sid) then
@@ -245,6 +248,9 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 	--check for restricted cards
 	local g5=Duel.GetMatchingGroup(Card.IsHasDeckRestriction,tp,LOCATION_HAND+LOCATION_DECK,0,nil)
 	local g6=Duel.GetMatchingGroup(Card.IsHasDeckRestriction,tp,0,LOCATION_HAND+LOCATION_DECK,nil)
+	--check for cloned cards
+	local g7=Duel.GetMatchingGroup(scard.filter2,tp,LOCATIONS_ALL,0,nil)
+	local g8=Duel.GetMatchingGroup(scard.filter2,tp,0,LOCATIONS_ALL,nil)
 	--check deck size
 	local dg1=Duel.GetMatchingGroup(nil,tp,LOCATION_HAND+LOCATION_DECK,0,nil)
 	local dg2=Duel.GetMatchingGroup(nil,tp,0,LOCATION_HAND+LOCATION_DECK,nil)
@@ -257,14 +263,17 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 		sdc:RegisterFlagEffect(PM_EFFECT_SUDDEN_DEATH_CHECK,0,0,0)
 	end
 	if (g1:GetCount()>0 and g2:GetCount()>0) or (g3:GetCount()==0 and g4:GetCount()==0)
-		or (g5:GetCount()>1 and g6:GetCount()>1) or (dg1:GetCount()~=60 and dg2:GetCount()~=60) then
+		or (g5:GetCount()>1 and g6:GetCount()>1) or (g7:GetClassCount(Card.GetCode)>=2 and g8:GetClassCount(Card.GetCode)>=2)
+		or (dg1:GetCount()~=60 and dg2:GetCount()~=60) then
 		Duel.Win(1-tp,PM_WIN_REASON_INVALID)
 		Duel.Win(tp,PM_WIN_REASON_INVALID)
 		return
-	elseif g1:GetCount()>0 or g3:GetCount()==0 or g5:GetCount()>1 or dg1:GetCount()~=60 then
+	elseif g1:GetCount()>0 or g3:GetCount()==0 or g5:GetCount()>1 or g7:GetClassCount(Card.GetCode)>=2
+		or dg1:GetCount()~=60 then
 		Duel.Win(1-tp,PM_WIN_REASON_INVALID)
 		return
-	elseif g2:GetCount()>0 or g4:GetCount()==0 or g6:GetCount()>1 or dg2:GetCount()~=60 then
+	elseif g2:GetCount()>0 or g4:GetCount()==0 or g6:GetCount()>1 or g8:GetClassCount(Card.GetCode)>=2
+		or dg2:GetCount()~=60 then
 		Duel.Win(tp,PM_WIN_REASON_INVALID)
 		return
 	end
@@ -404,7 +413,7 @@ function scard.prifilter(c,tp)
 	return c:IsPokemon() and c:IsPreviousLocation(PM_LOCATION_IN_PLAY) and c:GetOwner()==1-tp
 end
 function scard.thfilter(c)
-	return c:IsPrize() and c:IsAbleToHand()
+	return --[[c:IsPrize() and]] c:IsAbleToHand()
 end
 function scard.pricon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(scard.prifilter,1,nil,tp)
