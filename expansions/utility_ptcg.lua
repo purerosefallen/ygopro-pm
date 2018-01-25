@@ -1668,8 +1668,7 @@ function Auxiliary.AddTrainerAttack(c,desc_id,cate,con_func,targ_func,op_func,co
 	c:RegisterEffect(e1)
 end
 function Auxiliary.PokemonToolAttackCondition(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsPokemon() and c:IsActive()
+	return e:GetHandler():IsPokemon() and e:GetHandler():IsActive()
 end
 --Pokémon Tool
 function Auxiliary.EnablePokemonToolAttribute(c,desc_id,con_func)
@@ -1699,7 +1698,6 @@ function Auxiliary.PokemonToolOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.HintSelection(g)
 	Duel.Attach(g:GetFirst(),e:GetHandler())
 end
-
 --========== Stadium ==========
 --Stadium card
 function Auxiliary.EnableStadiumAttribute(c)
@@ -1750,9 +1748,9 @@ function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func
 	if cate then e1:SetCategory(cate) end
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	if prop then
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+PM_EFFECT_FLAG_POKEMON_ATTACK+prop)
+		e1:SetProperty(PM_EFFECT_FLAG_POKEMON_ATTACK+prop)
 	else
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+PM_EFFECT_FLAG_POKEMON_ATTACK)
+		e1:SetProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
 	end
 	e1:SetRange(PM_LOCATION_ACTIVE)
 	if con_func then e1:SetCondition(con_func) end
@@ -1816,6 +1814,16 @@ function Auxiliary.EnableDoubleEnergy(c,val)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
+--"You can't have more than 1 Miracle Energy card in your deck." (e.g. "Miracle Energy N4 16")
+function Auxiliary.EnableDeckRestriction(c,code,con_func)
+	--code: PM_EFFECT_RESTRICT_MIRACLE_ENERGY, PM_EFFECT_RESTRICT_ACE_SPEC or PM_EFFECT_RESTRICT_POKEMON_STAR
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(code)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	if con_func then e1:SetCondition(con_func) end
+	c:RegisterEffect(e1)
+end																							  
 --"Draw N cards." (e.g. "Bill BS 91")
 function Auxiliary.DrawTarget(p,ct)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -2036,8 +2044,7 @@ end
 function Auxiliary.CheckAsleepOperation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
-	local res=Duel.TossCoin(tp,1)
-	if res==RESULT_HEADS then Duel.RemoveSpecialCondition(tc,PM_EFFECT_ASLEEP) end
+	if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.RemoveSpecialCondition(tc,PM_EFFECT_ASLEEP) end
 end
 --[[
 "A Burned Pokémon takes damage between turns, but the condition might heal on its own.
@@ -2095,8 +2102,7 @@ function Auxiliary.CheckBurnedOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
 	tc:AddCounter(PM_DAMAGE_COUNTER,2)
 	Duel.BreakEffect()
-	local res=Duel.TossCoin(tp,1)
-	if res==RESULT_HEADS then Duel.RemoveSpecialCondition(tc,PM_EFFECT_BURNED) end
+	if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.RemoveSpecialCondition(tc,PM_EFFECT_BURNED) end
 end
 --[[
 "Turn a Confused Pokémon with its head pointed toward you to show that it is Confused.
@@ -2139,8 +2145,7 @@ end
 function Auxiliary.CheckConfusedOperation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_CARD,0,c:GetOriginalCode())
-	local res=Duel.TossCoin(tp,1)
-	if res==RESULT_HEADS then return end
+	if Duel.TossCoin(tp,1)==RESULT_HEADS then return end
 	if not Duel.NegatePokemonAttack(ev) then return end
 	if not c:AddCounter(PM_DAMAGE_COUNTER,3) then return end
 	Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)

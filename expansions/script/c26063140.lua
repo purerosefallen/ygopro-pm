@@ -15,4 +15,5 @@ end
 scard.pokemon_card=true
 function scard.nabtg(e,c)
 	return c:IsBasicPokemon() and (c:IsHasAbility() or bit.band(c:GetOriginalType(),PM_TYPE_ABILITY)==PM_TYPE_ABILITY)
+		and not e:IsHasProperty(EFFECT_FLAG_POKEMON_ATTACK)
 end
