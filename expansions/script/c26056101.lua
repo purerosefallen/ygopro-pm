@@ -7,7 +7,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 or Duel.IsPlayerCanDraw(tp) end
+	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 and Duel.IsPlayerCanDraw(tp) end
 end
 function scard.tdfilter(c)
 	return c:IsItem() and c:IsAbleToDeck()

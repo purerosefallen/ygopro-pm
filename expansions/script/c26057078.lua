@@ -7,8 +7,8 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,1,e:GetHandler())
-		or Duel.IsPlayerCanDraw(tp)
+	if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,LOCATION_HAND,0,1,e:GetHandler())
+		and Duel.IsPlayerCanDraw(tp) end
 end
 function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	local max=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
