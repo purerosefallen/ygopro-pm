@@ -2,6 +2,8 @@
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
+	--ace spec
+	pm.EnableDeckRestriction(c,PM_EFFECT_RESTRICT_ACE_SPEC)
 	--search
 	pm.EnableTrainerPlay(c,nil,scard.thtg,scard.thop,nil,pm.dhcost(2))
 end
@@ -13,6 +15,6 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	pm.ConfirmDeck(tp,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOHAND)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()==0 then return pm.ConfirmInvalid(tp,tp) end
+	if g:GetCount()==0 then return pm.SearchFailed(tp,tp) end
 	Duel.SendtoHand(g,PLAYER_OWNER,REASON_EFFECT)
 end
