@@ -46,6 +46,9 @@ CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 --↑Special Energy cards
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
 --↑Pokémon that are part of an evolutionary line
+CARD_CLEFFA							=26008020	--Cleffa → Clefairy → Clefable (Neo Genesis 20/111)
+CARD_CLEFAIRY						=26001005	--Cleffa → Clefairy → Clefable (Base Set 5/102)
+CARD_CLEFABLE						=26002070	--Cleffa → Clefairy → Clefable (Jungle 1/64)
 CARD_WEEDLE							=26001069	--Weedle → Kakuna → Beedril (Base Set 69/102)
 CARD_KAKUNA							=26001033	--Weedle → Kakuna → Beedril (Base Set 33/102)
 CARD_BEEDRILL						=26001017	--Weedle → Kakuna → Beedril (Base Set 17/102)

@@ -13,6 +13,7 @@
 --[+RuleFunctions]...........................................functions that are included on the rules card
 --[+Pokémon].................................................functions that are included on every Pokémon card
 --[+Evolution]...............................................functions that are included on every Evolution card
+--[+Baby]....................................................functions that are included on every Baby Pokémon card
 --[+LVX].....................................................functions that are included on every Pokémon LV.X card
 --[+Restored]................................................functions that are included on every Restored Pokémon card
 --[+Energy]..................................................functions that are included on every Energy card
@@ -528,8 +529,8 @@ Duel.NegatePokemonAttack=Duel.NegateActivation
 --check if it is the first turn of the game
 function Duel.IsFirstTurn()
 	return Duel.GetTurnCount()==1
-		or Duel.GetFlagEffect(0,PM_EFFECT_SUDDEN_DEATH_RESTART)>0
-		or Duel.GetFlagEffect(1,PM_EFFECT_SUDDEN_DEATH_RESTART)>0
+		or Duel.GetFlagEffect(0,PM_EFFECT_SUDDEN_DEATH_RESTART)~=0
+		or Duel.GetFlagEffect(1,PM_EFFECT_SUDDEN_DEATH_RESTART)~=0
 end
 --get a player's current prize cards
 function Duel.GetPrizeGroup(tp,player)
@@ -1352,6 +1353,32 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e3)
 end
 
+--==========[+Baby]==========
+--Baby Pokémon
+function Auxiliary.EnableBabyAttribute(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(PM_EVENT_PRE_ATTACK)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(PM_LOCATION_IN_PLAY)
+	e1:SetCondition(Auxiliary.BabyPokemonCondition)
+	e1:SetOperation(Auxiliary.BabyPokemonOperation)
+	c:RegisterEffect(e1)
+end
+function Auxiliary.BabyPokemonCondition(e,tp,eg,ep,ev,re,r,rp)
+	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
+	return e:GetHandler():IsBabyPokemon() and Duel.GetDefendingPokemon()==e:GetHandler()
+		and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK) and loc==PM_LOCATION_ACTIVE
+end
+function Auxiliary.BabyPokemonOperation(e,tp,eg,ep,ev,re,r,rp)
+	local turnp=Duel.GetTurnPlayer()
+	local code=e:GetHandler():GetOriginalCode()
+	Duel.Hint(HINT_CARD,0,code)
+	if Duel.TossCoin(turnp,1)==RESULT_HEADS then return end
+	if not Duel.NegatePokemonAttack(ev) then return end
+	Duel.SkipPhase(turnp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
+end
+
 --==========[+LVX]==========
 --[[
 "They are played similarly to an Evolution card but have special rules as well:
@@ -1820,7 +1847,7 @@ function Auxiliary.EnableDeckRestriction(c,code,con_func)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	if con_func then e1:SetCondition(con_func) end
 	c:RegisterEffect(e1)
-end																							  
+end
 --"Draw N cards." (e.g. "Bill BS 91")
 function Auxiliary.DrawTarget(p,ct)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -2140,12 +2167,13 @@ function Auxiliary.CheckConfusedCondition(e,tp,eg,ep,ev,re,r,rp)
 	return loc==PM_LOCATION_ACTIVE and re:GetHandler():IsConfused() and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
 end
 function Auxiliary.CheckConfusedOperation(e,tp,eg,ep,ev,re,r,rp)
+	local turnp=Duel.GetTurnPlayer()
 	local c=e:GetHandler()
 	Duel.Hint(HINT_CARD,0,c:GetOriginalCode())
-	if Duel.TossCoin(tp,1)==RESULT_HEADS then return end
+	if Duel.TossCoin(turnp,1)==RESULT_HEADS then return end
 	if not Duel.NegatePokemonAttack(ev) then return end
 	if not c:AddCounter(PM_DAMAGE_COUNTER,3) then return end
-	Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
+	Duel.SkipPhase(turnp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
 end
 --[[
 "Turn the Paralyzed Pokémon clockwise to show that it is Paralyzed.
