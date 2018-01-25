@@ -1544,6 +1544,7 @@ function Auxiliary.EnableTrainerAttach(c,desc_id,f,s,o,select_msg,discard,con_fu
 	local o=o or 0
 	local select_msg=select_msg or PM_HINTMSG_POKEMON
 	local discard=discard or false
+	local con_func=con_func or aux.TRUE
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(PM_DESC_ATTACH_TRAINER)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -1555,19 +1556,22 @@ function Auxiliary.EnableTrainerAttach(c,desc_id,f,s,o,select_msg,discard,con_fu
 	e1:SetLabelObject(c)
 	c:RegisterEffect(e1)
 	if not desc_id then return end
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(PM_EFFECT_TYPE_ATTACHED_TRAINER+EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_ADJUST)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetCondition(aux.AND(Auxiliary.AddAttachedDescCondition,con_func))
-	e2:SetOperation(Auxiliary.AddToolDescOperation(desc_id))
-	e2:SetLabelObject(c)
+	Auxiliary.AddAttachedDescription(c,desc_id,con_func)
+end
+function Auxiliary.AddAttachedDescription(c,desc_id,con_func)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(PM_EFFECT_TYPE_ATTACHED_TRAINER+EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_ADJUST)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCondition(aux.AND(Auxiliary.AddAttachedDescCondition,con_func))
+	e1:SetOperation(Auxiliary.AddAttachedDescOperation(desc_id))
+	e1:SetLabelObject(c)
+	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetCondition(Auxiliary.RemoveAttachedDescCondition)
+	e2:SetOperation(Auxiliary.RemoveAttachedDescOperation)
 	c:RegisterEffect(e2)
-	local e3=e2:Clone()
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e3:SetCondition(Auxiliary.RemoveAttachedDescCondition)
-	e3:SetOperation(Auxiliary.RemoveAttachedDescOperation)
-	c:RegisterEffect(e3)
 end
 function Auxiliary.TrainerAttachTarget(f,s,o)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -1601,7 +1605,7 @@ function Auxiliary.AddAttachedDescCondition(e)
 	local code=c:GetOriginalCode()
 	return e:GetHandler():GetFlagEffect(code)==0
 end
-function Auxiliary.AddToolDescOperation(desc_id)
+function Auxiliary.AddAttachedDescOperation(desc_id)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
 				local c=e:GetLabelObject()
 				local code=c:GetOriginalCode()
@@ -1619,53 +1623,34 @@ function Auxiliary.RemoveAttachedDescOperation(e)
 	e:GetHandler():ResetFlagEffect(code)
 end
 --========== Item ==========
---Pokémon Tool
-function Auxiliary.EnablePokemonToolAttribute(c,desc_id,con_func)
+--Technical Machine
+function Auxiliary.EnableTechnicalMachineAttribute(c,desc_id,discard,f,s,o,select_msg,con_func)
+	--discard: true to discard at the end of the turn
+	local desc_id=desc_id or 0
+	local discard=discard or false
+	local f=f or aux.AND(Card.IsFaceup,Card.IsPokemon)
+	local s=s or PM_LOCATION_IN_PLAY
+	local o=o or 0
+	local select_msg=select_msg or PM_HINTMSG_POKEMON
 	local con_func=con_func or aux.TRUE
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(PM_DESC_TOOL)
+	e1:SetDescription(PM_DESC_TECH_MACHINE)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetTarget(Auxiliary.PokemonToolTarget)
-	e1:SetOperation(Auxiliary.PokemonToolOperation)
+	e1:SetTarget(Auxiliary.TrainerAttachTarget(f,s,o))
+	e1:SetOperation(Auxiliary.TrainerAttachOperation(f,s,o,select_msg,discard))
 	c:RegisterEffect(e1)
 	if not desc_id then return end
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(PM_EFFECT_TYPE_POKEMON_TOOL+EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_ADJUST)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetCondition(aux.AND(Auxiliary.AddAttachedDescCondition,con_func))
-	e2:SetOperation(Auxiliary.AddToolDescOperation(desc_id))
-	e2:SetLabelObject(c)
-	c:RegisterEffect(e2)
-	local e3=e2:Clone()
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e3:SetCondition(Auxiliary.RemoveAttachedDescCondition)
-	e3:SetOperation(Auxiliary.RemoveAttachedDescOperation)
-	c:RegisterEffect(e3)
+	Auxiliary.AddAttachedDescription(c,desc_id,con_func)
 end
-function Auxiliary.PokemonToolFilter(c)
-	return c:IsFaceup() and c:IsPokemon() and not c:GetAttachmentGroup():IsExists(Card.IsPokemonTool,1,nil)
-end
-Auxiliary.toolfilter=Auxiliary.PokemonToolFilter
-function Auxiliary.PokemonToolTarget(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Auxiliary.PokemonToolFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil) end
-end
-function Auxiliary.PokemonToolOperation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_ATTACHTOOL)
-	local g=Duel.SelectMatchingCard(tp,Auxiliary.PokemonToolFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
-	if g:GetCount()==0 then return end
-	Duel.HintSelection(g)
-	Duel.Attach(g:GetFirst(),e:GetHandler())
-end
---give a pokémon attacks while it has a Pokémon Tool attached to it
-function Auxiliary.AddPokemonToolAttack(c,desc_id,cate,con_func,targ_func,op_func,cost_func,prop)
+--give a pokémon attacks while it has a Technical Machine or Pokémon Tool attached to it
+function Auxiliary.AddTrainerAttack(c,desc_id,cate,con_func,targ_func,op_func,cost_func,prop)
 	--targ_func: include Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(c:GetOriginalCode(),desc_id))
 	if cate then e1:SetCategory(cate) end
-	e1:SetType(PM_EFFECT_TYPE_POKEMON_TOOL+EFFECT_TYPE_IGNITION)
+	e1:SetType(PM_EFFECT_TYPE_ATTACHED_TRAINER+EFFECT_TYPE_IGNITION)
 	if prop then
 		e1:SetProperty(PM_EFFECT_FLAG_POKEMON_ATTACK+prop)
 	else
@@ -1686,6 +1671,35 @@ function Auxiliary.PokemonToolAttackCondition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsPokemon() and c:IsActive()
 end
+--Pokémon Tool
+function Auxiliary.EnablePokemonToolAttribute(c,desc_id,con_func)
+	local con_func=con_func or aux.TRUE
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(PM_DESC_TOOL)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetTarget(Auxiliary.PokemonToolTarget)
+	e1:SetOperation(Auxiliary.PokemonToolOperation)
+	c:RegisterEffect(e1)
+	if not desc_id then return end
+	Auxiliary.AddAttachedDescription(c,desc_id,con_func)
+end
+function Auxiliary.PokemonToolFilter(c)
+	return c:IsFaceup() and c:IsPokemon() and not c:GetAttachmentGroup():IsExists(Card.IsPokemonTool,1,nil)
+end
+Auxiliary.toolfilter=Auxiliary.PokemonToolFilter
+function Auxiliary.PokemonToolTarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Auxiliary.PokemonToolFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil) end
+end
+function Auxiliary.PokemonToolOperation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_ATTACHTOOL)
+	local g=Duel.SelectMatchingCard(tp,Auxiliary.PokemonToolFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
+	if g:GetCount()==0 then return end
+	Duel.HintSelection(g)
+	Duel.Attach(g:GetFirst(),e:GetHandler())
+end
+
 --========== Stadium ==========
 --Stadium card
 function Auxiliary.EnableStadiumAttribute(c)
@@ -1846,7 +1860,7 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				local g2=Duel.SelectMatchingCard(tp,f2,tp,s2,o2,1,1,nil,e,tp,class)
 				local tc2=g2:GetFirst()
 				if s2==LOCATION_DECK or o2==LOCATION_DECK then
-					if not tc2 then return Auxiliary.ConfirmInvalid(tp,tp) end
+					if not tc2 then return Auxiliary.SearchFailed(tp,tp) end
 				else
 					if not tc2 then return end
 				end

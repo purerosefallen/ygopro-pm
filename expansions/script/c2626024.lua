@@ -3,10 +3,11 @@ local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	pm.EnablePokemonToolAttribute(c,1,scard.damcon)
-	--gain attack
-	pm.AddPokemonToolAttack(c,0,nil,aux.AND(scard.damcon,pm.econ1(CARD_FIGHTING_ENERGY,1)),pm.hinttg,scard.damop)
+	--gain attack (damage)
+	pm.AddTrainerAttack(c,0,nil,aux.AND(scard.attack_cost,scard.damcon),pm.hinttg,scard.damop)
 end
 scard.pokemon_card=true
+scard.attack_cost=pm.econ1(CARD_FIGHTING_ENERGY,1)
 function scard.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSetCard(PM_SETNAME_TEAM_MAGMA)
 end
