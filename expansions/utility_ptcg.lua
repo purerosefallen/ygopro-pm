@@ -374,8 +374,6 @@ Card.IsAbleToDPileAsCost=Card.IsAbleToDiscardPileAsCost
 --prevent a card from being sent to the discard pile when it resolves
 Card.CancelToDiscardPile=Card.CancelToGrave
 Card.CancelToDPile=Card.CancelToDiscardPile
---check if a card is not public knowledge
-Card.IsSecret=aux.NOT(Card.IsPublic)
 --add the pokémon value to the non-pokémon card
 Card.AddPokemonAttribute=Card.AddMonsterAttribute
 Card.AddPokemonAttributeComplete=Card.AddMonsterAttributeComplete
@@ -798,7 +796,6 @@ function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2)
 	end
 	return Duel.SendtoDPile(dg,REASON_EFFECT+REASON_DISCARD)
 end
-
 --========== Auxiliary ==========
 function Auxiliary.GetValueType(v)
 	local t=type(v)

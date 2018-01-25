@@ -9,7 +9,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.drfilter(c)
-	return c.height and c:IsPokemon() and c:IsSecret()
+	return c.height and c:IsPokemon() and not c:IsPublic()
 end
 function scard.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(scard.drfilter,tp,LOCATION_HAND,0,1,nil) end
