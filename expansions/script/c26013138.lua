@@ -8,13 +8,13 @@ end
 scard.pokemon_card=true
 function scard.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,e:GetHandler())
-		or Duel.IsPlayerCanDraw(tp,ct) end
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,ct) end
 end
 function scard.drop(e,tp,eg,ep,ev,re,r,rp)
+	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)
 	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	Duel.SendtoDeck(g,PLAYER_OWNER,DECK_ORDER_SHUFFLE,REASON_EFFECT)
 	Duel.ShuffleDeck(tp)
 	Duel.BreakEffect()
-	Duel.Draw(tp,g:GetCount(),REASON_EFFECT)
+	Duel.Draw(tp,ct,REASON_EFFECT)
 end
