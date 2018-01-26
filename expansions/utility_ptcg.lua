@@ -1824,8 +1824,8 @@ function Auxiliary.ConfirmDeck(tp,player)
 end
 --notify a player that there are no valid targets and shuffle their deck after they looked at it
 function Auxiliary.SearchFailed(tp,player)
-	Duel.Hint(HINT_MESSAGE,tp,PM_DESC_NO_TARGETS)
-	Duel.ShuffleDeck(tp)
+	Duel.Hint(HINT_MESSAGE,player,PM_DESC_NO_TARGETS)
+	Duel.ShuffleDeck(player)
 end
 --"This card provides Double ... Energy." (e.g. "Double Colorless Energy BS 96")
 function Auxiliary.EnableDoubleEnergy(c,val)
