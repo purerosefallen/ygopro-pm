@@ -7,7 +7,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 function scard.devfilter(c)
-	return c:IsFaceup() and c:IsEvolution() and c:IsAbleToHand()
+	return c:IsFaceup() and c:IsEvolved() and c:IsAbleToHand()
 end
 function scard.devtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(scard.devfilter,tp,PM_LOCATION_IN_PLAY,0,1,nil) end

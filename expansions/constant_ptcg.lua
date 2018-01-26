@@ -46,6 +46,9 @@ CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 --↑Special Energy cards
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
 --↑Pokémon that are part of an evolutionary line
+CARD_ABRA							=26001043	--Abra → Kadabra → Alakazam (Base Set 43/102)
+CARD_KADABRA						=26001032	--Abra → Kadabra → Alakazam (Base Set 32/102)
+CARD_ALAKAZAM						=26001001	--Abra → Kadabra → Alakazam (Base Set 1/102)
 CARD_CLEFFA							=26008020	--Cleffa → Clefairy → Clefable (Neo Genesis 20/111)
 CARD_CLEFAIRY						=26001005	--Cleffa → Clefairy → Clefable (Base Set 5/102)
 CARD_CLEFABLE						=26002070	--Cleffa → Clefairy → Clefable (Jungle 1/64)
@@ -277,6 +280,7 @@ PM_EFFECT_SUDDEN_DEATH_RESTART		=CARD_PTCG_RULES+4			--Workaround for not being 
 PM_EFFECT_LIMIT_SUPPORTER			=CARD_PTCG_RULES+5			--Prevent activating more than 1 Supporter card per turn
 PM_EFFECT_LIMIT_STADIUM				=CARD_PTCG_RULES+6			--Prevent playing more than 1 Stadium card per turn
 PM_EFFECT_LIMIT_ENERGY				=CARD_PTCG_RULES+7			--Prevent attaching more than 1 Energy card per turn
+PM_EFFECT_EVOLVED					=CARD_ALAKAZAM				--Check if a Pokémon is evolved
 PM_EFFECT_LIMIT_GX_ATTACK			=CARD_SNORLAX_GX			--Prevent using more than 1 GX attack in a game
 PM_EFFECT_WEAKNESS_X2_GRASS			=26000001	--Weakness: Grass x2
 PM_EFFECT_WEAKNESS_10_GRASS			=26000002	--Weakness: Grass +10

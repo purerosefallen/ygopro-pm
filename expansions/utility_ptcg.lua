@@ -91,6 +91,10 @@ end
 function Card.IsPrize(c)
 	return c:GetFlagEffect(PM_EFFECT_PRIZE_CARD)~=0
 end
+--check if a card is evolved
+function Card.IsEvolved(c)
+	return c:GetFlagEffect(PM_EFFECT_EVOLVED)~=0
+end
 --check if a card is or was a type of Pokémon, Trainer or Energy
 Card.IsSubType=Card.IsSetCard
 Card.IsPreviousSubType=Card.IsPreviousSetCard
@@ -576,7 +580,7 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 	for tc in aux.Next(targets) do
 		if ct==0 or tc:IsFacedown() or tc:IsImmuneToAttack() or tc:IsImmuneToAttackDamage()
 			or tc:IsImmuneToDamage() or not d:IsRelateToBattle() then return end
-		if tc:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not a:IsEvolution() then return end
+		if tc:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not a:IsEvolved() then return end
 	end
 	--apply effects before weakness & resistance
 	if a:IsHasEffect(PM_EFFECT_DAMAGE_ATTACK_REDUCE_30) then ct=count-3 end --e.g. "Mewtwo-EX BKT 61"
@@ -630,7 +634,7 @@ function Duel.EffectDamage(count,c1,c2,weak,resist)
 	local ct=count
 	if ct==0 or c2:IsFacedown() or c2:IsImmuneToAttack() or c2:IsImmuneToAttackDamage()
 		or c2:IsImmuneToDamage() then return end
-	if c2:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not c1:IsEvolution() then return end
+	if c2:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not c1:IsEvolved() then return end
 	--apply effects before weakness & resistance
 	--reserved
 	local energy=c1:GetPokemonType()
@@ -1226,6 +1230,7 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	local pos=PM_POS_FACEUP_UPSIDE
 	if c:IsPokemonBREAK() then pos=PM_POS_FACEUP_SIDEWAYS end
 	Duel.PutInPlay(c,PM_SUMMON_TYPE_EVOLVE,tp,tp,false,false,pos)
+	c:RegisterFlagEffect(PM_EFFECT_EVOLVED,RESET_EVENT+RESETS_STANDARD,0,1)
 	--retain sequence
 	if c:GetSequence()~=seq then Duel.MoveSequence(c,seq) end
 	--retain counters
