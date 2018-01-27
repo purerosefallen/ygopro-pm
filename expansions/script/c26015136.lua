@@ -8,7 +8,7 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 scard.attack_cost=pm.econ1(CARD_COLORLESS_ENERGY,1)
-function scard.rmcfilter(c)
+function scard.ctfilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:GetCounter(PM_DAMAGE_COUNTER)>0
 end
 function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -16,7 +16,7 @@ function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		if Duel.GetPrizeGroupCount(tp,1-tp)>=5 then
 			return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0
 		elseif Duel.GetPrizeGroupCount(tp,1-tp)==2 then
-			return Duel.IsExistingMatchingCard(scard.rmcfilter,tp,PM_LOCATION_IN_PLAY,0,1,nil)
+			return Duel.IsExistingMatchingCard(scard.ctfilter,tp,PM_LOCATION_IN_PLAY,0,1,nil)
 		else return false end
 	end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
@@ -36,7 +36,7 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if Duel.GetPrizeGroupCount(tp,1-tp)==2 then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_REMOVEDAMAGE)
-		local g=Duel.SelectMatchingCard(tp,scard.rmcfilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,scard.ctfilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
 		if g:GetCount()==0 then return end
 		Duel.HintSelection(g)
 		local tc=g:GetFirst()
