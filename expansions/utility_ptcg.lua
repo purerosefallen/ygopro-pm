@@ -1866,9 +1866,11 @@ end
 Auxiliary.drtg=Auxiliary.DrawTarget
 function Auxiliary.DrawOperation(p,ct)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local c=e:GetHandler()
 				local player=nil
 				if p==PLAYER_PLAYER or p==tp then player=tp
 				elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
+				if c:IsPokemon() then Duel.PokemonAttack(c,Duel.GetDefendingPokemon()) end
 				Duel.Draw(player,ct,REASON_EFFECT)
 			end
 end

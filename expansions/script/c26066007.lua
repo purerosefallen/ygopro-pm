@@ -18,7 +18,9 @@ function scard.healtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetCounter(PM_DAMAGE_COUNTER)>0 end
 end
 function scard.healop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.HealDamage(e,20,e:GetHandler())
+	local c=e:GetHandler()
+	Duel.PokemonAttack(c,Duel.GetDefendingPokemon())
+	Duel.HealDamage(e,20,c)
 end
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(30)

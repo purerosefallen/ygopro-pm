@@ -12,8 +12,10 @@ scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.resistance_30=PM_ENERGY_PSYCHIC
 scard.attack_cost=pm.econ1(CARD_COLORLESS_ENERGY,1)
 function scard.typeop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.TossCoin(tp,1)==RESULT_TAILS then return end
+	local c=e:GetHandler()
 	local tc=Duel.GetDefendingPokemon()
+	Duel.PokemonAttack(c,tc)
+	if Duel.TossCoin(tp,1)==RESULT_TAILS then return end
 	local typ=tc:GetPokemonType()
 	local available_list={}
 	if typ~=PM_ENERGY_GRASS then table.insert(available_list,1) end
@@ -42,7 +44,7 @@ function scard.typeop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	tc:AddCounter(PM_COLORING_COUNTER,1)
 	--change type
-	local e1=Effect.CreateEffect(e:GetHandler())
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(PM_EFFECT_CHANGE_POKEMON_TYPE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)

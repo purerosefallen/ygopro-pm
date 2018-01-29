@@ -22,6 +22,7 @@ function scard.thfilter(c)
 	return c:IsEnergy(CARD_GRASS_ENERGY) and c:IsAbleToHand()
 end
 function scard.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon())
 	pm.ConfirmDeck(tp,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOHAND)
 	local g=Duel.SelectMatchingCard(tp,scard.thfilter,tp,LOCATION_DECK,0,1,1,nil)

@@ -23,6 +23,7 @@ function scard.tbfilter(c,e,tp)
 	return c:IsBasicPokemon() and c:IsSetCard(PM_SETNAME_TEAM_MAGMA) and c:IsCanBePutInPlay(e,0,tp,false,false)
 end
 function scard.tbop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon())
 	local ft=Duel.GetLocationCount(tp,PM_LOCATION_BENCH)
 	if ft<=0 then return end
 	if ft>2 then ft=2 end
