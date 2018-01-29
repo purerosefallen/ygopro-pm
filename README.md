@@ -89,6 +89,7 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 You can search for the following specific card information in YGOPro:
 - Attack Damage: Type `: N damage`
 - Card Type: Search by `Card Type`
+- Dual-Type Energy Type (Pokémon Type): Type `(Dual-type)`
 - Energy Type (Pokémon Type): Search by `Attribute` (only until `Darkness`), or type `Pokemon Type: Energy`
 - Expansions (what set the card appears in): **N/A**
 - Format (what tournament format the card is legally playable in): **N/A**

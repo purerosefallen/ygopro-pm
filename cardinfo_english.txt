@@ -28,12 +28,19 @@
 0x100	Colorless
 0x200	Fairy
 0x400	Dragon
+0x6	Fire&Water
+0xa	Fire&Lightning
+0xc	Water&Lightning
+0x24	Water&Fighting
 0x44	Water&Darkness
 0x48	Lightning&Darkness
 0x50	Psychic&Darkness
 0x60	Fighting&Darkness
+0x82	Fire&Metal
+0x84	Water&Metal
 0x90	Psychic&Metal
 0xa0	Fighting&Metal
+0x110	Psychic&Colorless
 0x210	Psychic&Fairy
 0xfff	All Energy
 ##level
@@ -57,7 +64,7 @@
 0x1	Discard Stadium    
 0x2	Knock Out Pokémon  
 0x4	Send to Lost Zone  
-0x8	Send to DPile      
+0x8	Send to D Pile     
 0x10	Return to Hand     
 0x20	Return to Deck     
 0x40	Destroy Hand       
@@ -71,19 +78,19 @@
 0x4000	Change Damage      
 0x8000	Multiple Attacks   
 0x10000	Restrict Attack    
-0x20000	#Direct Attack     
+0x20000	#N/A Direct Attack 
 0x40000	Put Pokémon In Play
-0x80000	#Token             
+0x80000	#N/A Token         
 0x100000	Pokémon Category   
-0x200000	Energy             
+0x200000	Energy-related     
 0x400000	Add Damage Counter 
 0x800000	Remove Damage      
 0x1000000	Cannot Knock Out   
 0x2000000	Remove Condition   
 0x4000000	Counter/Marker     
 0x8000000	Coin/RPS/Guess     
-0x10000000	#Fusion            
-0x20000000	#Synchro           
+0x10000000	#N/A Fusion        
+0x20000000	#N/A Synchro       
 0x40000000	Evolution/Level-Up 
 0x80000000	Restrict Ability   
 ##race
@@ -113,6 +120,12 @@
 0x400000	Creator God
 0x800000	Wyrm
 0x1000000	Cyberse
+0x1080	Pyro&Thunder
+0x100008	Fiend&Psychic
+0x102000	Psychic&Dragon
+0x201000	Thunder&Divine-Beast
+0x200080	Pyro&Divine-Beast
+0x20100	Rock&Fish
 ##type
 0x1	Pokémon   
 0x2	Trainer   
@@ -138,7 +151,7 @@
 0x200000	N/A       
 0x400000	N/A       
 0x800000	N/A       
-0x1000000	Evo/LVX   
+0x1000000	Evo/LV-Up 
 0x2000000	N/A       
 0x4000000	N/A       
 ##setname
