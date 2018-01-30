@@ -24,5 +24,5 @@ function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	if ct<=0 then return end
 	if Duel.Draw(tp,ct,REASON_EFFECT)==0 then return end
 	Duel.BreakEffect()
-	Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
+	pm.EndTurn(e)
 end

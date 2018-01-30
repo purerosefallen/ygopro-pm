@@ -15,12 +15,5 @@ function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	if ct<=0 then return end
 	Duel.Draw(tp,ct,REASON_EFFECT)
 	Duel.BreakEffect()
-	Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_BP)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetTargetRange(1,0)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
+	pm.EndTurn(e)
 end

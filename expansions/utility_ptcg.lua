@@ -495,15 +495,17 @@ function Duel.IsPlayerCanDraw(player,count)
 	if count>ct then count=ct end
 	return duel_is_player_can_draw(player,count)
 end
---set aside prize cards face-down
-Duel.SetPrizeCard=Duel.Remove
+--set aside a card face-down
+Duel.SetAside=Duel.Remove
+--put a card into the lost zone
+Duel.SendtoLost=Duel.Remove
 --knock out a pokémon
 Duel.KnockOut=Duel.Destroy
 --get all attached cards in a specified location
 Duel.GetAttachmentGroup=Duel.GetOverlayGroup
 --get a player's stadium card
 Duel.GetStadiumCard=Duel.GetFieldCard
---send targets to the discard pile (discard them)
+--place a card in the discard pile (discard a card)
 Duel.SendtoDiscardPile=Duel.SendtoGrave
 Duel.SendtoDPile=Duel.SendtoDiscardPile
 --check if a player can put a marker on a card
@@ -605,8 +607,8 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 		if resistance_20 then ct=count-2
 		elseif resistance_30 then ct=count-3 end
 	end
+	--apply effects after weakness & resistance
 	for tc in aux.Next(targets) do
-		--apply effects after weakness & resistance
 		if tc:IsHasEffect(PM_EFFECT_DAMAGE_ATTACK_REDUCE_20) then ct=count-2 end --e.g. "Chesnaught BKT 11"
 	end
 	local turnp=Duel.GetTurnPlayer()
@@ -777,7 +779,7 @@ function Duel.RemoveSpecialCondition(c,code)
 		if c:GetFlagEffect(PM_EFFECT_POISONED)~=0 then c:ResetFlagEffect(PM_EFFECT_POISONED) end
 	end
 end
---discard an energy card(s) attached to a pokémon
+--discard an energy card(s) attached to a pokémon and return the number of discarded energy cards
 function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2)
 	--ener1: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
 	local tp=e:GetHandlerPlayer()
@@ -785,6 +787,7 @@ function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2)
 	local g=c:GetAttachmentGroup()
 	if not g or g:GetCount()==0 then return end
 	local dg=Group.CreateGroup()
+	local sg=nil
 	if ener1 then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
 		sg=g:FilterSelect(tp,Card.IsEnergy,min1,max1,nil,ener1)
@@ -811,6 +814,33 @@ function Auxiliary.GetValueType(val)
 		elseif mt==Effect then return "Effect"
 		else return "Card" end
 	else return t end
+end
+--show a player their deck when they search it for a card
+function Auxiliary.ConfirmDeck(tp,player)
+	local g=Duel.GetFieldGroup(player,LOCATION_DECK,0)
+	if g:GetCount()<=0 then return end
+	Duel.ConfirmCards(player,g)
+end
+--notify a player that there are no valid targets and shuffle their deck after they looked at it
+function Auxiliary.SearchFailed(tp,player)
+	Duel.Hint(HINT_MESSAGE,player,PM_DESC_NO_TARGETS)
+	Duel.ShuffleDeck(player)
+end
+--end the turn player's turn
+function Auxiliary.EndTurn(e)
+	local turnp=Duel.GetTurnPlayer()
+	Duel.SkipPhase(turnp,PHASE_DRAW,RESET_PHASE+PHASE_END,1)
+	Duel.SkipPhase(turnp,PHASE_STANDBY,RESET_PHASE+PHASE_END,1)
+	Duel.SkipPhase(turnp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
+	Duel.SkipPhase(turnp,PHASE_BATTLE,RESET_PHASE+PHASE_END,1,1)
+	Duel.SkipPhase(turnp,PHASE_MAIN2,RESET_PHASE+PHASE_END,1)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_BP)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,turnp)
 end
 
 --==========[+RuleFunctions]==========
@@ -1220,11 +1250,11 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	local ivym=tc:GetMarker(PM_DARK_IVYSAUR_MARKER)
 	local prim=tc:GetMarker(PM_IMPRISON_MARKER)
 	local shom=tc:GetMarker(PM_SHOCKWAVE_MARKER)
-	local mg=tc:GetAttachmentGroup()
+	local ag=tc:GetAttachmentGroup()
 	if tc:IsActive() then Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) end --workaround
 	--retain attached cards
-	if mg:GetCount()~=0 then
-		Duel.Attach(c,mg)
+	if ag:GetCount()~=0 then
+		Duel.Attach(c,ag)
 	end
 	c:SetAttachment(g)
 	Duel.Evolve(c,g)
@@ -1433,11 +1463,11 @@ function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	local ivym=tc:GetMarker(PM_DARK_IVYSAUR_MARKER)
 	local prim=tc:GetMarker(PM_IMPRISON_MARKER)
 	local shom=tc:GetMarker(PM_SHOCKWAVE_MARKER)
-	local mg=tc:GetAttachmentGroup()
+	local ag=tc:GetAttachmentGroup()
 	Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) --workaround
 	--retain attached cards
-	if mg:GetCount()~=0 then
-		Duel.Attach(c,mg)
+	if ag:GetCount()~=0 then
+		Duel.Attach(c,ag)
 	end
 	c:SetAttachment(g)
 	Duel.LevelUp(c,g)
@@ -1817,17 +1847,6 @@ function Auxiliary.EnableCannotAttack(c,desc,reset_flag,reset_count,con_func)
 end
 
 --==========[+Ability]==========
---show a player their deck when they search it for a card
-function Auxiliary.ConfirmDeck(tp,player)
-	local g=Duel.GetFieldGroup(player,LOCATION_DECK,0)
-	if g:GetCount()<=0 then return end
-	Duel.ConfirmCards(player,g)
-end
---notify a player that there are no valid targets and shuffle their deck after they looked at it
-function Auxiliary.SearchFailed(tp,player)
-	Duel.Hint(HINT_MESSAGE,player,PM_DESC_NO_TARGETS)
-	Duel.ShuffleDeck(player)
-end
 --"This card provides Double ... Energy." (e.g. "Double Colorless Energy BS 96")
 function Auxiliary.EnableDoubleEnergy(c,val)
 	--val: PM_TYPE_DOUBLE_..._ENERGY
@@ -1917,15 +1936,16 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				local ivym=tc1:GetMarker(PM_DARK_IVYSAUR_MARKER)
 				local prim=tc1:GetMarker(PM_IMPRISON_MARKER)
 				local shom=tc1:GetMarker(PM_SHOCKWAVE_MARKER)
-				local mg=tc1:GetAttachmentGroup()
+				local ag=tc1:GetAttachmentGroup()
 				if tc1:IsActive() then Duel.SendtoExtraP(tc2,PLAYER_OWNER,REASON_RULE) end --workaround
 				--retain attached cards
-				if mg:GetCount()~=0 then
-					Duel.Attach(tc2,mg)
+				if ag:GetCount()~=0 then
+					Duel.Attach(tc2,ag)
 				end
 				tc2:SetAttachment(g1)
 				Duel.Evolve(tc2,g1)
 				Duel.PutInPlay(tc2,PM_SUMMON_TYPE_EVOLVE,tp,tp,false,false,PM_POS_FACEUP_UPSIDE)
+				--retain sequence
 				if tc2:GetSequence()~=seq then Duel.MoveSequence(tc2,seq) end
 				--retain counters
 				if damc>0 then tc2:AddCounter(PM_DAMAGE_COUNTER,damc) end
@@ -1978,9 +1998,9 @@ function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq)
 				elseif dest_loc==LOCATION_DECK then
 					Duel.SendtoDeck(g1,PLAYER_OWNER,deck_seq,REASON_EFFECT)
 				end
-				--retain attached cards and sequence
 				local tc2=g2:GetFirst()
 				Duel.MoveToField(ac,tp,tp,LOCATION_MZONE,PM_POS_FACEUP_UPSIDE,true)
+				--retain attached cards and sequence
 				g2:RemoveCard(tc2)
 				if tc2:GetSequence()~=seq then Duel.MoveSequence(tc2,seq) end
 				if g2:GetCount()>0 then Duel.Attach(tc2,g2) end

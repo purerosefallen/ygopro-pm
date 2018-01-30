@@ -346,7 +346,7 @@ function scard.set_prize_cards(e,tp,player,count)
 	local g=Duel.GetDecktopGroup(player,count)
 	if g:GetCount()==0 then return end
 	Duel.DisableShuffleCheck()
-	Duel.SetPrizeCard(g,POS_FACEDOWN,REASON_RULE)
+	Duel.SetAside(g,POS_FACEDOWN,REASON_RULE)
 	local tc=g:GetFirst()
 	for tc in aux.Next(g) do
 		tc:RegisterFlagEffect(PM_EFFECT_PRIZE_CARD,0,0,0)
@@ -413,7 +413,7 @@ function scard.prifilter(c,tp)
 	return c:IsPokemon() and c:IsPreviousLocation(PM_LOCATION_IN_PLAY) and c:GetOwner()==1-tp
 end
 function scard.thfilter(c)
-	return --[[c:IsPrize() and]] c:IsAbleToHand()
+	return c:IsPrize() and c:IsAbleToHand()
 end
 function scard.pricon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(scard.prifilter,1,nil,tp)
@@ -553,7 +553,7 @@ function scard.endcon2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(scard.endfilter,1,nil,tp)
 end
 function scard.endop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
+	pm.EndTurn(e)
 end
 --gx attack
 function scard.gxcon(e,tp,eg,ep,ev,re,r,rp)
