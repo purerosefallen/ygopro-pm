@@ -95,6 +95,10 @@ end
 function Card.IsEvolved(c)
 	return c:GetFlagEffect(PM_EFFECT_EVOLVED)~=0
 end
+--check if a card is devolved
+function Card.IsDevolved(c)
+	return c:GetFlagEffect(PM_EFFECT_DEVOLVED)~=0
+end
 --check if a card is or was a type of Pokémon, Trainer or Energy
 Card.IsSubType=Card.IsSetCard
 Card.IsPreviousSubType=Card.IsPreviousSetCard
@@ -804,6 +808,38 @@ function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2)
 	end
 	return Duel.SendtoDPile(dg,REASON_EFFECT+REASON_DISCARD)
 end
+--move an energy card(s) between pokémon
+function Duel.MoveEnergy(e,g1,g2,min,max,ener)
+	--g1: the pokémon in the group to move energy from
+	--g2: the pokémon in the group to move energy to
+	--ener1: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
+	local tp=e:GetHandlerPlayer()
+	if g1:GetCount()==0 or g2:GetCount()==0 then return end
+	local max=max or min
+	local ag=g1:GetFirst():GetAttachmentGroup()
+	local desc=PM_HINTMSG_ENERGY
+	if ener==CARD_GRASS_ENERGY then desc=PM_HINTMSG_GENERGY
+	elseif ener==CARD_FIRE_ENERGY then desc=PM_HINTMSG_RENERGY
+	elseif ener==CARD_WATER_ENERGY then desc=PM_HINTMSG_WENERGY
+	elseif ener==CARD_LIGHTNING_ENERGY then desc=PM_HINTMSG_LENERGY
+	elseif ener==CARD_PSYCHIC_ENERGY then desc=PM_HINTMSG_PENERGY
+	elseif ener==CARD_FIGHTING_ENERGY then desc=PM_HINTMSG_FENERGY
+	elseif ener==CARD_DARKNESS_ENERGY then desc=PM_HINTMSG_DENERGY
+	elseif ener==CARD_METAL_ENERGY then desc=PM_HINTMSG_MENERGY
+	elseif ener==CARD_FAIRY_ENERGY then desc=PM_HINTMSG_YENERGY end
+	Duel.Hint(HINT_SELECTMSG,tp,desc)
+	local sg1=nil
+	if ener then
+		sg1=ag:FilterSelect(tp,Card.IsEnergy,min,max,nil,ener)
+	else
+		sg1=ag:FilterSelect(tp,Card.IsEnergy,min,max,nil)
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_MOVEENERGY)
+	local sg2=g2:Select(tp,1,1,nil)
+	Duel.HintSelection(sg2)
+	Duel.Attach(sg2:GetFirst(),sg1)
+end
+
 --========== Auxiliary ==========
 --return the value of the datatype
 function Auxiliary.GetValueType(val)
@@ -1945,6 +1981,7 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				tc2:SetAttachment(g1)
 				Duel.Evolve(tc2,g1)
 				Duel.PutInPlay(tc2,PM_SUMMON_TYPE_EVOLVE,tp,tp,false,false,PM_POS_FACEUP_UPSIDE)
+				tc2:RegisterFlagEffect(PM_EFFECT_EVOLVED,RESET_EVENT+RESETS_STANDARD,0,1)
 				--retain sequence
 				if tc2:GetSequence()~=seq then Duel.MoveSequence(tc2,seq) end
 				--retain counters
@@ -1962,12 +1999,14 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 end
 Auxiliary.evoop=Auxiliary.EffectEvolveOperation
 --"Put the highest stage Evolution card on a Pokémon into your hand." (e.g. "Devolution Spray BS 72")
-function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq)
+function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq,ignore_cannot_evolve)
 	--dest_loc: destination location
 	--deck_seq: DECK_ORDER_TOP, DECK_ORDER_BOTTOM or DECK_ORDER_SHUFFLE
+	--ignore_cannot_evolve: true to allow pokémon to evolve in the same turn
 	return	function(e,tp,eg,ep,ev,re,r,rp)
 				local dest_loc=dest_loc or LOCATION_HAND
 				local deck_seq=deck_seq or DECK_ORDER_SHUFFLE
+				local ignore_cannot_evolve=ignore_cannot_evolve or false
 				Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DEVOLVE)
 				local g1=Duel.SelectMatchingCard(tp,f,tp,s,o,1,1,nil)
 				local tc1=g1:GetFirst()
@@ -1997,9 +2036,14 @@ function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq)
 					Duel.SendtoHand(g1,PLAYER_OWNER,REASON_EFFECT)
 				elseif dest_loc==LOCATION_DECK then
 					Duel.SendtoDeck(g1,PLAYER_OWNER,deck_seq,REASON_EFFECT)
+				elseif dest_loc==PM_LOCATION_DPILE then
+					Duel.SendtoDPile(g1,REASON_EFFECT)
+				elseif dest_loc==PM_LOCATION_LOST then
+					Duel.SendtoLost(g1,POS_FACEP,REASON_EFFECT)
 				end
 				local tc2=g2:GetFirst()
 				Duel.MoveToField(ac,tp,tp,LOCATION_MZONE,PM_POS_FACEUP_UPSIDE,true)
+				ac:RegisterFlagEffect(PM_EFFECT_DEVOLVED,RESET_EVENT+RESETS_STANDARD,0,1)
 				--retain attached cards and sequence
 				g2:RemoveCard(tc2)
 				if tc2:GetSequence()~=seq then Duel.MoveSequence(tc2,seq) end
@@ -2015,6 +2059,7 @@ function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq)
 				if ivym>0 then tc2:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
 				if prim>0 then tc2:AddCounter(PM_IMPRISON_MARKER,prim) end
 				if shom>0 then tc2:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
+				if ignore_cannot_evolve then return end
 				--cannot evolve
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetType(EFFECT_TYPE_SINGLE)
@@ -2572,12 +2617,12 @@ function Auxiliary.SendToDeckCost(loc,min,max,seq)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
 				local max=max or min
 				local seq=seq or DECK_ORDER_SHUFFLE
-				if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,loc,0,min,e:GetHandler()) end
+				if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeckAsCost,tp,loc,0,min,e:GetHandler()) end
 				local desc=PM_HINTMSG_TODECK
 				if seq==DECK_ORDER_TOP then desc=PM_HINTMSG_TODECKTOP
 				elseif seq==DECK_ORDER_BOTTOM then desc=PM_HINTMSG_TODECKBOT end
 				Duel.Hint(HINT_SELECTMSG,tp,desc)
-				local g=Duel.SelectMatchingCard(tp,nil,tp,loc,0,min,max,e:GetHandler())
+				local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeckAsCost,tp,loc,0,min,max,e:GetHandler())
 				Duel.SendtoDeck(g,PLAYER_OWNER,seq,REASON_COST)
 			end
 end
@@ -2611,9 +2656,9 @@ Auxiliary.decost=Auxiliary.DiscardEnergyCost
 --==========[+Targets]==========
 --target for Duel.Hint(hint,player,desc) only
 function Auxiliary.HintTarget(e,tp,eg,ep,ev,re,r,rp,chk,hint,p,desc)
-	hint=hint or HINT_OPSELECTED
-	p=p or 1-tp
-	desc=desc or e:GetDescription()
+	local hint=hint or HINT_OPSELECTED
+	local p=p or 1-tp
+	local desc=desc or e:GetDescription()
 	local player=nil
 	if p==PLAYER_PLAYER or p==tp then player=tp
 	elseif p==PLAYER_OPPONENT or p==1-tp then player=1-tp end
