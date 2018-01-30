@@ -9,14 +9,14 @@ scard.pokemon_card=true
 scard.evolve_list={[1]=CARD_OMANYTE}
 function scard.pltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0 
-		and Duel.IsPlayerCanPutPokemonInPlay(tp,sid,PM_TYPE_BASIC_POKEMON,PM_TYPE_POKEMON,10,10,0,RACE_DINOSAUR,0) end
+		and Duel.IsPlayerCanPutPokemonInPlay(tp,sid,PM_TYPE_BASIC_POKEMON,PM_TYPE_POKEMON,10,10,0,RACE_DINOSAUR,PM_ENERGY_COLORLESS) end
 end
 function scard.plop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,PM_LOCATION_BENCH)<=0 then return end
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e)
-		or not Duel.IsPlayerCanPutPokemonInPlay(tp,sid,PM_TYPE_BASIC_POKEMON,PM_TYPE_POKEMON,10,10,0,RACE_DINOSAUR,0) then return end
-	c:AddPokemonAttribute(PM_TYPE_POKEMON,0,RACE_DINOSAUR,0,10,10)
+		or not Duel.IsPlayerCanPutPokemonInPlay(tp,sid,PM_TYPE_BASIC_POKEMON,PM_TYPE_POKEMON,10,10,0,RACE_DINOSAUR,PM_ENERGY_COLORLESS) then return end
+	c:AddPokemonAttribute(PM_TYPE_POKEMON,PM_ENERGY_COLORLESS,RACE_DINOSAUR,0,10,10)
 	Duel.PutInPlayStep(c,0,tp,tp,true,false,PM_POS_FACEUP_UPSIDE)
 	c:AddPokemonAttributeComplete()
 	c:SetStatus(PM_STATUS_NO_RETREAT_COST,true)
@@ -28,59 +28,37 @@ function scard.plop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
 	e1:SetTarget(pm.hinttg)
 	e1:SetOperation(scard.tgop)
-	e1:SetReset(RESET_EVENT+0x47c0000)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 	c:RegisterEffect(e1,true)
-	--treat as basic pokémon
+	--no attack
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(sid,1))
 	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(PM_EFFECT_ADD_SETCODE)
+	e2:SetCode(PM_EFFECT_NO_ATTACK)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CLIENT_HINT)
-	e2:SetValue(PM_TYPE_BASIC_POKEMON)
-	e2:SetReset(RESET_EVENT+0x47c0000)
+	e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 	c:RegisterEffect(e2,true)
-	local e3=e2:Clone()
-	e3:SetCode(PM_EFFECT_REMOVE_TYPE)
-	e3:SetValue(PM_TYPE_TRAINER)
-	c:RegisterEffect(e3,true)
-	--no attack
-	local e4=e2:Clone()
-	e4:SetDescription(aux.Stringid(sid,2))
-	e4:SetCode(PM_EFFECT_NO_ATTACK)
-	c:RegisterEffect(e4,true)
 	--cannot retreat
-	local e5=e2:Clone()
-	e5:SetDescription(aux.Stringid(sid,3))
-	e5:SetCode(PM_EFFECT_CANNOT_RETREAT)
-	c:RegisterEffect(e5,true)
-	--cannot be asleep
-	local e6=e2:Clone()
-	e6:SetDescription(aux.Stringid(sid,4))
-	e6:SetCode(PM_EFFECT_CANNOT_BE_ASLEEP)
-	c:RegisterEffect(e6,true)
-	--cannot be confused
-	local e7=e6:Clone()
-	e7:SetCode(PM_EFFECT_CANNOT_BE_CONFUSED)
-	c:RegisterEffect(e7,true)
-	--cannot be paralyzed
-	local e8=e6:Clone()
-	e8:SetCode(PM_EFFECT_CANNOT_BE_PARALYZED)
-	c:RegisterEffect(e8,true)
-	--cannot be poisoned
-	local e9=e6:Clone()
-	e9:SetCode(PM_EFFECT_CANNOT_BE_POISONED)
-	c:RegisterEffect(e9,true)
+	local e3=e2:Clone()
+	e3:SetDescription(aux.Stringid(sid,2))
+	e3:SetCode(PM_EFFECT_CANNOT_RETREAT)
+	c:RegisterEffect(e3,true)
+	--immune
+	local e4=e2:Clone()
+	e4:SetDescription(aux.Stringid(sid,3))
+	e4:SetCode(PM_EFFECT_IMMUNE_SPECIAL_CONDITION)
+	c:RegisterEffect(e4,true)
 	--cannot be knocked out
-	local e10=Effect.CreateEffect(c)
-	e10:SetDescription(aux.Stringid(sid,4))
-	e10:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e10:SetCode(PM_EFFECT_KNOCK_OUT_REPLACE)
-	e10:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e10:SetRange(PM_LOCATION_IN_PLAY)
-	e10:SetTarget(scard.reptg)
-	e10:SetOperation(scard.repop)
-	e10:SetReset(RESET_EVENT+0x47c0000)
-	c:RegisterEffect(e10,true)
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(sid,4))
+	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e5:SetCode(PM_EFFECT_KNOCK_OUT_REPLACE)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e5:SetRange(PM_LOCATION_IN_PLAY)
+	e5:SetTarget(scard.reptg)
+	e5:SetOperation(scard.repop)
+	e5:SetReset(RESET_EVENT+RESETS_STANDARD)
+	c:RegisterEffect(e5,true)
 	Duel.PutInPlayComplete()
 end
 function scard.tgop(e,tp,eg,ep,ev,re,r,rp)
