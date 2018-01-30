@@ -408,23 +408,23 @@ function Card.IsAffectedBySpecialCondition(c)
 end
 --check if a pokémon can be asleep
 function Card.IsCanBeAsleep(c)
-	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_ASLEEP)
+	return not (c:IsHasEffect(PM_EFFECT_CANNOT_BE_ASLEEP) or c:IsHasEffect(PM_EFFECT_IMMUNE_SPECIAL_CONDITION))
 end
 --check if a pokémon can be burned
 function Card.IsCanBeBurned(c)
-	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_BURNED)
+	return not (c:IsHasEffect(PM_EFFECT_CANNOT_BE_BURNED) or c:IsHasEffect(PM_EFFECT_IMMUNE_SPECIAL_CONDITION))
 end
 --check if a pokémon can be confused
 function Card.IsCanBeConfused(c)
-	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_CONFUSED)
+	return not (c:IsHasEffect(PM_EFFECT_CANNOT_BE_CONFUSED) or c:IsHasEffect(PM_EFFECT_IMMUNE_SPECIAL_CONDITION))
 end
 --check if a pokémon can be paralyzed
 function Card.IsCanBeParalyzed(c)
-	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_PARALYZED)
+	return not (c:IsHasEffect(PM_EFFECT_CANNOT_BE_PARALYZED) or c:IsHasEffect(PM_EFFECT_IMMUNE_SPECIAL_CONDITION))
 end
 --check if a pokémon can be poisoned
 function Card.IsCanBePoisoned(c)
-	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_POISONED)
+	return not (c:IsHasEffect(PM_EFFECT_CANNOT_BE_POISONED) or c:IsHasEffect(PM_EFFECT_IMMUNE_SPECIAL_CONDITION))
 end
 --check if a pokémon can be affected by a special condition
 --reserved
@@ -802,10 +802,11 @@ function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2)
 	return Duel.SendtoDPile(dg,REASON_EFFECT+REASON_DISCARD)
 end
 --========== Auxiliary ==========
-function Auxiliary.GetValueType(v)
-	local t=type(v)
+--return the value of the datatype
+function Auxiliary.GetValueType(val)
+	local t=type(val)
 	if t=="userdata" then
-		local mt=getmetatable(v)
+		local mt=getmetatable(val)
 		if mt==Group then return "Group"
 		elseif mt==Effect then return "Effect"
 		else return "Card" end
@@ -2551,12 +2552,12 @@ function Auxiliary.SendToDeckCost(loc,min,max,seq)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
 				local max=max or min
 				local seq=seq or DECK_ORDER_SHUFFLE
-				if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeckAsCost,tp,loc,0,min,e:GetHandler()) end
+				if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,loc,0,min,e:GetHandler()) end
 				local desc=PM_HINTMSG_TODECK
 				if seq==DECK_ORDER_TOP then desc=PM_HINTMSG_TODECKTOP
 				elseif seq==DECK_ORDER_BOTTOM then desc=PM_HINTMSG_TODECKBOT end
 				Duel.Hint(HINT_SELECTMSG,tp,desc)
-				local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeckAsCost,tp,loc,0,min,max,e:GetHandler())
+				local g=Duel.SelectMatchingCard(tp,nil,tp,loc,0,min,max,e:GetHandler())
 				Duel.SendtoDeck(g,PLAYER_OWNER,seq,REASON_COST)
 			end
 end
