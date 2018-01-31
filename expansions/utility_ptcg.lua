@@ -568,9 +568,9 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 	local count=count/10
 	local d=Duel.GetDefendingPokemon()
 	local targets=targets or d
-	local weak=weak or true
-	local resist=resist or true
-	local effect=effect or true
+	if weak~=false and weak==nil then weak=true end
+	if resist~=false and resist==nil then resist=true end
+	if effect~=false and effect==nil then effect=true end
 	local a=Duel.GetAttackingPokemon()
 	--active pokémon attacks defending pokémon
 	Duel.PokemonAttack(a,d)
@@ -624,7 +624,7 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 		tc:AddCounter(PM_DAMAGE_COUNTER,ct,PM_REASON_ATTACK)
 	end
 end
---put a damage counter(s) on a pokémon due to an effect
+--put a damage counter(s) on a pokémon due to a pokémon's effect
 function Duel.EffectDamage(count,c1,c2,weak,resist)
 	--count: the number of damage
 	--c1: the pokémon that does damage
@@ -635,8 +635,8 @@ function Duel.EffectDamage(count,c1,c2,weak,resist)
 	local c1=c1 or Duel.GetAttackingPokemon()
 	local d=Duel.GetDefendingPokemon()
 	local c2=c2 or d
-	local weak=weak or true
-	local resist=resist or true
+	if weak~=false and weak==nil then weak=true end
+	if resist~=false and resist==nil then resist=true end
 	local ct=count
 	if ct==0 or c2:IsFacedown() or c2:IsImmuneToAttack() or c2:IsImmuneToAttackDamage()
 		or c2:IsImmuneToDamage() then return end
@@ -812,7 +812,7 @@ end
 function Duel.MoveEnergy(e,g1,g2,min,max,ener)
 	--g1: the pokémon in the group to move energy from
 	--g2: the pokémon in the group to move energy to
-	--ener1: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
+	--ener: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
 	local tp=e:GetHandlerPlayer()
 	if g1:GetCount()==0 or g2:GetCount()==0 then return end
 	local max=max or min
@@ -1448,7 +1448,7 @@ function Auxiliary.BabyPokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,code)
 	if Duel.TossCoin(turnp,1)==RESULT_HEADS then return end
 	if not Duel.NegatePokemonAttack(ev) then return end
-	Duel.SkipPhase(turnp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
+	Auxiliary.EndTurn(e)
 end
 
 --==========[+LVX]==========
@@ -2039,7 +2039,7 @@ function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq,ignore_cannot_
 				elseif dest_loc==PM_LOCATION_DPILE then
 					Duel.SendtoDPile(g1,REASON_EFFECT)
 				elseif dest_loc==PM_LOCATION_LOST then
-					Duel.SendtoLost(g1,POS_FACEP,REASON_EFFECT)
+					Duel.SendtoLost(g1,POS_FACEUP,REASON_EFFECT)
 				end
 				local tc2=g2:GetFirst()
 				Duel.MoveToField(ac,tp,tp,LOCATION_MZONE,PM_POS_FACEUP_UPSIDE,true)
@@ -2246,7 +2246,7 @@ function Auxiliary.CheckConfusedOperation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.TossCoin(turnp,1)==RESULT_HEADS then return end
 	if not Duel.NegatePokemonAttack(ev) then return end
 	if not c:AddCounter(PM_DAMAGE_COUNTER,3) then return end
-	Duel.SkipPhase(turnp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)
+	Auxiliary.EndTurn(e)
 end
 --[[
 "Turn the Paralyzed Pokémon clockwise to show that it is Paralyzed.
