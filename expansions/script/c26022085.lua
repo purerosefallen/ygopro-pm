@@ -15,14 +15,14 @@ end
 function scard.opttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(scard.mefilter,tp,0,PM_LOCATION_ACTIVE,1,nil)
 	local b2=Duel.IsExistingMatchingCard(pm.BenchPokemonFilter,tp,0,PM_LOCATION_IN_PLAY,1,nil)
-	local b3=Duel.GetDefendingPokemon() and b2
+	local b3=Duel.GetDefendingPokemon()
 	if chk==0 then return (b1 and b2) or b3 end
 	local opt=0
 	if b1 and b2 and b3 then
 		opt=Duel.SelectOption(tp,aux.Stringid(sid,0),aux.Stringid(sid,1))
 	elseif b1 and b2 then
 		opt=Duel.SelectOption(tp,aux.Stringid(sid,0))
-	else
+	elseif b2 and b3 then
 		opt=Duel.SelectOption(tp,aux.Stringid(sid,1))+1
 	end
 	e:SetLabel(opt)
