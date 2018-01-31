@@ -15,7 +15,7 @@ function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(160)
 	local c=e:GetHandler()
 	Duel.EffectDamage(30,c,c)
-	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_BENCHEDPOKEMON)
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DAMAGE)
 	local g=Duel.SelectMatchingCard(tp,pm.BenchPokemonFilter,tp,0,PM_LOCATION_IN_PLAY,1,1,nil)
 	if g:GetCount()==0 then return end
 	Duel.HintSelection(g)

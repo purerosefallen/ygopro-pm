@@ -15,7 +15,7 @@ function scard.damfilter(c)
 	return c:IsFaceup() and c:IsPokemon()
 end
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_POKEMON)
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DAMAGE)
 	local g=Duel.SelectMatchingCard(tp,scard.damfilter,tp,0,PM_LOCATION_IN_PLAY,1,1,nil)
 	if g:GetCount()==0 then return end
 	Duel.HintSelection(g)
