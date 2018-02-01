@@ -257,6 +257,7 @@ PM_EFFECT_TYPE_ATTACHED_TRAINER		=EFFECT_TYPE_XMATERIAL		--Trainer cards that gi
 --Flags
 PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.EnablePokemonAttribute
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x10000000					--Included on all Pokémon attacks
+PM_EFFECT_FLAG_GX_ATTACK			=0x20000000					--Included on all GX attacks
 --Codes
 PM_EFFECT_NO_ABILITY				=EFFECT_DISABLE				--A Pokémon has no abilities
 PM_EFFECT_CANNOT_PLAY				=EFFECT_CANNOT_ACTIVATE		--Prevent a card from being played or attached

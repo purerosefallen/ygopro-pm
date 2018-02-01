@@ -558,8 +558,8 @@ end
 --gx attack
 function scard.gxcon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	return rc:IsActive() and rc:IsControler(tp) and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
-		and rc:IsPokemonGX() and Duel.GetFlagEffect(tp,PM_EFFECT_LIMIT_GX_ATTACK)==0
+	return rc:IsActive() and rc:IsControler(tp)
+		and re:IsHasProperty(PM_EFFECT_FLAG_GX_ATTACK) and Duel.GetFlagEffect(tp,PM_EFFECT_LIMIT_GX_ATTACK)==0
 end
 function scard.gxop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,PM_EFFECT_LIMIT_GX_ATTACK,0,0,1)

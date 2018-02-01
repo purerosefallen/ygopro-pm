@@ -277,7 +277,7 @@ function Card.IsFairyEnergy(c)
 end
 --check if a card is a Special Energy
 function Card.IsSpecialEnergy(c)
-	return c:IsEnergy() and c:IsSubType(PM_TYPE_SPECIAL)
+	return c:IsEnergy() and c:IsSubType(PM_TYPE_SPECIAL_ENERGY)
 end
 --check if an Energy card provides [W][W]
 function Card.IsDoubleWaterEnergy(c)
@@ -1849,7 +1849,15 @@ function Auxiliary.EnablePokemonAttack(c,desc_id,cate,con_func,targ_func,op_func
 		e1:SetProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
 	end
 	e1:SetRange(PM_LOCATION_ACTIVE)
-	if con_func then e1:SetCondition(con_func) end
+	if prop==PM_EFFECT_FLAG_GX_ATTACK then
+		if con_func then
+			e1:SetCondition(aux.AND(Auxiliary.GXAttackCondition,con_func))
+		else
+			e1:SetCondition(Auxiliary.GXAttackCondition)
+		end
+	else
+		if con_func then e1:SetCondition(con_func) end
+	end
 	if cost_func then e1:SetCost(cost_func) end
 	if targ_func then e1:SetTarget(targ_func) end
 	e1:SetOperation(op_func)
@@ -2601,6 +2609,11 @@ function Auxiliary.NotFirstTurnCondition()
 	return not Duel.IsFirstTurn()
 end
 Auxiliary.nfturncon=Auxiliary.NotFirstTurnCondition
+--condition to use a pokémon's GX attack
+function Auxiliary.GXAttackCondition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFlagEffect(tp,PM_EFFECT_LIMIT_GX_ATTACK)==0
+end
+Auxiliary.gxcon=Auxiliary.GXAttackCondition
 
 --==========[+Costs]==========
 --cost for discarding cards from the player's hand
