@@ -436,7 +436,8 @@ function Card.IsCanBeAffectedBySpecialCondition(c)
 	return c:IsCanBeAsleep() and c:IsCanBeBurned() and c:IsCanBeConfused() and c:IsCanBeParalyzed() and c:IsCanBePoisoned()
 end
 --check if a pokémon can attack
-function Card.IsCanAttack(c)
+function Card.IsCanAttack(c,e)
+	if c:IsAsleep() and e:IsHasCategory(PM_CATEGORY_ASLEEP_ATTACK) then return true end
 	return not (Duel.IsFirstTurn() or c:IsAsleep() or c:IsParalyzed() or c:IsHasEffect(PM_EFFECT_CANNOT_ATTACK))
 end
 --check if an active pokémon can be retreated to the bench
@@ -2373,7 +2374,7 @@ Auxiliary.turnpcon=Auxiliary.TurnPlayerCondition
 --condition for attacks with no Energy Cost
 function Auxiliary.AttackCostCondition0(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()
+	return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack(e)
 end
 Auxiliary.econ0=Auxiliary.AttackCostCondition0
 --condition for attacks with an Energy Cost of 1 Energy
@@ -2392,7 +2393,7 @@ function Auxiliary.AttackCostCondition1(ener1,count1)
 				end
 				local res=count1
 				local sum=ct1+cct
-				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
+				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack(e)) then return false end
 				if cct>0 then
 					return sum>=res
 				else
@@ -2437,7 +2438,7 @@ function Auxiliary.AttackCostCondition2(ener1,count1,ener2,count2)
 					ener_count2=sum
 					ener_req2=res
 				end
-				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
+				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack(e)) then return false end
 				if cct>0 then
 					return sum>=res
 				else
@@ -2482,7 +2483,7 @@ function Auxiliary.AttackCostCondition3(ener1,count1,ener2,count2,ener3,count3)
 				local ener_req2=count2
 				local ener_count3=ct3
 				local ener_req3=count3
-				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
+				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack(e)) then return false end
 				if cct>0 then
 					return sum>=res
 				else
@@ -2534,7 +2535,7 @@ function Auxiliary.AttackCostCondition4(ener1,count1,ener2,count2,ener3,count3,e
 				local ener_req3=count3
 				local ener_count4=ct4
 				local ener_req4=count4
-				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
+				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack(e)) then return false end
 				if cct>0 then
 					return sum>=res
 				else
@@ -2594,7 +2595,7 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 				local ener_req4=count4
 				local ener_count5=ct5
 				local ener_req5=count5
-				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack()) then return false end
+				if not (Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack(e)) then return false end
 				if cct>0 then
 					return sum>=res
 				else

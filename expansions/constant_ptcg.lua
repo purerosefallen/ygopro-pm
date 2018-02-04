@@ -403,6 +403,7 @@ PM_EVENT_TOSS_COIN_NEGATE			=EVENT_TOSS_COIN_NEGATE	--When a coin is flipped, th
 PM_EVENT_ADD_COUNTER				=EVENT_ADD_COUNTER		--When a counter/marker is put on a card
 --Categories
 PM_CATEGORY_TOHAND					=CATEGORY_TOHAND	--"Pokémon Tower" (Black Star Promo Wizards of the Coast 42)
+PM_CATEGORY_ASLEEP_ATTACK			=CATEGORY_ANNOUNCE	--"Snorlax-GX" (Black Star Promo SM05)
 --Descriptions
 --↑Win (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)
 PM_DESC_INVALID						=aux.Stringid(PM_STRING_WIN,0)	--"Invalid deck!"
