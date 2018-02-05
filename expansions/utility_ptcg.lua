@@ -99,70 +99,69 @@ end
 function Card.IsDevolved(c)
 	return c:GetFlagEffect(PM_EFFECT_DEVOLVED)~=0
 end
---check if a card is or was a type of Pokémon, Trainer or Energy
-Card.IsSubType=Card.IsSetCard
-Card.IsPreviousSubType=Card.IsPreviousSetCard
---check what a card's original type is
-Card.IsOriginalSubType=Card.IsOriginalSetCard
 --check if a card is a Basic Pokémon
 function Card.IsBasicPokemon(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_BASIC_POKEMON)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_BASIC_POKEMON)
 end
 --check if a card is an Evolution Pokémon
 function Card.IsEvolution(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_EVOLUTION)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_EVOLUTION)
 end
 --check if a card is a Stage 1 Pokémon
 function Card.IsStage1(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_STAGE_1)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_STAGE_1)
 end
 --check if a card is a Stage 2 Pokémon
 function Card.IsStage2(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_STAGE_2)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_STAGE_2)
 end
 --check if a card is a Baby Pokémon
 function Card.IsBabyPokemon(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_BABY_POKEMON)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_BABY_POKEMON)
 end
 --check if a card is a Pokémon-ex
 function Card.IsPokemonex(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX_OLD)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_EX_OLD)
 end
 --check if a card is a Pokémon star
 function Card.IsPokemonStar(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_POKEMON_STAR)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_POKEMON_STAR)
 end
 --check if a card is a Pokémon LV.X (Pokémon Level-Up)
 function Card.IsPokemonLVX(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEVEL_UP)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_LEVEL_UP)
 end
 --check if a card is a Pokémon SP
 function Card.IsPokemonSP(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_SP)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_SP)
 end
 --check if a card is a Pokémon LEGEND
 function Card.IsPokemonLEGEND(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_LEGEND)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_LEGEND)
 end
 --check if a card is a Pokémon-EX
 function Card.IsPokemonEX(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_EX)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_EX)
 end
 --check if a card is a Restored Pokémon
 function Card.IsRestoredPokemon(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_RESTORED)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_RESTORED)
 end
 --check if a card is a Mega Evolution Pokémon
 function Card.IsMegaEvolution(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_MEGA)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_MEGA)
 end
 --check if a card is a Pokémon BREAK
 function Card.IsPokemonBREAK(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_BREAK)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_BREAK)
 end
 --check if a card is a Pokémon-GX
 function Card.IsPokemonGX(c)
-	return c:IsPokemon() and c:IsSubType(PM_TYPE_GX)
+	return c:IsPokemon() and c:IsSetCard(PM_TYPE_GX)
+end
+--check if a card is a Prism Star
+function Card.IsPrismStar(c)
+	return c:IsType(PM_TYPE_PRISM_STAR)
 end
 --check if a pokémon has an owner
 function Card.IsOwnerPokemon(c)
@@ -209,31 +208,31 @@ function Card.IsStadium(c)
 end
 --check if a card is an Item
 function Card.IsItem(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_ITEM)
+	return c:IsTrainer() and c:IsSetCard(PM_TYPE_ITEM)
 end
 --check if a card is a Pokémon Tool
 function Card.IsPokemonTool(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_POKEMON_TOOL)
+	return c:IsTrainer() and c:IsSetCard(PM_TYPE_POKEMON_TOOL)
 end
 --check if a card is an ACE SPEC
 function Card.IsACESPEC(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_ACE_SPEC)
+	return c:IsTrainer() and c:IsSetCard(PM_TYPE_ACE_SPEC)
 end
 --check if a card is a Supporter
 function Card.IsSupporter(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_SUPPORTER)
+	return c:IsTrainer() and c:IsSetCard(PM_TYPE_SUPPORTER)
 end
 --check if a card is a Technical Machine
 function Card.IsTechnicalMachine(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_TECHNICAL_MACHINE)
+	return c:IsTrainer() and c:IsSetCard(PM_TYPE_TECHNICAL_MACHINE)
 end
 --check if a card is a Rocket's Secret Machine
 function Card.IsRocketsSecretMachine(c)
-	return c:IsTrainer() and c:IsSubType(PM_TYPE_ROCKETS_SECRET_MACHINE)
+	return c:IsTrainer() and c:IsSetCard(PM_TYPE_ROCKETS_SECRET_MACHINE)
 end
 --check if a card is a basic Energy
 function Card.IsBasicEnergy(c)
-	return c:IsEnergy() and c:IsSubType(PM_TYPE_BASIC_ENERGY)
+	return c:IsEnergy() and c:IsSetCard(PM_TYPE_BASIC_ENERGY)
 end
 --check if a card is a [G] Energy
 function Card.IsGrassEnergy(c)
@@ -277,7 +276,7 @@ function Card.IsFairyEnergy(c)
 end
 --check if a card is a Special Energy
 function Card.IsSpecialEnergy(c)
-	return c:IsEnergy() and c:IsSubType(PM_TYPE_SPECIAL_ENERGY)
+	return c:IsEnergy() and c:IsSetCard(PM_TYPE_SPECIAL_ENERGY)
 end
 --check if an Energy card provides [W][W]
 function Card.IsDoubleWaterEnergy(c)
@@ -576,11 +575,10 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 	--active pokémon attacks defending pokémon
 	Duel.PokemonAttack(a,d)
 	local tc=nil
-	local typ=Auxiliary.GetValueType(targets)
-	if typ=="Card" then
+	if type(targets)=="Card" then
 		targets=Group.FromCards(targets)
 		tc=targets:GetFirst()
-	elseif typ=="Group" then
+	elseif type(targets)=="Group" then
 		tc=targets:GetFirst()
 	end
 	local ct=count
@@ -785,8 +783,8 @@ function Duel.RemoveSpecialCondition(c,code)
 	end
 end
 --discard an energy card(s) attached to a pokémon and return the number of discarded energy cards
-function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2)
-	--ener1: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
+function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2,min3,max3,ener3)
+	--enerX: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
 	local tp=e:GetHandlerPlayer()
 	local max1=max1 or min1
 	local g=c:GetAttachmentGroup()
@@ -807,12 +805,17 @@ function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2)
 		sg=g:FilterSelect(tp,Card.IsEnergy,min2,max2,nil,ener2)
 		dg:Merge(sg)
 	end
+	if ener3 then
+		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
+		sg=g:FilterSelect(tp,Card.IsEnergy,min3,max3,nil,ener3)
+		dg:Merge(sg)
+	end
 	return Duel.SendtoDPile(dg,REASON_EFFECT+REASON_DISCARD)
 end
 --move an energy card(s) between pokémon
 function Duel.MoveEnergy(e,g1,g2,min,max,ener)
 	--g1: the pokémon in the group to move energy from
-	--g2: the pokémon in the group to move energy to
+	--g2: the pokémon in the group to move the removed energy to
 	--ener: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
 	local tp=e:GetHandlerPlayer()
 	if g1:GetCount()==0 or g2:GetCount()==0 then return end

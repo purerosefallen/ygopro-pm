@@ -162,6 +162,7 @@ PM_TYPE_ABILITY						=TYPE_EFFECT	--A special effect that is not an attack
 PM_TYPE_ANCIENT_TRAIT				=TYPE_SPIRIT	--A special effect that is not an ability
 PM_TYPE_POKE_BODY					=TYPE_CONTINUOUS--A Pokémon Power/Ability that is always active
 PM_TYPE_POKE_POWER					=TYPE_UNION		--A Pokémon Power/Ability that a player must trigger or announce using
+PM_TYPE_PRISM_STAR					=TYPE_DUAL		--A type of card a player can't have more than 1 with the same name in their deck
 --↑Pokémon
 PM_TYPE_POKEMON						=TYPE_MONSTER	--Pokémon=Monster
 PM_TYPE_BASIC_POKEMON				=0x1			--"Clefairy Doll" (Base Set 70/102)
