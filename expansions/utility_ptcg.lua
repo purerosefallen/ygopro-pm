@@ -577,10 +577,11 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 	--active pokémon attacks defending pokémon
 	Duel.PokemonAttack(a,d)
 	local tc=nil
-	if type(targets)=="Card" then
+	local typ=Auxiliary.GetValueType(targets)
+	if typ=="Card" then
 		targets=Group.FromCards(targets)
 		tc=targets:GetFirst()
-	elseif type(targets)=="Group" then
+	elseif typ=="Group" then
 		tc=targets:GetFirst()
 	end
 	local ct=count
