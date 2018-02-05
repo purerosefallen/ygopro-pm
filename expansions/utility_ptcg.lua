@@ -18,6 +18,7 @@
 --[+Restored]................................................functions that are included on every Restored Pokémon card
 --[+Energy]..................................................functions that are included on every Energy card
 --[+Trainer].................................................functions that are included on every Trainer card
+--[+PrismStar]...............................................functions that are included on every Prism Star card
 --[+Attack]..................................................attacks that are shared by many pokémon
 --[+Ability].................................................effects that are shared by many cards
 --[+SpecialCondition]........................................asleep, burned, confused, paralyzed and poisoned
@@ -34,6 +35,7 @@ PM_LOCATION_DPILE=PM_LOCATION_DISCARD_PILE
 PM_LOCATION_PRIZE=PM_LOCATION_PRIZE_CARDS
 PM_LOCATION_ADJACENT_ACTIVE=PM_LOCATION_ADJACENT_ACTIVE_POKEMON
 PM_LOCATION_LOST=PM_LOCATION_LOST_ZONE
+PM_EFFECT_TO_DPILE_REDIRECT=PM_EFFECT_TO_DISCARD_PILE_REDIRECT
 PM_EFFECT_UPDATE_HP=PM_EFFECT_UPDATE_HIT_POINTS
 PM_EFFECT_RESIST_20_GRASS=PM_EFFECT_RESISTANCE_20_GRASS
 PM_EFFECT_RESIST_30_GRASS=PM_EFFECT_RESISTANCE_30_GRASS
@@ -1836,6 +1838,17 @@ function Auxiliary.StadiumPlayLimit(e,te,tp)
 	local code=e:GetHandler():GetOriginalCode()
 	return te:IsHasType(PM_EFFECT_TYPE_PLAY) and te:IsActiveType(PM_TYPE_STADIUM)
 		and te:GetHandler():GetOriginalCode()==code
+end
+
+--==========[+PrismStar]==========
+--Prism Star card
+function Auxiliary.EnablePrismStarAttribute(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(PM_EFFECT_TO_DPILE_REDIRECT)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetValue(PM_LOCATION_LOST)
+	c:RegisterEffect(e1)
 end
 
 --==========[+Attack]==========

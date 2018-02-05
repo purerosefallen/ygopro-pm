@@ -265,6 +265,7 @@ PM_EFFECT_CANNOT_PLAY				=EFFECT_CANNOT_ACTIVATE		--Prevent a card from being pl
 PM_EFFECT_PUT_IN_PLAY_CONDITION		=EFFECT_SPSUMMON_CONDITION	--Limit the ways a Pokémon can be put In Play
 PM_EFFECT_BENCH_PROC				=EFFECT_SPSUMMON_PROC		--Put a Pokémon onto the Bench
 PM_EFFECT_KNOCK_OUT_REPLACE			=EFFECT_DESTROY_REPLACE		--Prevent a Pokémon from being Knocked Out
+PM_EFFECT_TO_DISCARD_PILE_REDIRECT	=EFFECT_TO_GRAVE_REDIRECT	--Put a card in the Lost Zone instead of the discard pile
 PM_EFFECT_UPDATE_HIT_POINTS			=EFFECT_UPDATE_ATTACK		--Increase or decrease a Pokémon's HP
 PM_EFFECT_SELF_KNOCK_OUT			=EFFECT_SELF_DESTROY		--A Pokémon knocks itself out 
 PM_EFFECT_CHANGE_ENERGY				=EFFECT_CHANGE_CODE			--Change an Energy type
