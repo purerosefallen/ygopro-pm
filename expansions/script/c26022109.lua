@@ -11,6 +11,7 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.poiop)
 end
 scard.pokemon_card=true
+scard.evolve_list={[1]=CARD_GROVYLE,[2]=CARD_SCEPTILE}
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.resistance_30=PM_ENERGY_WATER
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)

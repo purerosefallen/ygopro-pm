@@ -11,6 +11,7 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.aslop)
 end
 scard.pokemon_card=true
+scard.evolve_list={[1]=CARD_MARSHTOMP,[2]=CARD_SWAMPERT}
 scard.weakness_x2=PM_ENERGY_LIGHTNING
 scard.attack_cost1=pm.econ1(CARD_WATER_ENERGY,1)
 scard.attack_cost2=pm.econ1(CARD_WATER_ENERGY,2)
