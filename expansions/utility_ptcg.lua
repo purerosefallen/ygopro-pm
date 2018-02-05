@@ -2389,9 +2389,11 @@ function Auxiliary.TurnPlayerCondition(p)
 end
 Auxiliary.turnpcon=Auxiliary.TurnPlayerCondition
 --condition for attacks with no Energy Cost
-function Auxiliary.AttackCostCondition0(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack(e)
+function Auxiliary.AttackCostCondition0()
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				local c=e:GetHandler()
+				return Auxiliary.ActivePokemonFilter(c) and c:IsCanAttack(e)
+			end
 end
 Auxiliary.econ0=Auxiliary.AttackCostCondition0
 --condition for attacks with an Energy Cost of 1 Energy
