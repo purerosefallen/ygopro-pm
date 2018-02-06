@@ -2189,7 +2189,12 @@ end
 function Auxiliary.CheckAsleepOperation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
-	if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.RemoveSpecialCondition(tc,PM_EFFECT_ASLEEP) end
+	if Duel.IsPlayerAffectedByEffect(tp,PM_EFFECT_ASLEEP_TOSS_2_COIN) then
+		local c1,c2=Duel.TossCoin(tp,2)
+		if c1+c2==RESULT_HEADS+RESULT_HEADS then Duel.RemoveSpecialCondition(tc,PM_EFFECT_ASLEEP) end
+	else
+		if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.RemoveSpecialCondition(tc,PM_EFFECT_ASLEEP) end
+	end
 end
 --[[
 "A Burned Pokémon takes damage between turns, but the condition might heal on its own.
