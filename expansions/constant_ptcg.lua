@@ -98,6 +98,8 @@ CARD_MEWTWO_EX						=26051054	--Mewtwo-EX → M Mewtwo-EX (Next Destinies 54/99)
 CARD_M_MEWTWO_EX					=26066063	--Mewtwo-EX → M Mewtwo-EX (BREAKthrough 63/162)
 CARD_GROUDON_EX						=26052054	--Groudon-EX → Primal Groudon-EX (Dark Explorers 54/108)
 CARD_PRIMAL_GROUDON_EX				=26063086	--Groudon-EX → Primal Groudon-EX (Primal Clash 86/160)
+CARD_RAYQUAZA_EX					=26053085	--Rayquaza-EX → M Rayquaza-EX (Dragons Exalted 85/124)
+CARD_M_RAYQUAZA_EX					=26064061	--Rayquaza-EX → M Rayquaza-EX (Roaring Skies 61/108)
 CARD_CHESPIN						=2623001	--Chespin → Quilladin → Chesnaught → Chesnaught BREAK (Black Star Promo XY01)
 CARD_QUILLADIN						=2624004	--Chespin → Quilladin → Chesnaught → Chesnaught BREAK (Kalos Starter Set 4/39)
 CARD_CHESNAUGHT						=2624005	--Chespin → Quilladin → Chesnaught → Chesnaught BREAK (Kalos Starter Set 5/39)
@@ -408,6 +410,7 @@ PM_EFFECT_CANNOT_ATTACK				=726	--"Haxorus" (Noble Victories 88/101)
 PM_EFFECT_EXTEND_BENCH_8			=727	--"Sky Field" (Roaring Skies 89/108)
 PM_EFFECT_DAMAGE_ATTACK_REDUCE_20	=728	--"Chesnaught" (BREAKthrough 11/162)
 PM_EFFECT_DAMAGE_ATTACK_REDUCE_30	=729	--"Mewtwo-EX" (BREAKthrough 61/162)
+PM_EFFECT_ASLEEP_TOSS_2_COIN		=730	--"Darkrai Prism Star" (Ultra Prism 77/156)
 --Abilities that activate or actions that occur at the appropriate event
 PM_EVENT_TO_DISCARDPILE				=EVENT_TO_GRAVE			--When a card is put into the discard pile
 PM_EVENT_LEAVE_PLAY					=EVENT_LEAVE_FIELD		--When a card leaves play

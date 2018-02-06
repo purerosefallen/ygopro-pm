@@ -9,6 +9,7 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.damop)
 end
 scard.pokemon_card=true
+scard.evolve_list={[1]=CARD_M_RAYQUAZA_EX}
 scard.weakness_x2=PM_ENERGY_DRAGON
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_FIRE_ENERGY,1,CARD_LIGHTNING_ENERGY,1)
