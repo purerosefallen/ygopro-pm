@@ -2266,7 +2266,9 @@ function Auxiliary.EnableConfused(c,con_func,reset_flag)
 end
 function Auxiliary.CheckConfusedCondition(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return loc==PM_LOCATION_ACTIVE and re:GetHandler():IsConfused() and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
+	local rc=re:GetHandler()
+	return loc==PM_LOCATION_ACTIVE and rc:IsActive() and rc:IsConfused()
+		and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK) and Duel.GetTurnPlayer()==tp
 end
 function Auxiliary.CheckConfusedOperation(e,tp,eg,ep,ev,re,r,rp)
 	local turnp=Duel.GetTurnPlayer()
