@@ -546,6 +546,25 @@ function Duel.IsFirstTurn()
 		or Duel.GetFlagEffect(0,PM_EFFECT_SUDDEN_DEATH_RESTART)~=0
 		or Duel.GetFlagEffect(1,PM_EFFECT_SUDDEN_DEATH_RESTART)~=0
 end
+--add a card to a player's prize cards
+function Duel.SendtoPrize(e,targets,player,reason)
+	local tp=e:GetHandlerPlayer()
+	local tc=nil
+	local typ=Auxiliary.GetValueType(targets)
+	if typ=="Card" then
+		targets=Group.FromCards(targets)
+		tc=targets:GetFirst()
+	elseif typ=="Group" then
+		tc=targets:GetFirst()
+	end
+	for tc in aux.Next(targets) do
+		if tc:IsLocation(LOCATION_DECK) then Duel.DisableShuffleCheck() end
+		Duel.SetAside(tc,POS_FACEDOWN,reason)
+		tc:RegisterFlagEffect(PM_EFFECT_PRIZE_CARD,0,0,0)
+	end
+	local ct=Duel.GetPrizeGroupCount(tp,player)
+	Duel.SetLP(player,ct)
+end
 --get a player's current prize cards
 function Duel.GetPrizeGroup(tp,player)
 	return Duel.GetMatchingGroup(Card.IsPrize,player,PM_LOCATION_PRIZE,0,nil)
@@ -628,7 +647,7 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 		tc:AddCounter(PM_DAMAGE_COUNTER,ct,PM_REASON_ATTACK)
 	end
 end
---put a damage counter(s) on a pokémon due to a pokémon's effect
+--put a damage counter on a pokémon due to a pokémon's effect
 function Duel.EffectDamage(count,c1,c2,weak,resist)
 	--count: the number of damage
 	--c1: the pokémon that does damage
@@ -675,7 +694,7 @@ function Duel.EffectDamage(count,c1,c2,weak,resist)
 	elseif ct<count and c2==d then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
 	c2:AddCounter(PM_DAMAGE_COUNTER,ct)
 end
---remove a damage counter(s) from a pokémon
+--remove a damage counter from a pokémon
 function Duel.RemoveDamage(e,count,c)
 	local damc=c:GetCounter(PM_DAMAGE_COUNTER)
 	if damc==0 then return end
@@ -787,7 +806,7 @@ function Duel.RemoveSpecialCondition(c,code)
 		if c:GetFlagEffect(PM_EFFECT_POISONED)~=0 then c:ResetFlagEffect(PM_EFFECT_POISONED) end
 	end
 end
---discard an energy card(s) attached to a pokémon and return the number of discarded energy cards
+--discard an energy card attached to a pokémon and return the number of discarded energy cards
 function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2,min3,max3,ener3)
 	--enerX: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
 	local tp=e:GetHandlerPlayer()
@@ -817,7 +836,7 @@ function Duel.DiscardEnergy(e,c,min1,max1,ener1,min2,max2,ener2,min3,max3,ener3)
 	end
 	return Duel.SendtoDPile(dg,REASON_EFFECT+REASON_DISCARD)
 end
---move an energy card(s) between pokémon
+--move an energy card between pokémon
 function Duel.MoveEnergy(e,g1,g2,min,max,ener)
 	--g1: the pokémon in the group to move energy from
 	--g2: the pokémon in the group to move the removed energy to

@@ -57,6 +57,7 @@ function scard.initial_effect(c)
 	--take prize
 	local e6=e5:Clone()
 	e6:SetDescription(aux.Stringid(sid,5))
+	e6:SetCode(PM_EVENT_KNOCKED_OUT)
 	e6:SetCondition(scard.pricon)
 	e6:SetOperation(scard.priop)
 	c:RegisterEffect(e6)
@@ -287,8 +288,10 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 	scard.play_bench_pokemon(e,tp,tp)
 	scard.play_bench_pokemon(e,tp,1-tp)
 	--set prize cards
-	scard.set_prize_cards(e,tp,tp,6)
-	scard.set_prize_cards(e,tp,1-tp,6)
+	local pg1=Duel.GetDecktopGroup(tp,6)
+	Duel.SendtoPrize(e,pg1,turnp,REASON_RULE)
+	local pg2=Duel.GetDecktopGroup(1-tp,6)
+	Duel.SendtoPrize(e,pg2,1-turnp,REASON_RULE)
 	--flip
 	scard.flip_pokemon(e,tp)
 	--draw extra
@@ -341,18 +344,6 @@ function scard.play_bench_pokemon(e,tp,player)
 	for tc in aux.Next(sg) do
 		Duel.MoveToField(tc,tp,player,PM_LOCATION_BENCH,PM_POS_FACEDOWN_UPSIDE,true)
 	end
-end
-function scard.set_prize_cards(e,tp,player,count)
-	local g=Duel.GetDecktopGroup(player,count)
-	if g:GetCount()==0 then return end
-	Duel.DisableShuffleCheck()
-	Duel.SetAside(g,POS_FACEDOWN,REASON_RULE)
-	local tc=g:GetFirst()
-	for tc in aux.Next(g) do
-		tc:RegisterFlagEffect(PM_EFFECT_PRIZE_CARD,0,0,0)
-	end
-	local ct=Duel.GetPrizeGroupCount(tp,player)
-	Duel.SetLP(1-player,ct)
 end
 function scard.flip_pokemon(e,tp)
 	local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,PM_LOCATION_IN_PLAY,PM_LOCATION_IN_PLAY,nil)
@@ -422,11 +413,12 @@ end
 function scard.priop(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
 	local ct=1
-	if ec:IsPokemonEX() or ec:IsPokemonGX() then ct=2 end
-	local g1=Duel.GetPrizeGroup(tp,tp):Filter(scard.thfilter,nil)
-	local g2=Duel.GetPrizeGroup(tp,1-tp):Filter(scard.thfilter,nil)
-	local rg=g1:RandomSelect(tp,ct)
-	Duel.SendtoHand(rg,PLAYER_OWNER,REASON_RULE)
+	if ec:IsPokemonex() or ec:IsPokemonLEGEND() or ec:IsPokemonEX() or ec:IsPokemonGX() then ct=2 end
+	local a=Duel.GetAttackingPokemon()
+	if ec:GetPreviousSequence()==SEQUENCE_EXTRA_MZONE and a:IsHasEffect(PM_EFFECT_EXTRA_PRIZE_KNOCKED_OUT) then ct=ct+1 end
+	local g=Duel.GetPrizeGroup(tp,tp):Filter(scard.thfilter,nil)
+	local sg=g:RandomSelect(tp,ct)
+	Duel.SendtoHand(sg,PLAYER_OWNER,REASON_RULE)
 	Duel.RegisterFlagEffect(tp,PM_EFFECT_PRIZE_CARD_CHECK,0,0,0)
 end
 function scard.sdfilter(c)
@@ -466,8 +458,10 @@ function scard.sudden_death(e,tp,eg,ep,ev,re,r,rp)
 	scard.play_bench_pokemon(e,tp,turnp)
 	scard.play_bench_pokemon(e,tp,1-turnp)
 	--set prize cards
-	scard.set_prize_cards(e,tp,turnp,1)
-	scard.set_prize_cards(e,tp,1-turnp,1)
+	local pg1=Duel.GetDecktopGroup(tp,1)
+	Duel.SendtoPrize(e,pg1,turnp,REASON_RULE)
+	local pg2=Duel.GetDecktopGroup(1-tp,1)
+	Duel.SendtoPrize(e,pg2,1-turnp,REASON_RULE)
 	--flip
 	scard.flip_pokemon(e,turnp)
 	--draw extra
