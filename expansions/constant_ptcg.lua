@@ -273,6 +273,7 @@ PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.En
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x10000000					--Included on all Pokémon attacks
 PM_EFFECT_FLAG_GX_ATTACK			=0x20000000					--Included on all GX attacks
 --Codes
+PM_EFFECT_IMMUNE_EFFECT				=EFFECT_IMMUNE_EFFECT		--Prevent all effects of a card done to a Pokémon
 PM_EFFECT_NO_ABILITY				=EFFECT_DISABLE				--A Pokémon has no abilities
 PM_EFFECT_CANNOT_PLAY				=EFFECT_CANNOT_ACTIVATE		--Prevent a card from being played or attached
 PM_EFFECT_PUT_IN_PLAY_CONDITION		=EFFECT_SPSUMMON_CONDITION	--Limit the ways a Pokémon can be put In Play
