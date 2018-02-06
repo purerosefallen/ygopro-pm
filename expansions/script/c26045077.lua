@@ -25,5 +25,8 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.DisableShuffleCheck()
 			Duel.SendtoDPile(g,REASON_EFFECT+REASON_DISCARD)
 		end
-	else Duel.SendtoDPile(g,REASON_EFFECT+REASON_DISCARD) end
+	else
+		Duel.DisableShuffleCheck()
+		Duel.SendtoDPile(g,REASON_EFFECT+REASON_DISCARD)
+	end
 end
