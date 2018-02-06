@@ -81,10 +81,12 @@ end
 function Card.IsTrainer(c)
 	return c:IsType(PM_TYPE_TRAINER)
 end
---check if a card is an Energy (or what type of Energy a card is)
+--check if a card is an Energy (or what type of Energy it is)
 function Card.IsEnergy(c,energy)
-	if energy then
+	if energy and energy~=PM_TYPE_SPECIAL_ENERGY then
 		return c:IsType(PM_TYPE_ENERGY) and c:IsCode(energy)
+	elseif energy and energy==PM_TYPE_SPECIAL_ENERGY then
+		return c:IsSpecialEnergy()
 	else
 		return c:IsType(PM_TYPE_ENERGY)
 	end
@@ -1222,6 +1224,7 @@ function Auxiliary.RetreatCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local ag=c:GetAttachmentGroup()
 	local rc=c:GetRetreatCost()
+	if c:IsHasEffect(PM_EFFECT_NO_RETREAT_COST) then rc=0 end
 	if c:IsHasEffect(PM_EFFECT_RETREAT_COST_REPLACE) then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARD)
 		local sg=ag:FilterSelect(tp,Card.IsHasEffect,1,1,nil,PM_EFFECT_RETREAT_COST_REPLACE)
