@@ -17,7 +17,7 @@ function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 			t[i]=i
 		end
 		if Duel.SelectYesNo(tp,PM_QHINTMSG_DRAW) then
-			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(sid,0))
+			Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_NUMBERDRAW)
 			local an=Duel.AnnounceNumber(tp,table.unpack(t))
 			Duel.Draw(tp,an,REASON_EFFECT)
 		end
@@ -29,7 +29,7 @@ function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 			t[i]=i
 		end
 		if Duel.SelectYesNo(1-tp,PM_QHINTMSG_DRAW) then
-			Duel.Hint(HINT_SELECTMSG,1-tp,aux.Stringid(sid,0))
+			Duel.Hint(HINT_SELECTMSG,1-tp,PM_HINTMSG_NUMBERDRAW)
 			local an=Duel.AnnounceNumber(1-tp,table.unpack(t))
 			Duel.Draw(1-tp,an,REASON_EFFECT)
 		end
