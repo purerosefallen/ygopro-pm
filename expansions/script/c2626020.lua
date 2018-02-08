@@ -13,6 +13,6 @@ scard.weakness_x2=PM_ENERGY_LIGHTNING
 scard.attack_cost=pm.econ1(CARD_DARKNESS_ENERGY,1)
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c1,c2=Duel.TossCoin(tp,2)
-	local ct=c1+c2
-	Duel.AttackDamage(10*ct)
+	local dam=c1+c2
+	Duel.AttackDamage(10*dam)
 end

@@ -13,6 +13,6 @@ scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost=pm.econ1(CARD_GRASS_ENERGY,1)
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c1,c2,c3,c4=Duel.TossCoin(tp,4)
-	local ct=c1+c2+c3+c4
-	Duel.AttackDamage(10*ct)
+	local dam=c1+c2+c3+c4
+	Duel.AttackDamage(10*dam)
 end

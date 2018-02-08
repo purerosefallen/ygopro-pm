@@ -11,8 +11,8 @@ scard.height=2.00
 scard.evolve_list={[1]=CARD_FRAXURE}
 scard.attack_cost=pm.econ1(CARD_COLORLESS_ENERGY,2)
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=50
+	local dam=50
 	local c1,c2=Duel.TossCoin(tp,2)
-	if c1+c2~=RESULT_HEADS+RESULT_HEADS then ct=0 end
-	Duel.AttackDamage(ct)
+	if c1+c2~=RESULT_HEADS+RESULT_HEADS then dam=0 end
+	Duel.AttackDamage(dam)
 end

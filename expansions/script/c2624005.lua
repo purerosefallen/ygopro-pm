@@ -21,8 +21,8 @@ function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(50)
 end
 function scard.damop2(e,tp,eg,ep,ev,re,r,rp)
-	local ct=80
-	if Duel.TossCoin(tp,1)==RESULT_HEADS then ct=ct+40 end
-	if ct>80 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	local dam=80
+	if Duel.TossCoin(tp,1)==RESULT_HEADS then dam=dam+40 end
+	if dam>80 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 end

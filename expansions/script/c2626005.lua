@@ -17,8 +17,8 @@ scard.weakness_x2=PM_ENERGY_METAL
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_WATER_ENERGY,3,CARD_COLORLESS_ENERGY,1)
 function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
-	local ct=e:GetHandler():GetAttachmentGroup():FilterCount(Card.IsEnergy,nil)
-	Duel.AttackDamage(30*ct)
+	local dam=e:GetHandler():GetAttachmentGroup():FilterCount(Card.IsEnergy,nil)
+	Duel.AttackDamage(30*dam)
 end
 function scard.damfilter(c)
 	return c:IsFaceup() and c:IsPokemon()

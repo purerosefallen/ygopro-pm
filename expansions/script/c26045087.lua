@@ -19,18 +19,18 @@ function scard.ddop1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.PokemonAttack(c,Duel.GetDefendingPokemon())
 	Duel.DiscardDeck(1-tp,5,REASON_EFFECT)
-	local ct=Duel.GetOperatedGroup():FilterCount(Card.IsEnergy,nil)
-	if ct==0 then return end
+	local dam=Duel.GetOperatedGroup():FilterCount(Card.IsEnergy,nil)
+	if dam==0 then return end
 	local dg=Duel.GetMatchingGroup(pm.BenchPokemonFilter,tp,0,PM_LOCATION_IN_PLAY,nil)
 	if dg:GetCount()==0 then return end
 	local tc=dg:GetFirst()
 	for tc in aux.Next(dg) do
-		Duel.EffectDamage(30*ct,c,tc,false,false)
+		Duel.EffectDamage(30*dam,c,tc,false,false)
 	end
 end
 function scard.ddop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.DiscardDeck(tp,5,REASON_EFFECT)
-	local ct=Duel.GetOperatedGroup():FilterCount(Card.IsEnergy,nil)
-	if ct==0 then return Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon()) end
-	Duel.AttackDamage(100*ct)
+	local dam=Duel.GetOperatedGroup():FilterCount(Card.IsEnergy,nil)
+	if dam==0 then return Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon()) end
+	Duel.AttackDamage(100*dam)
 end

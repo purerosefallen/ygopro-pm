@@ -40,7 +40,7 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 		if g:GetCount()==0 then return end
 		Duel.HintSelection(g)
 		local tc=g:GetFirst()
-		local ct=tc:GetCounter(PM_DAMAGE_COUNTER)
-		Duel.RemoveDamage(e,ct,tc)
+		local dam=tc:GetCounter(PM_DAMAGE_COUNTER)
+		Duel.RemoveDamage(e,dam,tc)
 	end
 end

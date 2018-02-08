@@ -27,8 +27,8 @@ function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(20,g)
 end
 function scard.damop2(e,tp,eg,ep,ev,re,r,rp)
-	local ct=60
-	if Duel.GetDefendingPokemon():IsSetCard(PM_SETNAME_TEAM_MAGMA) then ct=ct+60 end
-	if ct>60 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	local dam=60
+	if Duel.GetDefendingPokemon():IsSetCard(PM_SETNAME_TEAM_MAGMA) then dam=dam+60 end
+	if dam>60 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 end

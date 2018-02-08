@@ -12,10 +12,10 @@ scard.weakness_x2=PM_ENERGY_FIRE
 scard.resistance_20=PM_ENERGY_PSYCHIC
 scard.attack_cost=pm.econ2(CARD_METAL_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=0
+	local dam=0
 	repeat
 		local res=Duel.TossCoin(tp,1)
-		if res==RESULT_HEADS then ct=ct+1 end
+		if res==RESULT_HEADS then dam=dam+1 end
 	until res==RESULT_TAILS
-	Duel.AttackDamage(30*ct)
+	Duel.AttackDamage(30*dam)
 end

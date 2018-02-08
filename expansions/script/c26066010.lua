@@ -22,6 +22,6 @@ function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
 end
 function scard.damop2(e,tp,eg,ep,ev,re,r,rp)
 	local c1,c2,c3,c4=Duel.TossCoin(tp,4)
-	local ct=c1+c2+c3+c4
-	Duel.AttackDamage(40*ct)
+	local dam=c1+c2+c3+c4
+	Duel.AttackDamage(40*dam)
 end

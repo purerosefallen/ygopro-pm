@@ -14,10 +14,10 @@ scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,3)
 scard.attack_cost2=pm.econ1(CARD_COLORLESS_ENERGY,4)
 function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
-	local ct=10
-	if Duel.TossCoin(tp,1)==RESULT_HEADS then ct=ct+30 end
-	if ct>10 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	local dam=10
+	if Duel.TossCoin(tp,1)==RESULT_HEADS then dam=dam+30 end
+	if dam>10 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 end
 function scard.damop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(70)
