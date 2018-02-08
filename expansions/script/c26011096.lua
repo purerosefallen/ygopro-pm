@@ -27,6 +27,7 @@ function scard.retop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=sg:GetFirst()
 		if tc and not tc:IsAbleToRemoveEnergy() then return Duel.Hint(HINT_CARD,0,CARD_BROCKS_PROTECTION) end
 		Duel.SendtoHand(sg,PLAYER_OWNER,REASON_EFFECT)
+		Duel.ConfirmCards(tp,sg)
 	end
 	pm.EndTurn(e)
 end

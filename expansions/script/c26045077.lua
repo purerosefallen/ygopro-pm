@@ -18,6 +18,7 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:FilterSelect(tp,Card.IsAbleToHand,2,2,nil)
 		g:Sub(sg)
 		if sg:GetCount()>0 then
+			Duel.DisableShuffleCheck()
 			Duel.SendtoHand(sg,PLAYER_OWNER,REASON_EFFECT)
 			Duel.ShuffleHand(tp)
 		end

@@ -22,7 +22,6 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 		if sg:GetCount()>0 then
 			Duel.SendtoHand(sg,PLAYER_OWNER,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,sg)
-			Duel.ShuffleHand(tp)
 		end
 	else pm.SearchFailed(tp,tp) end
 end

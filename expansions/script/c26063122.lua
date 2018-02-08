@@ -19,6 +19,7 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	if sg:GetCount()>0 then
 		Duel.DisableShuffleCheck()
 		Duel.SendtoHand(sg,PLAYER_OWNER,REASON_EFFECT)
+		Duel.ShuffleHand(tp)
 	end
 	if g:GetCount()>0 then
 		Duel.DisableShuffleCheck()
