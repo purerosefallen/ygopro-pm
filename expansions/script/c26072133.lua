@@ -3,13 +3,13 @@ local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	--discard hand
-	pm.EnableTrainerPlay(c,nil,scard.hdtg,scard.hdop)
+	pm.EnableTrainerPlay(c,nil,scard.dhtg,scard.dhop)
 end
 scard.pokemon_card=true
-function scard.hdtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function scard.dhtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
 end
-function scard.hdop(e,tp,eg,ep,ev,re,r,rp)
+function scard.dhop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	if g:GetCount()<=0 then return end
 	Duel.ConfirmCards(tp,g)

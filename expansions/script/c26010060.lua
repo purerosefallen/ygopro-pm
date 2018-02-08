@@ -37,7 +37,7 @@ function scard.ptop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	local tc=g:GetFirst()
 	Duel.HintSelection(g)
-	Duel.Attach(tc,Group.FromCards(e:GetHandler()))
+	Duel.Attach(tc,e:GetHandler())
 	--register description
 	tc:RegisterFlagEffect(sid,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(sid,0))
 	tc:RegisterFlagEffect(sid+1,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(sid,1))
@@ -45,14 +45,14 @@ function scard.ptop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_ADJUST)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
-	e1:SetCondition(scard.resetcon)
-	e1:SetOperation(scard.resetop)
+	e1:SetCondition(scard.rscon)
+	e1:SetOperation(scard.rsop)
 	tc:RegisterEffect(e1)
 end
-function scard.resetcon(e)
+function scard.rscon(e)
 	return e:GetHandler():IsBench() and e:GetHandler():GetFlagEffect(sid)~=0 and e:GetHandler():GetFlagEffect(sid+1)~=0
 end
-function scard.resetop(e)
+function scard.rsop(e)
 	e:GetHandler():ResetFlagEffect(sid)
 	e:GetHandler():ResetFlagEffect(sid+1)
 end
