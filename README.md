@@ -23,7 +23,7 @@ In Yugioh terms:
 4. Begin the duel by drawing 7 cards, then place 1 "Basic Pokémon" monster from your hand in an extra monster zone face-down as your [Active Pokémon](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Active_Pok.C3.A9mon).<br>
 If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuffle it into the deck, then draw 7 cards. Repeat this until you have a "Basic Pokémon" monster in your hand.<br>
 5. Optional: Place any number of "Basic Pokémon" monsters from your hand in your main monster zones face-down as Pokémon on the [Bench](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Bench).<br>
-6. Set aside the top 6 cards of your deck as [Prize cards](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Prize_Card), then your life points become 6.<br>
+6. Set aside the top 6 cards of your deck as [Prize cards](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Prize_Card), then your life points become equal to the number of Prize cards you have.<br>
 7. Optional: Your opponent draws a number of cards, up to the number of times you shuffled your hand into the deck because you did not have a "Basic Pokémon" monster in your hand.<br>
 8. Flip all face-down cards on your field face-up.
 9. During your draw phase, draw 1 card, regardless if it is the first turn of the duel. If you cannot, you lose the duel. (There is no limit to the number of cards in your hand.)
@@ -54,9 +54,12 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 	- Pokémon with "Ancient Trait" in their text = `Monster + Spirit`
 	- Pokémon with "Poké-Power" in their text = `Monster + Effect + Union`
 	- Pokémon with "Poké-Body" in their text = `Monster + Effect + Continuous`
+	- Pokémon that are also "Prism Star" cards = `Monster + Gemini`
 - Trainer = `Spell`
 	- Stadium = `Spell + Field`
+	- Trainers that are also "Prism Star" cards = `Spell + Gemini`
 - Energy = `Trap`
+	- Energy that are also "Prism Star" cards = `Trap + Gemini`
 </details>
 <details>
 <summary>Attribute</summary>
@@ -128,7 +131,7 @@ Note - missing information. Text that appears on the card that is not essential 
 - Ability/Pokémon Power = [Monster effect](http://yugioh.wikia.com/wiki/Monster_effect)
 - Active Pokémon = `Monster in the Extra Monster Zone`
 - Ancient Trait = [Continuous effect](http://yugioh.wikia.com/wiki/Continuous_Effect) `[while that monster is in a Monster Zone or Spell & Trap Zone]`
-- Attach = `Attach a card to a monster as a material`
+- Attach = `Attach a card to a monster as a material`/`Stack a card on top of or underneath another card`
 - Attack = `During your Main Phase, if this card has [...] attached to it: You can activate this effect; (attack goes here)`
 - Benched Pokémon = `Monster in the Main Monster Zone [or card in the Spell & Trap Zone]`
 - Between-Turns Step = `End Phase`
@@ -150,8 +153,9 @@ Note - missing information. Text that appears on the card that is not essential 
 - Poké-Body = `Continuous monster effect [while that monster is in a Monster Zone or Spell & Trap Zone]`
 - Poké-Power = [Ignition](http://yugioh.wikia.com/wiki/Ignition_Effect) `monster effect`
 - Pokémon = `Monster`
-- Pokémon Legend = *Not yet implemented*
+- Pokémon Legend = `Cannot be Special Summoned, except if [...] is in your hand. (If this card is Special Summoned, stack [...] from your hand underneath this card.)`
 - Poison Marker = `Poison Counter`
+- Prism Star = `A card that is Limited`
 - Resistance = `If this card attacks a monster that has this card's Attribute listed in its "Resistance" text, this card does less damage to that monster, equal to its Resistance number`
 - Retreat = `Once per turn: You can switch the locations of 1 monster in your Extra Monster Zone with 1 monster in your Main Monster Zone [or Spell & Trap Zone as an extended Bench], by detaching "Energy" cards from the monster in the Extra Monster Zone equal to its Level`
 - Special Condition = `Continuous Effect` (["Asleep"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Asleep), ["Burned"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Burned), ["Confused"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Confused), ["Paralyzed"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Paralyzed) and ["Poisoned"](https://bulbapedia.bulbagarden.net/wiki/Special_Conditions_(TCG)#Poisoned))

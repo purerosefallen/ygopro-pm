@@ -15,6 +15,7 @@
 --[+Evolution]...............................................functions that are included on every Evolution card
 --[+Baby]....................................................functions that are included on every Baby Pokémon card
 --[+LVX].....................................................functions that are included on every Pokémon LV.X card
+--[+LEGEND]..................................................functions that are included on every Pokémon LEGEND card
 --[+Restored]................................................functions that are included on every Restored Pokémon card
 --[+Energy]..................................................functions that are included on every Energy card
 --[+Trainer].................................................functions that are included on every Trainer card
@@ -646,6 +647,10 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 		if tc~=d then ct=count end
 		tc:AddCounter(PM_DAMAGE_COUNTER,ct,PM_REASON_ATTACK)
 	end
+	--knock out
+	for tc in aux.Next(targets) do
+		if tc:GetHP()==0 then Duel.KnockOut(tc,PM_REASON_ATTACK) end
+	end
 end
 --put a damage counter on a pokémon due to a pokémon's effect
 function Duel.EffectDamage(count,c1,c2,weak,resist)
@@ -1180,7 +1185,6 @@ function Auxiliary.EnablePokemonAttribute(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetTargetRange(PM_POS_FACEUP_UPSIDE,0)
 	e1:SetCondition(Auxiliary.BenchCondition)
-	e1:SetValue(1)
 	c:RegisterEffect(e1)
 	--[[
 	local e2=Effect.CreateEffect(c)
@@ -1217,14 +1221,20 @@ end
 function Auxiliary.BenchCondition(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0 and c:IsBasicPokemon()
+	return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0 and (c:IsBasicPokemon() or c:IsPokemonLEGEND())
 end
 --[[
-function Auxiliary.BenchCondition2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsPlayerAffectedByEffect(tp,PM_EFFECT_EXTEND_BENCH_8)
+function Auxiliary.BenchCondition2(code)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				if not Duel.IsPlayerAffectedByEffect(tp,PM_EFFECT_EXTEND_BENCH_8) then return false end
+				local c=e:GetHandler()
+				if c:IsPokemonLEGEND() then return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_HAND,0,1,nil,code)
+				else return true end
+			end
 end
 function Auxiliary.BenchTarget(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+	local c=e:GetHandler()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and (c:IsBasicPokemon() or c:IsPokemonLEGEND()) end
 end
 function Auxiliary.BenchOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
@@ -1555,14 +1565,45 @@ function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	c:CopyEffect(code,RESET_EVENT+RESETS_STANDARD_DISABLE,1)
 end
 
---==========[+Restored]==========
---Restored Pokémon
-function Auxiliary.EnableRestoredAttribute(c)
+--==========[+LEGEND]==========
+--Pokémon LEGEND
+function Auxiliary.EnableRuleCannotPutInPlay(c,con_func)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(PM_EFFECT_PUT_IN_PLAY_CONDITION)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	if con_func then e1:SetValue(con_func) end
 	c:RegisterEffect(e1)
+end
+function Auxiliary.EnableLEGENDAttribute(c,code)
+	local code=code or c:GetOriginalCode()+1
+	Auxiliary.EnableRuleCannotPutInPlay(c,Auxiliary.LEGENDCondition(code))
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(PM_EVENT_PLAY_SUCCESS)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCondition(Auxiliary.LEGENDCondition(code))
+	e1:SetOperation(Auxiliary.LEGENDOperation(code))
+	c:RegisterEffect(e1)
+end
+function Auxiliary.LEGENDCondition(code)
+	return	function(e)
+				return Duel.IsExistingMatchingCard(Card.IsCode,e:GetHandlerPlayer(),LOCATION_HAND,0,1,nil,code)
+			end
+end
+function Auxiliary.LEGENDOperation(code)
+	return	function(e)
+				local c=e:GetHandler()
+				if not c:IsPokemonLEGEND() then return end
+				local tc=Duel.GetFirstMatchingCard(Card.IsCode,e:GetHandlerPlayer(),LOCATION_HAND,0,nil,code)
+				Duel.Attach(c,tc)
+			end
+end
+
+--==========[+Restored]==========
+--Restored Pokémon
+function Auxiliary.EnableRestoredAttribute(c)
+	Auxiliary.EnableRuleCannotPutInPlay(c)
 end
 
 --==========[+Energy]==========

@@ -373,7 +373,7 @@ function scard.hpval(e,c)
 end
 --knock out
 function scard.kofilter(c)
-	return c:IsFaceup() and c:IsPokemon() and c:GetHP()==0
+	return c:IsFaceup() and c:IsPokemon() and c:GetHP()==0 and not c:IsStatus(PM_STATUS_KNOCKED_OUT_CONFIRMED)
 end
 function scard.kocon(e)
 	return Duel.IsExistingMatchingCard(scard.kofilter,e:GetHandlerPlayer(),PM_LOCATION_IN_PLAY,PM_LOCATION_IN_PLAY,1,nil)
@@ -411,8 +411,8 @@ function scard.pricon(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(scard.thfilter,tp,PM_LOCATION_PRIZE,0,1,nil)
 end
 function scard.priop(e,tp,eg,ep,ev,re,r,rp)
-	local ec=eg:GetFirst()
 	local ct=1
+	local ec=eg:GetFirst()
 	if ec:IsPokemonex() or ec:IsPokemonLEGEND() or ec:IsPokemonEX() or ec:IsPokemonGX() then ct=2 end
 	local a=Duel.GetAttackingPokemon()
 	if ec:GetPreviousSequence()==SEQUENCE_EXTRA_MZONE and a:IsHasEffect(PM_EFFECT_EXTRA_PRIZE_KNOCKED_OUT) then ct=ct+1 end

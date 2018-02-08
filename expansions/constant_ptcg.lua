@@ -121,6 +121,16 @@ CARD_TYRUNT							=26061061	--"Fossil Researcher" (Furious Fists 92/111)
 CARD_ARCEUS							=26042094	--"Arceus LV.X" (Arceus AR1)
 --↑Pokémon LV.X
 CARD_MEWTWO							=26001010	--"Mewtwo LV.X" (Legends Awakened 144/146)
+--↑Pokémon LEGEND
+CARD_HO_OH_LEGEND					=26043111	--"Ho-Oh LEGEND" (HeartGold & SoulSilver 111/123) & (HeartGold & SoulSilver 112/123)
+CARD_LUGIA_LEGEND					=26043113	--"Lugia LEGEND" (HeartGold & SoulSilver 113/123) & (HeartGold & SoulSilver 114/123)
+CARD_ENTEI_AND_RAIKOU_LEGEND		=26044090	--"Entei & Raikou LEGEND" (Unleashed 90/95) & (Unleashed 91/95)
+CARD_RAIKOU_AND_SUICUNE_LEGEND		=26044092	--"Raikou & Suicune LEGEND" (Unleashed 92/95) & (Unleashed 93/95)
+CARD_SUICUNE_AND_ENTEI_LEGEND		=26044094	--"Suicune & Entei LEGEND" (Unleashed 94/95) & (Unleashed 95/95)
+CARD_KYOGRE_AND_GROUDON_LEGEND		=26045087	--"Kyogre & Groudon LEGEND" (Undaunted 87/90) & (Undaunted 88/90)
+CARD_RAYQUAZA_AND_DEOXYS_LEGEND		=26045089	--"Rayquaza & Deoxys LEGEND" (Undaunted 89/90) & (Undaunted 90/90)
+CARD_DARKRAI_AND_CRESSELIA_LEGEND	=26046099	--"Darkrai & Cresselia LEGEND" (Triumphant 99/102) & (Triumphant 100/102)
+CARD_PALKIA_AND_DIALGA_LEGEND		=26046101	--"Palkia & Dialga LEGEND" (Triumphant 101/102) & (Triumphant 102/102)
 --↑Pokémon GX
 CARD_SNORLAX_GX						=2629005	--"Pokemon Rules"
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
@@ -250,14 +260,14 @@ PM_ENERGY_COLORLESS					=0x100			--???
 PM_ENERGY_FAIRY						=0x200			--???
 PM_ENERGY_DRAGON					=0x400			--???
 --Reason
-PM_REASON_KNOCKED_OUT				=REASON_DESTROY				--Knocked Out=Destroy
-PM_REASON_ATTACK					=REASON_EFFECT+0x20000000	--Put damage counters on a card by an attack
+PM_REASON_ATTACK					=REASON_DESTROY	--Put damage counters on a Pokémon by an attack and Knock Out it out if its HP is 0
 --Summon Type
 PM_SUMMON_TYPE_EVOLVE				=SUMMON_TYPE_XYZ	--Evolve=Xyz
 PM_SUMMON_TYPE_LEVELUP				=0x4d000000			--Pokémon LV.X
 --Status
-PM_STATUS_NO_RETREAT_COST			=STATUS_NO_LEVEL		--Pokémon with no Retreat Cost
-PM_STATUS_PLAY_TURN					=STATUS_SPSUMMON_TURN	--Pokémon that was played during the current turn
+PM_STATUS_NO_RETREAT_COST			=STATUS_NO_LEVEL			--Pokémon with no Retreat Cost
+PM_STATUS_KNOCKED_OUT_CONFIRMED		=STATUS_DESTROY_CONFIRMED	--Pokémon that is Knocked Out
+PM_STATUS_PLAY_TURN					=STATUS_SPSUMMON_TURN		--Pokémon that was played during the current turn
 --Player
 PLAYER_OWNER						=nil	--player=PLAYER_OWNER in Duel.Sendto..(targets, player, reason)
 PLAYER_PLAYER						=0		--player=PLAYER_PLAYER in Effect.SetCondition(Auxiliary.turnpcon(player)), etc.
@@ -405,12 +415,13 @@ PM_EFFECT_IMMUNE_ATTACK_EFFECT		=721	--"Arceus" (Arceus AR9)
 PM_EFFECT_IMMUNE_ATTACK_DAMAGE		=722	--"Arceus" (Arceus AR9)
 PM_EFFECT_IMMUNE_ATTACK_POKEMONLVX	=723	--"Arceus" (Arceus AR9)
 PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED	=724	--"Mewtwo LV.X" (Legends Awakened 144/146)
-PM_EFFECT_RESTRICT_ACE_SPEC			=725	--"Computer Search" (Boundaries Crossed 137/149)
-PM_EFFECT_CANNOT_ATTACK				=726	--"Haxorus" (Noble Victories 88/101)
-PM_EFFECT_EXTEND_BENCH_8			=727	--"Sky Field" (Roaring Skies 89/108)
-PM_EFFECT_DAMAGE_ATTACK_REDUCE_20	=728	--"Chesnaught" (BREAKthrough 11/162)
-PM_EFFECT_DAMAGE_ATTACK_REDUCE_30	=729	--"Mewtwo-EX" (BREAKthrough 61/162)
-PM_EFFECT_ASLEEP_TOSS_2_COIN		=730	--"Darkrai Prism Star" (Ultra Prism 77/156)
+PM_EFFECT_EXTRA_PRIZE_KNOCKED_OUT	=725	--"Rayquaza & Deoxys LEGEND" (Undaunted 89/90)
+PM_EFFECT_RESTRICT_ACE_SPEC			=726	--"Computer Search" (Boundaries Crossed 137/149)
+PM_EFFECT_CANNOT_ATTACK				=727	--"Haxorus" (Noble Victories 88/101)
+PM_EFFECT_EXTEND_BENCH_8			=728	--"Sky Field" (Roaring Skies 89/108)
+PM_EFFECT_DAMAGE_ATTACK_REDUCE_20	=729	--"Chesnaught" (BREAKthrough 11/162)
+PM_EFFECT_DAMAGE_ATTACK_REDUCE_30	=730	--"Mewtwo-EX" (BREAKthrough 61/162)
+PM_EFFECT_ASLEEP_TOSS_2_COIN		=731	--"Darkrai Prism Star" (Ultra Prism 77/156)
 --Abilities that activate or actions that occur at the appropriate event
 PM_EVENT_TO_DISCARDPILE				=EVENT_TO_GRAVE			--When a card is put into the discard pile
 PM_EVENT_LEAVE_PLAY					=EVENT_LEAVE_FIELD		--When a card leaves play
@@ -534,6 +545,7 @@ PM_HINTMSG_TODECK					=aux.Stringid(PM_STRING_HINTMSG8,11)	--"Select a card to s
 PM_HINTMSG_TODECKTOP				=aux.Stringid(PM_STRING_HINTMSG8,12)	--"Select a card to put on top of the deck."
 PM_HINTMSG_TODECKBOT				=aux.Stringid(PM_STRING_HINTMSG8,13)	--"Select a card to put on the bottom of the deck."
 PM_HINTMSG_TODISCARD				=aux.Stringid(PM_STRING_HINTMSG8,14)	--"Select a card to put into the discard pile."
+PM_HINTMSG_TOLZONE					=aux.Stringid(PM_STRING_HINTMSG8,15)	--"Select a card to put in the Lost Zone."
 --Question Hint Message
 PM_QHINTMSG_DRAW					=aux.Stringid(PM_STRING_QHINTMSG,0)		--"Would you like to draw a card?"
 --Select Message
