@@ -15,8 +15,8 @@ local PTCG={}
 CARD_PTCG_RULES						=26000000	--Unofficial card (Pokemon Rules)
 CARD_GX_MARKER						=26000999	--Unofficial card (GX Marker)
 --↑String
-PM_STRING_WIN						=26000001	--Win
-PM_STRING_GAME						=26000002	--Game Progress
+PM_STRING_DECK						=26000001	--Deck Message
+PM_STRING_GAME						=26000002	--Game Message
 PM_STRING_CONDITION					=26000003	--Special Condition
 PM_STRING_DESC						=26000004	--Action
 PM_STRING_HINTMSG					=26000005	--Hint Message (Pokémon)
@@ -119,7 +119,7 @@ CARD_AMAURA							=26061025	--"Fossil Researcher" (Furious Fists 92/111)
 CARD_TYRUNT							=26061061	--"Fossil Researcher" (Furious Fists 92/111)
 --↑You may have as many of the following cards in your deck as you like
 CARD_ARCEUS							=26042094	--"Arceus LV.X" (Arceus AR1)
---↑Pokémon LV.X
+--↑Pokémon that can Level Up
 CARD_MEWTWO							=26001010	--"Mewtwo LV.X" (Legends Awakened 144/146)
 --↑Pokémon LEGEND
 CARD_HO_OH_LEGEND					=26043111	--"Ho-Oh LEGEND" (HeartGold & SoulSilver 111/123) & (HeartGold & SoulSilver 112/123)
@@ -164,7 +164,6 @@ PM_LOCATION_ACTIVE_POKEMON			=LOCATION_MZONE		--Location for Active Pokémon
 PM_LOCATION_BENCH					=LOCATION_MZONE		--Location for Benched Pokémon
 PM_LOCATION_BENCH_EXTENDED			=LOCATION_SZONE		--Location for Pokémon on an extended Bench
 PM_LOCATION_IN_PLAY					=LOCATION_MZONE+LOCATION_SZONE	--Location for Active and Benched Pokémon
-PM_LOCATION_ADJACENT_ACTIVE_POKEMON	=LOCATION_SZONE		--Location for Trainer cards that temporarily stay in play
 PM_LOCATION_DISCARD_PILE			=LOCATION_GRAVE		--Location for cards taken out of play
 PM_LOCATION_PRIZE_CARDS				=LOCATION_REMOVED	--Location for Prize cards
 PM_LOCATION_LOST_ZONE				=LOCATION_REMOVED	--Location for cards no longer playable
@@ -263,7 +262,7 @@ PM_ENERGY_DRAGON					=0x400			--???
 PM_REASON_ATTACK					=REASON_DESTROY	--Put damage counters on a Pokémon by an attack and Knock Out it out if its HP is 0
 --Summon Type
 PM_SUMMON_TYPE_EVOLVE				=SUMMON_TYPE_XYZ	--Evolve=Xyz
-PM_SUMMON_TYPE_LEVELUP				=0x4d000000			--Pokémon LV.X
+PM_SUMMON_TYPE_LEVEL_UP				=0x4d000000			--Pokémon LV.X
 --Status
 PM_STATUS_NO_RETREAT_COST			=STATUS_NO_LEVEL			--Pokémon with no Retreat Cost
 PM_STATUS_KNOCKED_OUT_CONFIRMED		=STATUS_DESTROY_CONFIRMED	--Pokémon that is Knocked Out
@@ -281,7 +280,7 @@ RESETS_STANDARD_DISCONTROL			=0x3ff0000	--0x1ff0000+RESET_CONTROL
 PM_EFFECT_TYPE_PLAY					=EFFECT_TYPE_ACTIVATE		--Trainer cards that a player can play each turn
 PM_EFFECT_TYPE_ATTACHED_TRAINER		=EFFECT_TYPE_XMATERIAL		--Trainer cards that give Pokémon attacks or effects
 --Flags
-PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included in Auxiliary.EnablePokemonAttribute
+PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included on all Pokémon that can be put onto the Bench
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x10000000					--Included on all Pokémon attacks
 PM_EFFECT_FLAG_GX_ATTACK			=0x20000000					--Included on all GX attacks
 --Codes
@@ -435,20 +434,23 @@ PM_EVENT_ADD_COUNTER				=EVENT_ADD_COUNTER		--When a counter/marker is put on a 
 PM_CATEGORY_TOHAND					=CATEGORY_TOHAND	--"Pokémon Tower" (Black Star Promo Wizards of the Coast 42)
 PM_CATEGORY_ASLEEP_ATTACK			=CATEGORY_ANNOUNCE	--"Snorlax-GX" (Black Star Promo SM05)
 --Descriptions
---↑Win (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)
-PM_DESC_INVALID						=aux.Stringid(PM_STRING_WIN,0)	--"Invalid deck!"
-PM_DESC_KNOCKOUT					=aux.Stringid(PM_STRING_WIN,1)	--"No more Pokémon left in play!"
-PM_DESC_PRIZE						=aux.Stringid(PM_STRING_WIN,2)	--"Collected all the Prize cards!"
-PM_DESC_LOST_WORLD					=aux.Stringid(PM_STRING_WIN,3)	--"Once during each player's turn, if that player's opponent has 6 or more Pokémon in the Lost Zone, the player may choose to win the game."
-PM_DESC_SLOWBRO						=aux.Stringid(PM_STRING_WIN,4)	--"If you use this attack when you have only 1 Prize card left, you win this game."
---↑Game Progress (Reserved: Can be used as HINT_OPSELECTED or HINT_MESSAGE with Duel.Hint)
-PM_DESC_MULLIGAN					=aux.Stringid(PM_STRING_GAME,0)	--"Your opening hand has no Basic Pokémon. Select OK to take a mulligan."
-PM_DESC_MULLIGAN_WARN				=aux.Stringid(PM_STRING_GAME,1)	--"Your opponent had no Basic Pokémon in their hand and will redraw after you play your starting Pokémon."
-PM_DESC_EMPTY_BENCH					=aux.Stringid(PM_STRING_GAME,2)	--"You have no additional Basic Pokémon to start on your Bench. Select OK to continue."
-PM_DESC_SUDDEN_DEATH				=aux.Stringid(PM_STRING_GAME,3)	--"Sudden Death"
-PM_DESC_DAMAGE_INCREASE				=aux.Stringid(PM_STRING_GAME,4)	--"Damage Increased"
-PM_DESC_DAMAGE_DECREASE				=aux.Stringid(PM_STRING_GAME,5)	--"Damage Decreased"
-PM_DESC_NO_TARGETS					=aux.Stringid(PM_STRING_GAME,6)	--"Sorry, there are no valid targets to select. Click OK to continue."
+--↑Deck Message
+PM_DESC_INVALID_SIZE				=aux.Stringid(PM_STRING_DECK,0)			--"Your deck must be exactly 60 cards! Click OK to continue."
+PM_DESC_INVALID_POKEMON				=aux.Stringid(PM_STRING_DECK,1)			--"You are not allowed to have non-Pokémon cards in your deck! Click OK to continue."
+PM_DESC_INVALID_BASIC				=aux.Stringid(PM_STRING_DECK,2)			--"You need at least 1 Basic Pokémon in your deck! Click OK to continue."
+PM_DESC_INVALID_MIRACLE				=aux.Stringid(PM_STRING_DECK,3)			--"You can't have more than 1 [Miracle Energy] in your deck! Click OK to continue."
+PM_DESC_INVALID_STAR				=aux.Stringid(PM_STRING_DECK,4)			--"You can't have more than 1 Pokémon Star card in your deck! Click OK to continue."
+PM_DESC_INVALID_ACE_SPEC			=aux.Stringid(PM_STRING_DECK,5)			--"You can't have more than 1 ACE SPEC card in your deck! Click OK to continue."			
+PM_DESC_INVALID_LEGEND				=aux.Stringid(PM_STRING_DECK,6)			--"You can't have more than 4 total halves of each Pokémon LEGEND in your deck! Click OK to continue."
+PM_DESC_INVALID_CLONE				=aux.Stringid(PM_STRING_DECK,7)			--"You can't have both [Professor Juniper] and [Professor Sycamore] in your deck! Click OK to continue."
+--↑Game Message
+--PM_DESC_MULLIGAN					=aux.Stringid(PM_STRING_GAME,0)			--RESERVED: "Your opening hand has no Basic Pokémon. Click OK to take a mulligan."
+--PM_DESC_MULLIGAN_WARN				=aux.Stringid(PM_STRING_GAME,1)			--RESERVED: "Your opponent had no Basic Pokémon in their hand and will redraw after you play your starting Pokémon. Click OK to continue."
+--PM_DESC_EMPTY_BENCH					=aux.Stringid(PM_STRING_GAME,2)			--RESERVED: "You have no additional Basic Pokémon to start on your Bench. Click OK to continue."
+PM_DESC_SUDDEN_DEATH				=aux.Stringid(PM_STRING_GAME,3)			--"The game has ended in a Sudden Death. Click OK to play a new game."
+PM_DESC_DAMAGE_INCREASE				=aux.Stringid(PM_STRING_GAME,4)			--"Damage Increased"
+PM_DESC_DAMAGE_DECREASE				=aux.Stringid(PM_STRING_GAME,5)			--"Damage Decreased"
+PM_DESC_NO_TARGETS					=aux.Stringid(PM_STRING_GAME,6)			--"Sorry, there are no valid targets to select. Click OK to continue."
 --↑Special Condition
 PM_DESC_ASLEEP						=aux.Stringid(PM_STRING_CONDITION,0)	--"This Pokémon is Asleep."
 PM_DESC_ASLEEP_DESC					=aux.Stringid(PM_STRING_CONDITION,1)	--"While Asleep, a Pokémon cannot attack or retreat."
@@ -474,7 +476,6 @@ PM_DESC_ATTACH_TRAINER				=aux.Stringid(PM_STRING_DESC,4)			--"Attach the Traine
 PM_DESC_TECH_MACHINE				=aux.Stringid(PM_STRING_DESC,5)			--"Attach the Technical Machine to your Pokémon."
 PM_DESC_TOOL						=aux.Stringid(PM_STRING_DESC,6)			--"Attach the Pokémon Tool to your Pokémon."
 PM_DESC_SELF_DISCARD				=aux.Stringid(PM_STRING_DESC,7)			--"Discard this card."
-PM_DESC_SELF_DETACH					=aux.Stringid(PM_STRING_DESC,8)			--"Detach this card."
 --Hint Message
 PM_HINTMSG_CARD						=aux.Stringid(PM_STRING_HINTMSG,0)		--"Select a card."
 PM_HINTMSG_POKEMON					=aux.Stringid(PM_STRING_HINTMSG,1)		--"Select a Pokémon."

@@ -34,7 +34,6 @@ local PTCG=require "expansions.constant_ptcg"
 PM_LOCATION_ACTIVE=PM_LOCATION_ACTIVE_POKEMON
 PM_LOCATION_DPILE=PM_LOCATION_DISCARD_PILE
 PM_LOCATION_PRIZE=PM_LOCATION_PRIZE_CARDS
-PM_LOCATION_ADJACENT_ACTIVE=PM_LOCATION_ADJACENT_ACTIVE_POKEMON
 PM_LOCATION_LOST=PM_LOCATION_LOST_ZONE
 PM_EFFECT_TO_DPILE_REDIRECT=PM_EFFECT_TO_DISCARD_PILE_REDIRECT
 PM_EFFECT_UPDATE_HP=PM_EFFECT_UPDATE_HIT_POINTS
@@ -297,8 +296,8 @@ function Card.IsDoubleColorlessEnergy(c)
 end
 --check if a card can only have one copy of itself in a player's deck
 function Card.IsHasDeckRestriction(c)
-	return c:IsHasEffect(PM_EFFECT_RESTRICT_MIRACLE_ENERGY) or c:IsHasEffect(PM_EFFECT_RESTRICT_ACE_SPEC)
-		or c:IsHasEffect(PM_EFFECT_RESTRICT_POKEMON_STAR) --update with new effects here
+	return c:IsHasEffect(PM_EFFECT_RESTRICT_MIRACLE_ENERGY) or c:IsHasEffect(PM_EFFECT_RESTRICT_POKEMON_STAR)
+		or c:IsHasEffect(PM_EFFECT_RESTRICT_ACE_SPEC)--update with new effects here
 end
 --get the cards attached to a card
 Card.GetAttachmentGroup=Card.GetOverlayGroup
@@ -506,7 +505,7 @@ function Duel.IsPlayerCanDraw(player,count)
 end
 --set aside a card face-down
 Duel.SetAside=Duel.Remove
---put a card into the lost zone
+--put a card in the lost zone
 Duel.SendtoLost=Duel.Remove
 --knock out a pokémon
 Duel.KnockOut=Duel.Destroy
@@ -695,6 +694,7 @@ function Duel.EffectDamage(count,c1,c2,weak,resist)
 	--apply effects after weakness & resistance
 	--reserved
 	local turnp=Duel.GetTurnPlayer()
+	if ct<=0 then return end
 	if ct>count and c2==d then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_INCREASE)
 	elseif ct<count and c2==d then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
 	c2:AddCounter(PM_DAMAGE_COUNTER,ct)
@@ -1151,6 +1151,7 @@ function Auxiliary.RuleCannotSSet(c)
 	c:RegisterEffect(e1)
 end
 --adjust extra deck
+--temporary workaround
 function Auxiliary.RuleAdjustExtraDeck(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -1516,7 +1517,7 @@ function Auxiliary.LVXTarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,PM_LOCATION_ACTIVE)>-1
 		and Duel.IsExistingMatchingCard(Auxiliary.LVXFilter,tp,PM_LOCATION_ACTIVE,0,1,nil,c:GetCode())
-		and c:IsCanBePutInPlay(e,PM_SUMMON_TYPE_LEVELUP,tp,false,false) end
+		and c:IsCanBePutInPlay(e,PM_SUMMON_TYPE_LEVEL_UP,tp,false,false) end
 end
 function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -1546,7 +1547,7 @@ function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	end
 	c:SetAttachment(g)
 	Duel.LevelUp(c,g)
-	Duel.PutInPlay(c,PM_SUMMON_TYPE_LEVELUP,tp,tp,false,false,PM_POS_FACEUP_UPSIDE)
+	Duel.PutInPlay(c,PM_SUMMON_TYPE_LEVEL_UP,tp,tp,false,false,PM_POS_FACEUP_UPSIDE)
 	--retain sequence
 	if c:GetSequence()~=seq then Duel.MoveSequence(c,seq) end
 	--retain counters
@@ -1609,6 +1610,7 @@ end
 --==========[+Energy]==========
 --Energy card
 function Auxiliary.EnableEnergyAttribute(c,setname,discard)
+	--setname: include setname if the energy can only be attached to a setname pokémon
 	--discard: true to discard at the end of the turn
 	local discard=discard or false
 	local e1=Effect.CreateEffect(c)
@@ -1988,7 +1990,7 @@ function Auxiliary.EnableDoubleEnergy(c,val)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
---"You can't have more than 1 Miracle Energy card in your deck." (e.g. "Miracle Energy N4 16")
+--"You can't have more than 1 ... card in your deck." (e.g. "Miracle Energy N4 16")
 function Auxiliary.EnableDeckRestriction(c,code,con_func)
 	--code: PM_EFFECT_RESTRICT_MIRACLE_ENERGY, PM_EFFECT_RESTRICT_ACE_SPEC or PM_EFFECT_RESTRICT_POKEMON_STAR
 	local e1=Effect.CreateEffect(c)
@@ -2159,7 +2161,7 @@ function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq,ignore_cannot_
 			end
 end
 Auxiliary.devop=Auxiliary.EffectDevolveOperation
---"The Retreat Cost for each [P] and [D] Pokémon is 0." (e.g. "Moonlight Stadium GE 100")
+--"The Retreat Cost for each ... Pokémon is 0." (e.g. "Moonlight Stadium GE 100")
 function Auxiliary.EnableNoRetreatCost(c,range,s_range,o_range,targ_func,con_func)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -2170,7 +2172,7 @@ function Auxiliary.EnableNoRetreatCost(c,range,s_range,o_range,targ_func,con_fun
 	if con_func then e1:SetCondition(con_func) end
 	c:RegisterEffect(e1)
 end
---"The Retreat Cost of each Basic Pokémon in play is [C] less." (e.g. "Skyarrow Bridge NXD 91")
+--"The Retreat Cost of each ... Pokémon in play is [C] less." (e.g. "Skyarrow Bridge NXD 91")
 function Auxiliary.EnableRetreatCostChange(c,val,range,s_range,o_range,targ_func,con_func)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)

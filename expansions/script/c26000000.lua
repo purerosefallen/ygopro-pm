@@ -202,10 +202,24 @@ function scard.initial_effect(c)
 end
 scard.pokemon_card=true
 --apply
-function scard.filter(c)
+function scard.npfilter(c)
 	return not c.pokemon_card
 end
-function scard.filter2(c)
+function scard.legfilter1(c,tp)
+	local code=c:GetOriginalCode()
+	return Duel.IsExistingMatchingCard(scard.legfilter2,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,code)
+end
+function scard.legfilter2(c,code)
+	return c:IsPokemonLEGEND() and c.legend_top_half==code
+end
+function scard.legfilter3(c,tp)
+	local code=c:GetOriginalCode()
+	return Duel.IsExistingMatchingCard(scard.legfilter4,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,code)
+end
+function scard.legfilter4(c,code)
+	return c:IsPokemonLEGEND() and c.legend_bottom_half==code
+end
+function scard.clfilter(c)
 	return c.clone
 end
 function scard.condition(e)
@@ -233,29 +247,16 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(gx2,POS_FACEUP,REASON_RULE)
 		Duel.SendtoExtraP(gx2,1-tp,REASON_RULE)
 	else
-		local rules=Duel.CreateToken(1-tp,sid)
-		Duel.Remove(rules,POS_FACEUP,REASON_RULE)
-		Duel.SendtoExtraP(rules,1-tp,REASON_RULE)
+		local rule=Duel.CreateToken(1-tp,sid)
+		Duel.Remove(rule,POS_FACEUP,REASON_RULE)
+		Duel.SendtoExtraP(rule,1-tp,REASON_RULE)
 		local gx2=Duel.CreateToken(1-tp,CARD_GX_MARKER)
 		Duel.Remove(gx2,POS_FACEUP,REASON_RULE)
 		Duel.SendtoExtraP(gx2,1-tp,REASON_RULE)
 	end
-	--check for non-pokémon cards
-	local g1=Duel.GetMatchingGroup(scard.filter,tp,LOCATIONS_ALL,0,nil)
-	local g2=Duel.GetMatchingGroup(scard.filter,tp,0,LOCATIONS_ALL,nil)
-	--check for basic pokémon
-	local g3=Duel.GetMatchingGroup(Card.IsBasicPokemon,tp,LOCATION_HAND+LOCATION_DECK,0,nil)
-	local g4=Duel.GetMatchingGroup(Card.IsBasicPokemon,tp,0,LOCATION_HAND+LOCATION_DECK,nil)
-	--check for restricted cards
-	local g5=Duel.GetMatchingGroup(Card.IsHasDeckRestriction,tp,LOCATION_HAND+LOCATION_DECK,0,nil)
-	local g6=Duel.GetMatchingGroup(Card.IsHasDeckRestriction,tp,0,LOCATION_HAND+LOCATION_DECK,nil)
-	--check for cloned cards
-	local g7=Duel.GetMatchingGroup(scard.filter2,tp,LOCATIONS_ALL,0,nil)
-	local g8=Duel.GetMatchingGroup(scard.filter2,tp,0,LOCATIONS_ALL,nil)
-	--check deck size
-	local dg1=Duel.GetMatchingGroup(nil,tp,LOCATION_HAND+LOCATION_DECK,0,nil)
-	local dg2=Duel.GetMatchingGroup(nil,tp,0,LOCATION_HAND+LOCATION_DECK,nil)
 	--create group for sudden death
+	local dg1=Duel.GetFieldGroup(tp,LOCATION_HAND+LOCATION_DECK,0)
+	local dg2=Duel.GetFieldGroup(tp,0,LOCATION_HAND+LOCATION_DECK)
 	local sdg=Group.CreateGroup()
 	sdg:Merge(dg1)
 	sdg:Merge(dg2)
@@ -263,18 +264,55 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 	for sdc in aux.Next(sdg) do
 		sdc:RegisterFlagEffect(PM_EFFECT_SUDDEN_DEATH_CHECK,0,0,0)
 	end
-	if (g1:GetCount()>0 and g2:GetCount()>0) or (g3:GetCount()==0 and g4:GetCount()==0)
-		or (g5:GetCount()>1 and g6:GetCount()>1) or (g7:GetClassCount(Card.GetCode)>=2 and g8:GetClassCount(Card.GetCode)>=2)
-		or (dg1:GetCount()~=60 and dg2:GetCount()~=60) then
+	--check deck size
+	local deck1=dg1:GetCount()
+	local deck2=dg2:GetCount()
+	--check for non-pokémon cards
+	local np1=Duel.GetMatchingGroupCount(scard.npfilter,tp,LOCATIONS_ALL,0,nil)
+	local np2=Duel.GetMatchingGroupCount(scard.npfilter,tp,0,LOCATIONS_ALL,nil)
+	--check for basic pokémon
+	local bp1=Duel.GetMatchingGroupCount(Card.IsBasicPokemon,tp,LOCATION_HAND+LOCATION_DECK,0,nil)
+	local bp2=Duel.GetMatchingGroupCount(Card.IsBasicPokemon,tp,0,LOCATION_HAND+LOCATION_DECK,nil)
+	--check for restricted cards
+	local me1=Duel.GetMatchingGroupCount(Card.IsHasEffect,tp,LOCATION_HAND+LOCATION_DECK,0,nil,PM_EFFECT_RESTRICT_MIRACLE_ENERGY)
+	local me2=Duel.GetMatchingGroupCount(Card.IsHasEffect,tp,0,LOCATION_HAND+LOCATION_DECK,nil,PM_EFFECT_RESTRICT_MIRACLE_ENERGY)
+	local ps1=Duel.GetMatchingGroupCount(Card.IsHasEffect,tp,LOCATION_HAND+LOCATION_DECK,0,nil,PM_EFFECT_RESTRICT_POKEMON_STAR)
+	local ps2=Duel.GetMatchingGroupCount(Card.IsHasEffect,tp,0,LOCATION_HAND+LOCATION_DECK,nil,PM_EFFECT_RESTRICT_POKEMON_STAR)
+	local ap1=Duel.GetMatchingGroupCount(Card.IsHasEffect,tp,LOCATION_HAND+LOCATION_DECK,0,nil,PM_EFFECT_RESTRICT_ACE_SPEC)
+	local ap2=Duel.GetMatchingGroupCount(Card.IsHasEffect,tp,0,LOCATION_HAND+LOCATION_DECK,nil,PM_EFFECT_RESTRICT_ACE_SPEC)
+	--check for pokémon legend
+	local lp1=Duel.GetMatchingGroupCount(scard.legfilter1,tp,LOCATION_HAND+LOCATION_DECK,0,nil,tp)
+	local lp2=Duel.GetMatchingGroupCount(scard.legfilter3,tp,LOCATION_HAND+LOCATION_DECK,0,nil,tp)
+	local lp3=Duel.GetMatchingGroupCount(scard.legfilter1,tp,0,LOCATION_HAND+LOCATION_DECK,nil,tp)
+	local lp4=Duel.GetMatchingGroupCount(scard.legfilter3,tp,0,LOCATION_HAND+LOCATION_DECK,nil,tp)
+	--check for clone cards
+	local cl1=Duel.GetMatchingGroup(scard.clfilter,tp,LOCATIONS_ALL,0,nil):GetClassCount(Card.GetCode)
+	local cl2=Duel.GetMatchingGroup(scard.clfilter,tp,0,LOCATIONS_ALL,nil):GetClassCount(Card.GetCode)
+	if deck1~=60 then Duel.Hint(HINT_MESSAGE,tp,PM_DESC_INVALID_SIZE) end
+	if deck2~=60 then Duel.Hint(HINT_MESSAGE,1-tp,PM_DESC_INVALID_SIZE) end
+	if np1>0 then Duel.Hint(HINT_MESSAGE,tp,PM_DESC_INVALID_POKEMON) end
+	if np2>0 then Duel.Hint(HINT_MESSAGE,1-tp,PM_DESC_INVALID_POKEMON) end
+	if bp1==0 then Duel.Hint(HINT_MESSAGE,tp,PM_DESC_INVALID_BASIC) end
+	if bp2==0 then Duel.Hint(HINT_MESSAGE,1-tp,PM_DESC_INVALID_BASIC) end
+	if me1>1 then Duel.Hint(HINT_MESSAGE,tp,PM_DESC_INVALID_MIRACLE) end
+	if me2>1 then Duel.Hint(HINT_MESSAGE,1-tp,PM_DESC_INVALID_MIRACLE) end
+	if ps1>1 then Duel.Hint(HINT_MESSAGE,tp,PM_DESC_INVALID_STAR) end
+	if ps2>1 then Duel.Hint(HINT_MESSAGE,1-tp,PM_DESC_INVALID_STAR) end
+	if ap1>1 then Duel.Hint(HINT_MESSAGE,tp,PM_DESC_INVALID_ACE_SPEC) end
+	if ap2>1 then Duel.Hint(HINT_MESSAGE,1-tp,PM_DESC_INVALID_ACE_SPEC) end
+	if lp1+lp2>4 then Duel.Hint(HINT_MESSAGE,tp,PM_DESC_INVALID_LEGEND) end
+	if lp3+lp4>4 then Duel.Hint(HINT_MESSAGE,1-tp,PM_DESC_INVALID_LEGEND) end
+	if cl1>1 then Duel.Hint(HINT_MESSAGE,tp,PM_DESC_INVALID_CLONE) end
+	if cl2>1 then Duel.Hint(HINT_MESSAGE,1-tp,PM_DESC_INVALID_CLONE) end
+	if (deck1~=60 and deck2~=60) or (np1>0 and np2>0) or (bp1==0 and bp2==0) or (me1>1 and me2>1) or (ps1>1 and ps2>1)
+		or (ap1>1 and ps2>1) or (lp1+lp2>4 and lp3+lp4>4) or (cl1>1 and cl2>1) then
 		Duel.Win(1-tp,PM_WIN_REASON_INVALID)
 		Duel.Win(tp,PM_WIN_REASON_INVALID)
 		return
-	elseif g1:GetCount()>0 or g3:GetCount()==0 or g5:GetCount()>1 or g7:GetClassCount(Card.GetCode)>=2
-		or dg1:GetCount()~=60 then
+	elseif deck1~=60 or np1>0 or bp1==0 or me1>1 or ps1>1 or ap1>1 or lp1+lp2>4 or cl1>1 then
 		Duel.Win(1-tp,PM_WIN_REASON_INVALID)
 		return
-	elseif g2:GetCount()>0 or g4:GetCount()==0 or g6:GetCount()>1 or g8:GetClassCount(Card.GetCode)>=2
-		or dg2:GetCount()~=60 then
+	elseif deck2~=60 or np2>0 or bp2==0 or me2>1 or ps2>1 or ap2>1 or lp3+lp4>4 or cl2>1 then
 		Duel.Win(tp,PM_WIN_REASON_INVALID)
 		return
 	end
@@ -288,6 +326,7 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 	scard.play_bench_pokemon(e,tp,tp)
 	scard.play_bench_pokemon(e,tp,1-tp)
 	--set prize cards
+	local turnp=Duel.GetTurnPlayer()
 	local pg1=Duel.GetDecktopGroup(tp,6)
 	Duel.SendtoPrize(e,pg1,turnp,REASON_RULE)
 	local pg2=Duel.GetDecktopGroup(1-tp,6)

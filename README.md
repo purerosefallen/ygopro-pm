@@ -16,10 +16,16 @@
 In Yugioh terms:
 1. Start YGOPro.
 2. Optional: Disable `Auto chain order` in the Settings tab in Deck Editor. If the option is enabled, always choose the chain order from left to right.
-3. Make a main deck of exactly 60 cards:<br>
-	-All 60 cards must be Pokémon cards. If there is at least 1 non-Pokémon card in your deck, you will lose the duel.<br>
-	-There must be at least 1 "[Basic Pokémon](https://bulbapedia.bulbagarden.net/wiki/Basic_Pok%C3%A9mon_(TCG))" monster in your deck. If there is not, you will lose the duel.<br>
-	-Add 1 *Pokemon Rules* to the extra deck.<br>
+3. Click on `Deck Edit` to build your deck. Remember to add 1 *Pokemon Rules* to your extra deck!<br>
+If you do not build your deck according to the following rules, you will lose the duel and have to rebuild your deck:<br>
+	-Your main deck must be exactly 60 cards.<br>
+	-All 60 cards must be Pokémon cards. You cannot have any non-Pokémon cards in your deck.<br>
+	-There must be at least 1 "[Basic Pokémon](https://bulbapedia.bulbagarden.net/wiki/Basic_Pok%C3%A9mon_(TCG))" monster in your deck.<br>
+	-You cannot have more than 1 "[Miracle Energy](https://bulbapedia.bulbagarden.net/wiki/Miracle_Energy_(Neo_Destiny_16))" in your deck.<br>
+	-You cannot have more than 1 "[Pokémon ☆](https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_%E2%98%86_(TCG))" monster in your deck.<br>
+	-You cannot have more than 1 "[ACE SPEC](https://bulbapedia.bulbagarden.net/wiki/Ace_Spec_card_(TCG))" card in your deck.<br>
+	-You cannot have 4 of each half of a "[Pokémon LEGEND](https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_LEGEND_(TCG))" monster in your deck. (e.g. 4 "[Lugia LEGEND](https://bulbapedia.bulbagarden.net/wiki/Lugia_LEGEND_(HeartGold_%26_SoulSilver_113))" top half and 4 "Lugia LEGEND" bottom half)<br>
+	-You cannot have both "[Professor Juniper](https://bulbapedia.bulbagarden.net/wiki/Professor_Juniper_(Black_%26_White_101))" and "[Professor Sycamore](https://bulbapedia.bulbagarden.net/wiki/Professor_Sycamore_(XY_122))" in your deck.
 4. Begin the duel by drawing 7 cards, then place 1 "Basic Pokémon" monster from your hand in an extra monster zone face-down as your [Active Pokémon](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Active_Pok.C3.A9mon).<br>
 If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuffle it into the deck, then draw 7 cards. Repeat this until you have a "Basic Pokémon" monster in your hand.<br>
 5. Optional: Place any number of "Basic Pokémon" monsters from your hand in your main monster zones face-down as Pokémon on the [Bench](https://bulbapedia.bulbagarden.net/wiki/Appendix:Glossary_(TCG)#Bench).<br>
