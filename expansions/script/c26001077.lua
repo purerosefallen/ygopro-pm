@@ -10,22 +10,23 @@ function scard.tdfilter(c)
 	return (c:IsBasicPokemon() or c:IsEvolution()) and c:IsAbleToDeck()
 end
 function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>-1
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0
 		and Duel.IsExistingMatchingCard(scard.tdfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
 end
 function scard.thfilter(c)
 	return (c:IsBasicPokemon() or c:IsEvolution()) and c:IsAbleToHand()
 end
 function scard.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TODECKTOP)
-	local g1=Duel.SelectMatchingCard(tp,scard.tdfilter,tp,LOCATION_HAND,0,1,1,nil)
-	if g1:GetCount()==0 then return end
-	Duel.SendtoDeck(g1,PLAYER_OWNER,DECK_ORDER_TOP,REASON_EFFECT)
-	if Duel.GetOperatedGroup():FilterCount(Card.IsLocation,nil,LOCATION_DECK)==0 then return end
+	local g=Duel.GetMatchingGroup(scard.tdfilter,tp,LOCATION_HAND,0,nil)
+	if g:GetCount()==0 then return end
 	pm.ConfirmDeck(tp,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOHAND)
-	local g2=Duel.SelectMatchingCard(tp,scard.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g2:GetCount()==0 then return pm.SearchFailed(tp,tp) end
-	Duel.SendtoHand(g2,PLAYER_OWNER,REASON_EFFECT)
-	Duel.ConfirmCards(1-tp,g2)
+	local sg1=Duel.SelectMatchingCard(tp,scard.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	if sg1:GetCount()==0 then return pm.SearchFailed(tp,tp) end
+	Duel.SendtoHand(sg1,PLAYER_OWNER,REASON_EFFECT)
+	Duel.ConfirmCards(1-tp,sg1)
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TODECK)
+	local sg2=g:Select(tp,1,1,nil)
+	Duel.ConfirmCards(1-tp,sg2)
+	Duel.SendtoDeck(sg2,PLAYER_OWNER,DECK_ORDER_SHUFFLE,REASON_EFFECT)
 end
