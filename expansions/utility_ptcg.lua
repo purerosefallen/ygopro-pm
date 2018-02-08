@@ -313,6 +313,14 @@ Card.GetOriginalPokemonType=Card.GetOriginalAttribute
 Card.GetPreviousPokemonType=Card.GetPreviousAttributeOnField
 --check what a pokémon's current type (color) is
 Card.IsPokemonType=Card.IsAttribute
+--check if a pokémon is a dual-type card
+--reserved
+function Card.IsDualType(c)
+	local typ=c:GetPokemonType()
+	if typ/2<(PM_ENERGY_GRASS+PM_ENERGY_FIRE)/2 or typ/2>(PM_ENERGY_FAIRY+PM_ENERGY_DRAGON)/2 then
+		return false
+	else return true end
+end
 --check if a pokémon is active
 function Card.IsActive(c)
 	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()>=SEQUENCE_EXTRA_MZONE
@@ -614,14 +622,26 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 	--apply effects before weakness & resistance
 	if a:IsHasEffect(PM_EFFECT_DAMAGE_ATTACK_REDUCE_30) then ct=count-3 end --e.g. "Mewtwo-EX BKT 61"
 	local energy=a:GetPokemonType()
+	local energy1=nil
+	local energy2=nil
+	if energy==PM_ENERGY_GRASS+PM_ENERGY_LIGHTNING then energy1=PM_ENERGY_GRASS energy2=PM_ENERGY_LIGHTNING
+	elseif energy==PM_ENERGY_FIRE+PM_ENERGY_LIGHTNING then energy1=PM_ENERGY_FIRE energy2=PM_ENERGY_LIGHTNING
+	elseif energy==PM_ENERGY_WATER+PM_ENERGY_LIGHTNING then energy1=PM_ENERGY_WATER energy2=PM_ENERGY_LIGHTNING
+	elseif energy==PM_ENERGY_WATER+PM_ENERGY_FIGHTING then energy1=PM_ENERGY_WATER energy2=PM_ENERGY_FIGHTING
+	elseif energy==PM_ENERGY_PSYCHIC+PM_ENERGY_FIGHTING then energy1=PM_ENERGY_PSYCHIC energy2=PM_ENERGY_FIGHTING
+	elseif energy==PM_ENERGY_FIGHTING+PM_ENERGY_LIGHTNING then energy1=PM_ENERGY_FIGHTING energy2=PM_ENERGY_LIGHTNING
+	elseif energy==PM_ENERGY_PSYCHIC+PM_ENERGY_COLORLESS then energy1=PM_ENERGY_PSYCHIC energy2=PM_ENERGY_COLORLESS end
 	local weakness_x2=d.weakness_x2==energy
+	local dual_weakness1_x2=d.dual_weakness_x2[1]==energy1
+	local dual_weakness2_x2=d.dual_weakness_x2[2]==energy2
 	local weakness_10=d.weakness_10==energy
 	local weakness_20=d.weakness_20==energy
 	local weakness_30=d.weakness_30==energy
 	local weakness_40=d.weakness_40==energy
 	--apply weakness
 	if weak then
-		if weakness_x2 then ct=count*2
+		if dual_weakness1_x2 and dual_weakness2_x2 then ct=count*4
+		elseif weakness_x2 or dual_weakness1_x2 or dual_weakness2_x2 then ct=count*2
 		elseif weakness_10 then ct=count+1
 		elseif weakness_20 then ct=count+2
 		elseif weakness_30 then ct=count+3
