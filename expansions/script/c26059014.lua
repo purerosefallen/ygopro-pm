@@ -23,12 +23,14 @@ scard.evolve_list={[1]=CARD_CHESNAUGHT_BREAK}
 scard.devolve_list={[1]=CARD_QUILLADIN,[2]=CARD_CHESPIN}
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost=pm.econ2(CARD_GRASS_ENERGY,2,CARD_COLORLESS_ENERGY,2)
+--add counter
 function scard.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsActive() and bit.band(r,PM_REASON_ATTACK)~=0 and rp~=tp
 end
 function scard.ctop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.GetAttackingPokemon():AddCounter(PM_DAMAGE_COUNTER,3)
 end
+--heal
 function scard.healop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(90)
 	Duel.HealDamage(e,20,e:GetHandler())

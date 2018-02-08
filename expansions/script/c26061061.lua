@@ -14,9 +14,11 @@ scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost1=pm.econ2(CARD_FIGHTING_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_FIGHTING_ENERGY,1,CARD_COLORLESS_ENERGY,2)
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(30)
 end
+--discard energy
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(50)
 	local tc=Duel.GetDefendingPokemon()

@@ -17,12 +17,14 @@ scard.devolve_list={[1]=CARD_QUILLADIN,[2]=CARD_CHESPIN}
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost1=pm.econ2(CARD_GRASS_ENERGY,1,CARD_COLORLESS_ENERGY,2)
 scard.attack_cost2=pm.econ2(CARD_GRASS_ENERGY,2,CARD_COLORLESS_ENERGY,2)
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=60
-	if Duel.GetDefendingPokemon():GetCounter(PM_DAMAGE_COUNTER)>0 then ct=ct+60 end
-	if ct>60 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	local dam=60
+	if Duel.GetDefendingPokemon():GetCounter(PM_DAMAGE_COUNTER)>0 then dam=dam+60 end
+	if dam>60 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 end
+--damage reduce
 function scard.effop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(100)
 	local e1=Effect.CreateEffect(e:GetHandler())

@@ -15,6 +15,7 @@ scard.evolve_list={[1]=CARD_MARSHTOMP,[2]=CARD_SWAMPERT}
 scard.weakness_x2=PM_ENERGY_LIGHTNING
 scard.attack_cost1=pm.econ1(CARD_WATER_ENERGY,1)
 scard.attack_cost2=pm.econ1(CARD_WATER_ENERGY,2)
+--discard energy
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetDefendingPokemon()
@@ -22,10 +23,11 @@ function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	if not tc:IsAbleToRemoveEnergy() then return Duel.Hint(HINT_CARD,0,CARD_BROCKS_PROTECTION) end
 	if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.DiscardEnergy(e,tc,1) end
 end
+--asleep
 function scard.aslop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=20
-	if Duel.GetPrizeGroupCount(tp,1-tp)==1 then ct=ct+50 end
-	if ct>20 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	local dam=20
+	if Duel.GetPrizeGroupCount(tp,1-tp)==1 then dam=dam+50 end
+	if dam>20 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 	if Duel.GetPrizeGroupCount(tp,1-tp)==1 then pm.EnableAsleep(Duel.GetDefendingPokemon()) end
 end

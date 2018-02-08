@@ -15,6 +15,7 @@ scard.weakness_x2=PM_ENERGY_DARKNESS
 scard.resistance_20=PM_ENERGY_FIGHTING
 scard.attack_cost1=pm.econ1(CARD_PSYCHIC_ENERGY,1)
 scard.attack_cost2=pm.econ1(CARD_PSYCHIC_ENERGY,4)
+--attach
 function scard.cfilter(c)
 	return c:IsFaceup() and c:IsPokemon()
 end
@@ -34,6 +35,7 @@ function scard.atop(e,tp,eg,ep,ev,re,r,rp)
 		ct=ct-1
 	until sg1:GetCount()==0 or sg2:GetCount()==0 or ct==0
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetAttachmentGroup(tp,1,1):FilterCount(Card.IsEnergy,nil)
 	Duel.AttackDamage(20*ct)

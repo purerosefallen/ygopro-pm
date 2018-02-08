@@ -22,6 +22,7 @@ scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_DARKNESS
 scard.resistance_20=PM_ENERGY_FIGHTING
 scard.attack_cost=pm.econ1(CARD_PSYCHIC_ENERGY,4)
+--attach
 function scard.atcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_HAND) and Duel.GetTurnPlayer()==tp
 end
@@ -35,6 +36,7 @@ function scard.atop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	Duel.Attach(e:GetHandler(),g)
 end
+--discard energy
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(160)
 	Duel.DiscardEnergy(e,e:GetHandler(),2)

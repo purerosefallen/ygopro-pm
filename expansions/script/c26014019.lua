@@ -21,6 +21,7 @@ scard.pokemon_card=true
 scard.devolve_list={[1]=CARD_HORSEA,[2]=CARD_SEADRA}
 scard.weakness_x2=PM_ENERGY_LIGHTNING
 scard.attack_cost=pm.econ2(CARD_WATER_ENERGY,2,CARD_COLORLESS_ENERGY,2)
+--move energy
 function scard.mecon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsAffectedBySpecialCondition()
 end
@@ -44,6 +45,7 @@ function scard.meop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.HintSelection(sg2)
 	Duel.Attach(sg2:GetFirst(),sg1)
 end
+--discard energy
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(50)
 	if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.DiscardEnergy(e,Duel.GetDefendingPokemon(),1) end

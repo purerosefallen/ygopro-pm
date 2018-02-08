@@ -13,10 +13,12 @@ scard.weakness_x2=PM_ENERGY_FIRE
 scard.resistance_20=PM_ENERGY_PSYCHIC
 scard.attack_cost1=pm.econ2(CARD_METAL_ENERGY,1,CARD_COLORLESS_ENERGY,2)
 scard.attack_cost2=pm.econ2(CARD_METAL_ENERGY,1,CARD_COLORLESS_ENERGY,3)
+--switch
 function scard.swop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(30)
 	Duel.SwitchPokemon(e,1-tp,1-tp)
 end
+--remove counter
 function scard.ctop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(60)
 	Duel.RemoveDamage(e,1,e:GetHandler())

@@ -13,6 +13,7 @@ scard.weakness_x2=PM_ENERGY_FIRE
 scard.resistance_20=PM_ENERGY_PSYCHIC
 scard.attack_cost1=pm.econ2(CARD_METAL_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_METAL_ENERGY,1,CARD_COLORLESS_ENERGY,2)
+--cannot play
 function scard.actop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(10)
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -33,9 +34,10 @@ end
 function scard.aclimit(e,re,tp)
 	return re:IsHasType(PM_EFFECT_TYPE_PLAY) and re:IsActiveType(PM_TYPE_TRAINER)
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=50
-	if Duel.GetDefendingPokemon():GetCounter(PM_DAMAGE_COUNTER)>=2 then ct=ct+20 end
-	if ct>50 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	local dam=50
+	if Duel.GetDefendingPokemon():GetCounter(PM_DAMAGE_COUNTER)>=2 then dam=dam+20 end
+	if dam>50 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 end

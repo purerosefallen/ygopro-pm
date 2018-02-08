@@ -4,7 +4,7 @@ local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--heal
-	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,scard.healtg,scard.healop)
+	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.healop)
 	--damage
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.damop)
 end
@@ -14,14 +14,13 @@ scard.evolve_list={[1]=CARD_QUILLADIN,[2]=CARD_CHESNAUGHT,[3]=CARD_CHESNAUGHT_BR
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_GRASS_ENERGY,1,CARD_COLORLESS_ENERGY,2)
-function scard.healtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetCounter(PM_DAMAGE_COUNTER)>0 end
-end
+--heal
 function scard.healop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.PokemonAttack(c,Duel.GetDefendingPokemon())
-	Duel.HealDamage(e,20,c)
+	if c:GetCounter(PM_DAMAGE_COUNTER)>0 then Duel.HealDamage(e,20,c) end
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(30)
 end

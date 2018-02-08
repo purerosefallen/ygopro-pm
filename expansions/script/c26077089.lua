@@ -15,6 +15,7 @@ scard.weakness_x2=PM_ENERGY_FIRE
 scard.resistance_20=PM_ENERGY_PSYCHIC
 scard.attack_cost1=pm.econ1(CARD_METAL_ENERGY,1)
 scard.attack_cost2=pm.econ1(CARD_METAL_ENERGY,4)
+--attach
 function scard.cfilter(c)
 	return c:IsFaceup() and c:IsPokemon()
 end
@@ -34,6 +35,7 @@ function scard.atop(e,tp,eg,ep,ev,re,r,rp)
 		ct=ct-1
 	until sg1:GetCount()==0 or sg2:GetCount()==0 or ct==0
 end
+--cannot attack
 function scard.effop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(160)
 	local c=e:GetHandler()

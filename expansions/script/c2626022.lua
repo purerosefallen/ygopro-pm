@@ -4,7 +4,7 @@ local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--to bench
-	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,scard.tbtg,scard.tbop)
+	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.tbop)
 	--damage
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.damop)
 end
@@ -14,11 +14,7 @@ scard.devolve_list={[1]=CARD_TEAM_AQUAS_CARVANHA}
 scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ1(CARD_COLORLESS_ENERGY,3)
-function scard.tbtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0
-		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
-	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-end
+--to bench
 function scard.tbfilter(c,e,tp)
 	return c:IsBasicPokemon() and c:IsSetCard(PM_SETNAME_TEAM_MAGMA) and c:IsCanBePutInPlay(e,0,tp,false,false)
 end
@@ -34,10 +30,11 @@ function scard.tbop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=g:Select(tp,1,ft,nil)
 	Duel.PutInPlay(sg,0,tp,tp,false,false,PM_POS_FACEUP_UPSIDE)
 end
+--damage
 function scard.damfilter(c)
 	return pm.BenchPokemonFilter(c) and c:IsSetCard(PM_SETNAME_TEAM_MAGMA)
 end
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetMatchingGroupCount(scard.damfilter,tp,PM_LOCATION_IN_PLAY,0,nil)
-	Duel.AttackDamage(20*ct)
+	local dam=Duel.GetMatchingGroupCount(scard.damfilter,tp,PM_LOCATION_IN_PLAY,0,nil)
+	Duel.AttackDamage(20*dam)
 end

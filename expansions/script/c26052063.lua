@@ -12,9 +12,11 @@ scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.resistance_20=PM_ENERGY_PSYCHIC
 scard.attack_cost=pm.econ2(CARD_DARKNESS_ENERGY,2,CARD_COLORLESS_ENERGY,1)
+--no retreat cost
 function scard.rctg(e,c)
 	return c:IsFaceup() and c:IsPokemon() and c:GetAttachmentGroup():IsExists(Card.IsEnergy,1,nil,CARD_DARKNESS_ENERGY)
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(90)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DAMAGE)

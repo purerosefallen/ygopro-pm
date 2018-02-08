@@ -12,12 +12,14 @@ scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_METAL
 scard.attack_cost1=pm.econ2(CARD_WATER_ENERGY,1,CARD_COLORLESS_ENERGY,2)
 scard.attack_cost2=pm.econ2(CARD_WATER_ENERGY,2,CARD_COLORLESS_ENERGY,2)
+--discard energy
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(60)
 	local tc=Duel.GetDefendingPokemon()
 	if not tc:IsAbleToRemoveEnergy() then return Duel.Hint(HINT_CARD,0,CARD_BROCKS_PROTECTION) end
 	Duel.DiscardEnergy(e,tc,1,1,PM_TYPE_SPECIAL_ENERGY)
 end
+--damage
 function scard.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(sid)==0
 end

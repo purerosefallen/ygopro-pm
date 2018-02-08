@@ -13,12 +13,14 @@ scard.height=8.10
 scard.weakness_x2=PM_ENERGY_PSYCHIC
 scard.attack_cost1=pm.econ1(CARD_PSYCHIC_ENERGY,1)
 scard.attack_cost2=pm.econ1(CARD_COLORLESS_ENERGY,2)
+--poisoned
 function scard.poiop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(10)
 	local tc=Duel.GetDefendingPokemon()
 	if not tc:IsAbleToRemoveEnergy() then return Duel.Hint(HINT_CARD,0,CARD_BROCKS_PROTECTION) end
 	if Duel.TossCoin(tp,1)==RESULT_HEADS then pm.EnablePoisoned(tc) end
 end
+--discard energy
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(30)
 	local tc=Duel.GetDefendingPokemon()

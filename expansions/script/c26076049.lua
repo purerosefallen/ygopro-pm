@@ -21,6 +21,7 @@ end
 scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_PSYCHIC
 scard.attack_cost=pm.econ1(CARD_PSYCHIC_ENERGY,3)
+--confused & poisoned
 function scard.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_HAND)
 end
@@ -32,11 +33,13 @@ function scard.spop(e,tp,eg,ep,ev,re,r,rp)
 	pm.EnableConfused(d)
 	pm.EnablePoisoned(d)
 end
+--cannot retreat
 function scard.effop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(120)
 	local tc=Duel.GetDefendingPokemon()
 	pm.EnableCannotRetreat(tc,aux.Stringid(sid,3),RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
 end
+--gx attack (to prize)
 function scard.tpop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon())
 	local g=Duel.GetDecktopGroup(1-tp,2)

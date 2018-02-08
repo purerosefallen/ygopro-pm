@@ -17,10 +17,12 @@ scard.devolve_list={[1]=CARD_CHESPIN}
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost1=pm.econ2(CARD_GRASS_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_GRASS_ENERGY,1,CARD_COLORLESS_ENERGY,2)
+--heal
 function scard.healop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(20)
 	Duel.HealDamage(e,10,e:GetHandler())
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(50)
 end

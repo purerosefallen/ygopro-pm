@@ -15,11 +15,13 @@ scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.resistance_20=PM_ENERGY_PSYCHIC
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_FIGHTING_ENERGY,1,CARD_COLORLESS_ENERGY,1)
+--confirm
 function scard.confop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(1-tp,LOCATION_HAND,0)
 	Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon())
 	Duel.ConfirmCards(tp,g)
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(20)
 end

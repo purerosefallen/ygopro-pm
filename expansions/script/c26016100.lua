@@ -12,6 +12,7 @@ scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_WATER
 scard.attack_cost1=pm.econ1(CARD_FIRE_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_FIRE_ENERGY,2,CARD_COLORLESS_ENERGY,1)
+--damage reduce
 function scard.effop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(10)
 	local tc=Duel.GetDefendingPokemon()
@@ -35,10 +36,12 @@ function scard.coinop(e,tp,eg,ep,ev,re,r,rp)
 	local turnp=Duel.GetTurnPlayer()
 	local code=e:GetHandler():GetOriginalCode()
 	Duel.Hint(HINT_CARD,0,code)
-	if Duel.TossCoin(turnp,1)==RESULT_HEADS then return end
-	if not Duel.NegatePokemonAttack(ev) then return end
-	pm.EndTurn(e)
+	if Duel.TossCoin(turnp,1)==RESULT_TAILS then
+		if not Duel.NegatePokemonAttack(ev) then return end
+		pm.EndTurn(e)
+	end
 end
+--burned
 function scard.burop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(40)
 	pm.EnableBurned(Duel.GetDefendingPokemon())

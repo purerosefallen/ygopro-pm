@@ -13,6 +13,7 @@ scard.weakness_x2=PM_ENERGY_FIRE
 scard.resistance_20=PM_ENERGY_FIGHTING
 scard.attack_cost1=pm.econ1(CARD_GRASS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_GRASS_ENERGY,1,CARD_COLORLESS_ENERGY,1)
+--attach
 function scard.atfilter(c)
 	return c:IsFaceup() and c:IsPokemon()
 end
@@ -27,8 +28,9 @@ function scard.atop(e,tp,eg,ep,ev,re,r,rp)
 	local g2=Duel.SelectMatchingCard(tp,scard.atfilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
 	Duel.Attach(g2:GetFirst(),g1)
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetFlagEffect(1-tp,PM_EFFECT_PRIZE_CARD_CHECK)
-	if ct>0 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(30+ct)
+	local dam=Duel.GetFlagEffect(1-tp,PM_EFFECT_PRIZE_CARD_CHECK)
+	if dam>0 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(30+dam)
 end

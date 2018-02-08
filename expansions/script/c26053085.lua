@@ -13,20 +13,22 @@ scard.evolve_list={[1]=CARD_M_RAYQUAZA_EX}
 scard.weakness_x2=PM_ENERGY_DRAGON
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_FIRE_ENERGY,1,CARD_LIGHTNING_ENERGY,1)
+--discard deck & attach
 function scard.atop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.DiscardDeck(tp,3,REASON_EFFECT)
 	local og=Duel.GetOperatedGroup():Filter(Card.IsEnergy,1,nil)
 	if og:GetCount()==0 then return end
 	Duel.Attach(e:GetHandler(),og)
 end
-function scard.defilter(c,energy)
+--damage
+function scard.cfilter(c,energy)
 	return c:IsBasicEnergy() and c:IsEnergy(energy)
 end
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=60
+	local dam=60
 	local c=e:GetHandler()
-	local b1=c:GetAttachmentGroup():IsExists(scard.defilter,1,nil,CARD_FIRE_ENERGY)
-	local b2=c:GetAttachmentGroup():IsExists(scard.defilter,1,nil,CARD_LIGHTNING_ENERGY)
+	local b1=c:GetAttachmentGroup():IsExists(scard.cfilter,1,nil,CARD_FIRE_ENERGY)
+	local b2=c:GetAttachmentGroup():IsExists(scard.cfilter,1,nil,CARD_LIGHTNING_ENERGY)
 	local opt=0
 	if b1 and b2 then
 		opt=Duel.SelectOption(tp,aux.Stringid(sid,2),aux.Stringid(sid,3))
@@ -37,11 +39,11 @@ function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	local g=nil
 	if opt==0 then
-		g=c:GetAttachmentGroup():Filter(scard.defilter,nil,CARD_FIRE_ENERGY)
+		g=c:GetAttachmentGroup():Filter(scard.cfilter,nil,CARD_FIRE_ENERGY)
 	else
-		g=c:GetAttachmentGroup():Filter(scard.defilter,nil,CARD_LIGHTNING_ENERGY)
+		g=c:GetAttachmentGroup():Filter(scard.cfilter,nil,CARD_LIGHTNING_ENERGY)
 	end
-	ct=ct*Duel.SendtoDPile(g,REASON_EFFECT+REASON_DISCARD)
-	if ct>60 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	dam=dam*Duel.SendtoDPile(g,REASON_EFFECT+REASON_DISCARD)
+	if dam>60 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 end

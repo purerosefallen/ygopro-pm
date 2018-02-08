@@ -22,6 +22,7 @@ scard.height=6.03
 scard.devolve_list={[1]=CARD_TEAM_MAGMAS_NUMEL}
 scard.weakness_x2=PM_ENERGY_WATER
 scard.attack_cost=pm.econ2(CARD_ENERGY_FIRE,1,CARD_ENERGY_COLORLESS,2)
+--attach
 function scard.atfilter(c)
 	return c:IsEnergy(CARD_FIGHTING_ENERGY) or c:IsEnergy(CARD_FIRE_ENERGY)
 end
@@ -35,6 +36,7 @@ function scard.atop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	Duel.Attach(e:GetHandler(),g)
 end
+--move energy
 function scard.meop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(60)
 	local ag=e:GetHandler():GetAttachmentGroup()

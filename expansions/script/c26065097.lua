@@ -20,11 +20,13 @@ scard.pokemon_card=true
 scard.devolve_list={[1]=CARD_GROUDON_EX}
 scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost=pm.econ2(CARD_FIGHTING_ENERGY,3,CARD_COLORLESS_ENERGY,1)
+--immune
 function scard.efilter(e,te)
 	local tc=te:GetHandler()
 	if tc:IsPokemonTool() or tc:IsStadium() then return false end
 	return te:IsActiveType(PM_TYPE_TRAINER) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
+--discard stadium
 function scard.dsop(e,tp,eg,ep,ev,re,r,rp)
 	local dam=100
 	local tc=Duel.GetFirstMatchingCard(nil,tp,PM_LOCATION_STADIUM,PM_LOCATION_STADIUM,nil)

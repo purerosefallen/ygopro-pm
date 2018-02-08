@@ -2,6 +2,7 @@
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
+	--attach
 	pm.EnableTrainerAttach(c,2,scard.atfilter,PM_LOCATION_IN_PLAY,0,aux.Stringid(sid,0),true)
 	--re-flip coin
 	local e1=Effect.CreateEffect(c)
@@ -12,9 +13,11 @@ function scard.initial_effect(c)
 	e1:SetOperation(scard.coinop)
 	c:RegisterEffect(e1)
 end
+--attach
 function scard.atfilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:IsSetCard(PM_SETNAME_SABRINA)
 end
+--re-flip coin
 function scard.coincon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp and Duel.GetFlagEffect(tp,sid)==0 and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
 end

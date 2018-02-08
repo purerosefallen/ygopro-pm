@@ -22,6 +22,7 @@ scard.height=4.11
 scard.devolve_list={[1]=CARD_TEAM_MAGMAS_BALTOY}
 scard.weakness_x2=PM_ENERGY_PSYCHIC
 scard.attack_cost=pm.econ2(CARD_PSYCHIC_ENERGY,1,CARD_COLORLESS_ENERGY,2)
+--move energy
 function scard.cfilter1(c)
 	return c:IsFaceup() and c:IsPokemon() and c:GetAttachmentGroup():IsExists(Card.IsBasicEnergy,1,nil)
 end
@@ -52,6 +53,7 @@ function scard.meop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.HintSelection(sg2)
 	Duel.Attach(sg2:GetFirst(),sg1)
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(70)
 end

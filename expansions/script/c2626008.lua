@@ -15,12 +15,14 @@ scard.height=3.11
 scard.devolve_list={[1]=CARD_TEAM_AQUAS_GRIMER}
 scard.weakness_x2=PM_ENERGY_PSYCHIC
 scard.attack_cost=pm.econ2(CARD_PSYCHIC_ENERGY,1,CARD_COLORLESS_ENERGY,2)
+--retreat cost up
 function scard.rctg(e,c)
 	return c:IsFaceup() and c:IsPokemon() and not c:IsSetCard(PM_SETNAME_TEAM_AQUA)
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=60
-	if Duel.GetDefendingPokemon():IsAffectedBySpecialCondition() then ct=ct+60 end
-	if ct>60 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	local dam=60
+	if Duel.GetDefendingPokemon():IsAffectedBySpecialCondition() then dam=dam+60 end
+	if dam>60 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 end

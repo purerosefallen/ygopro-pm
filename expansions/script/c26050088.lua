@@ -15,13 +15,15 @@ scard.height=5.11
 scard.devolve_list={[1]=CARD_FRAXURE,[2]=CARD_AXEW}
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,2)
 scard.attack_cost2=pm.econ1(CARD_COLORLESS_ENERGY,3)
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c1,c2=Duel.TossCoin(tp,2)
-	local ct=c1+c2
-	Duel.AttackDamage(50*ct)
+	local dam=c1+c2
+	Duel.AttackDamage(50*dam)
 end
+--cannot attack
 function scard.effop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(120)
-	local tc=e:GetHandler()
-	pm.EnableCannotAttack(tc,aux.Stringid(sid,2),RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_SELF_TURN,2)
+	local c=e:GetHandler()
+	pm.EnableCannotAttack(c,aux.Stringid(sid,2),RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_SELF_TURN,2)
 end

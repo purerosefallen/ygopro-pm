@@ -12,6 +12,7 @@ scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,2)
 scard.attack_cost2=pm.econ1(CARD_COLORLESS_ENERGY,3)
+--remove counter
 function scard.ctfilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:GetCounter(PM_DAMAGE_COUNTER)>0
 end
@@ -24,6 +25,7 @@ function scard.ctop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RemoveDamage(e,2,tc)
 	end
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(80)
 	Duel.EffectDamage(60,e:GetHandler(),e:GetHandler(),false,false)

@@ -23,6 +23,7 @@ scard.length=1.40
 scard.devolve_list={[1]=CARD_MYSTERIOUS_FOSSIL}
 scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost=pm.econ1(PM_ENERGY_WATER,1)
+--to bench
 function scard.tbcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsAffectedBySpecialCondition()
 end
@@ -58,6 +59,7 @@ function scard.tbop(e,tp,eg,ep,ev,re,r,rp)
 	tc:RegisterEffect(e2,true)
 	Duel.PutInPlayComplete()
 end
+--paralyzed
 function scard.parop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(10)
 	if Duel.TossCoin(tp,1)==RESULT_HEADS then pm.EnableParalyzed(Duel.GetDefendingPokemon()) end

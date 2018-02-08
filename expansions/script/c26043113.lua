@@ -22,6 +22,7 @@ scard.legend_top_half=CARD_LUGIA_LEGEND
 scard.weakness_x2=PM_ENERGY_LIGHTNING
 scard.resistance_20=PM_ENERGY_FIGHTING
 scard.attack_cost=pm.econ3(CARD_FIRE_ENERGY,1,CARD_WATER_ENERGY,1,CARD_LIGHTNING_ENERGY,1)
+--attach
 function scard.attg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
@@ -46,6 +47,7 @@ function scard.atop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoDPile(g,REASON_EFFECT+REASON_DISCARD)
 	end
 end
+--discard energy
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(200)
 	Duel.DiscardEnergy(e,e:GetHandler(),1,1,CARD_FIRE_ENERGY,1,1,CARD_WATER_ENERGY,1,1,CARD_LIGHTNING_ENERGY)

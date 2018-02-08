@@ -17,18 +17,20 @@ scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.resistance_20=PM_ENERGY_PSYCHIC
 scard.attack_cost1=pm.econ2(CARD_WATER_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_WATER_ENERGY,2,CARD_COLORLESS_ENERGY,1)
+--damage
 function scard.damfilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:IsSetCard(PM_SETNAME_TEAM_AQUA)
 end
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	local count=Duel.GetMatchingGroupCount(scard.damfilter,tp,PM_LOCATION_IN_PLAY,0,nil)
-	local ct=0
+	local dam=0
 	repeat
-		if Duel.TossCoin(tp,1)==RESULT_HEADS then ct=ct+1 end
+		if Duel.TossCoin(tp,1)==RESULT_HEADS then dam=dam+1 end
 		count=count-1
 	until count==0
-	Duel.AttackDamage(30*ct)
+	Duel.AttackDamage(30*dam)
 end
+--discard energy
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(80)
 	local tc=Duel.GetDefendingPokemon()

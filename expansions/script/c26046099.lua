@@ -6,7 +6,7 @@ function scard.initial_effect(c)
 	--legend
 	pm.EnableLEGENDAttribute(c)
 	--move counter
-	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.mctop)
+	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.ctop)
 	--to lost
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost2,pm.hinttg,scard.tlop)
 end
@@ -15,20 +15,21 @@ scard.legend_top_half=CARD_DARKRAI_AND_CRESSELIA_LEGEND
 scard.dual_weakness_x2={[1]=PM_ENERGY_FIGHTING,[2]=PM_ENERGY_PSYCHIC}
 scard.attack_cost1=pm.econ1(CARD_PSYCHIC_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_DARKNESS_ENERGY,2,CARD_COLORLESS_ENERGY,2)
+--move counter
 function scard.cfilter1(c)
 	return c:IsFaceup() and c:IsPokemon() and c:GetCounter(PM_DAMAGE_COUNTER)>0
 end
 function scard.cfilter2(c)
 	return c:IsFaceup() and c:IsPokemon() and c:GetCounter(PM_DAMAGE_COUNTER)==0
 end
-function scard.mctfilter(c)
+function scard.ctfilter(c)
 	return c:IsFaceup() and c:IsPokemon()
 end
-function scard.mctop(e,tp,eg,ep,ev,re,r,rp)
+function scard.ctop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon())
 	local g1=Duel.GetMatchingGroup(scard.cfilter1,tp,0,PM_LOCATION_IN_PLAY,nil)
 	local g2=Duel.GetMatchingGroup(scard.cfilter2,tp,0,PM_LOCATION_IN_PLAY,nil)
-	local g3=Duel.GetMatchingGroup(scard.mctfilter,tp,0,PM_LOCATION_IN_PLAY,nil)
+	local g3=Duel.GetMatchingGroup(scard.ctfilter,tp,0,PM_LOCATION_IN_PLAY,nil)
 	if g1:GetCount()==0 or g2:GetCount()==0 then return end
 	repeat
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_REMOVEDAMAGE)
@@ -54,6 +55,7 @@ function scard.mctop(e,tp,eg,ep,ev,re,r,rp)
 		tc2:AddCounter(PM_DAMAGE_COUNTER,ct1,REASON_EFFECT)
 	until g1:GetCount()==0
 end
+--to lost
 function scard.tlop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ag=c:GetAttachmentGroup()

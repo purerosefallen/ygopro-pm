@@ -17,9 +17,11 @@ scard.devolve_list={[1]=CARD_BRAIXEN,[2]=CARD_FENNEKIN}
 scard.weakness_x2=PM_ENERGY_WATER
 scard.attack_cost1=pm.econ2(CARD_FIRE_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_FIRE_ENERGY,1,CARD_COLORLESS_ENERGY,3)
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(30)
 end
+--discard energy
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(120)
 	Duel.DiscardEnergy(e,e:GetHandler(),1)

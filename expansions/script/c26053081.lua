@@ -13,6 +13,7 @@ scard.weakness_x2=PM_ENERGY_FIRE
 scard.resistance_20=PM_ENERGY_PSYCHIC
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,3)
 scard.attack_cost2=pm.econ2(CARD_METAL_ENERGY,2,CARD_COLORLESS_ENERGY,2)
+--damage
 function scard.damfilter(c)
 	return c:IsFaceup() and c:IsPokemon()
 end
@@ -30,6 +31,7 @@ function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 		else Duel.EffectDamage(30,c,tc) end
 	end
 end
+--damage reduce
 function scard.effop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(80)
 	local e1=Effect.CreateEffect(e:GetHandler())

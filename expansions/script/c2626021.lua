@@ -23,6 +23,7 @@ scard.height=5.11
 scard.devolve_list={[1]=CARD_TEAM_AQUAS_CARVANHA}
 scard.weakness_x2=PM_ENERGY_LIGHTNING
 scard.attack_cost=pm.econ2(CARD_DARKNESS_ENERGY,1,CARD_COLORLESS_ENERGY,2)
+--search
 function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
@@ -38,6 +39,7 @@ function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoHand(g,PLAYER_OWNER,REASON_EFFECT)
 	Duel.ConfirmCards(1-tp,g)
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(70)
 end

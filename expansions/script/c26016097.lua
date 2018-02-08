@@ -13,13 +13,15 @@ scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.resistance_30=PM_ENERGY_METAL
 scard.attack_cost1=pm.econ1(CARD_LIGHTNING_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_LIGHTNING_ENERGY,2,CARD_COLORLESS_ENERGY,1)
+--paralyzed
 function scard.parop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(10)
 	if Duel.TossCoin(tp,1)==RESULT_HEADS then pm.EnableParalyzed(Duel.GetDefendingPokemon()) end
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=40
-	if Duel.TossCoin(tp,1)==RESULT_HEADS then ct=ct+20 end
-	if ct>40 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	local dam=40
+	if Duel.TossCoin(tp,1)==RESULT_HEADS then dam=dam+20 end
+	if dam>40 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 end

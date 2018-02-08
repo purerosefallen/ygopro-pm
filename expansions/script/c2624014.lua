@@ -17,12 +17,14 @@ scard.devolve_list={[1]=CARD_FROGADIER,[2]=CARD_FROAKIE}
 scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost1=pm.econ1(CARD_WATER_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_WATER_ENERGY,2,CARD_COLORLESS_ENERGY,1)
+--discard energy
 function scard.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(40)
 	local tc=Duel.GetDefendingPokemon()
 	if not tc:IsAbleToRemoveEnergy() then return Duel.Hint(HINT_CARD,0,CARD_BROCKS_PROTECTION) end
 	if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.DiscardEnergy(e,tc,1) end
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(80)
 end

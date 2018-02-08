@@ -30,12 +30,14 @@ function scard.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 scard.pokemon_card=true
+--extend bench
 function scard.zcon(e)
 	return e:GetHandler():IsOnField() and e:GetHandler():IsFaceup()
 end
 function scard.zop(e)
 	return bit.lshift(0x1,e:GetLabel())
 end
+--leave play 
 function scard.leaveop(e)
 	local tp=e:GetHandlerPlayer()
 	local ct1=Duel.GetMatchingGroupCount(pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,nil)

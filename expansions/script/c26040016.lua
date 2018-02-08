@@ -13,6 +13,7 @@ scard.weakness_x2=PM_ENERGY_PSYCHIC
 scard.resistance_20=PM_ENERGY_FIRE
 scard.attack_cost1=pm.econ0()
 scard.attack_cost2=pm.econ2(CARD_PSYCHIC_ENERGY,1,CARD_COLORLESS_ENERGY,1)
+--to deck & draw
 function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon())
 	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,LOCATION_HAND)
@@ -49,10 +50,11 @@ function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+--confused
 function scard.conop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=10
-	if Duel.GetPrizeGroupCount(tp,1-tp)==1 then ct=ct+50 end
-	if ct>10 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	local dam=10
+	if Duel.GetPrizeGroupCount(tp,1-tp)==1 then dam=dam+50 end
+	if dam>10 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 	if Duel.GetPrizeGroupCount(tp,1-tp)==1 then pm.EnableConfused(Duel.GetDefendingPokemon()) end
 end

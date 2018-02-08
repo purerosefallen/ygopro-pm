@@ -14,15 +14,18 @@ scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.attack_cost1=pm.econ1(CARD_COLORLESS_ENERGY,3)
 scard.attack_cost2=pm.econ1(CARD_COLORLESS_ENERGY,5)
+--asleep
 function scard.aslop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(80)
 	pm.EnableAsleep(e:GetHandler())
 end
+--damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	local dam=180
 	if not e:GetHandler():IsAsleep() then dam=0 end
 	Duel.AttackDamage(dam)
 end
+--gx attack (asleep)
 function scard.aslop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(210)
 	pm.EnableAsleep(e:GetHandler())

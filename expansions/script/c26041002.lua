@@ -12,6 +12,7 @@ scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_WATER
 scard.attack_cost1=pm.econ1(CARD_FIRE_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_FIRE_ENERGY,1,CARD_COLORLESS_ENERGY,1)
+--switch & burned
 function scard.burop(e,tp,eg,ep,ev,re,r,rp)
 	local tc1=Duel.GetDefendingPokemon()
 	Duel.PokemonAttack(e:GetHandler(),tc1)
@@ -19,12 +20,13 @@ function scard.burop(e,tp,eg,ep,ev,re,r,rp)
 	local tc2=Duel.GetDefendingPokemon()
 	pm.EnableBurned(tc2)
 end
+--damage
 function scard.damfilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:IsPokemonType(PM_ENERGY_WATER)
 end
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=30
-	if Duel.IsExistingMatchingCard(scard.damfilter,tp,0,PM_LOCATION_IN_PLAY,1,nil) then ct=ct+30 end
-	if ct>30 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
-	Duel.AttackDamage(ct)
+	local dam=30
+	if Duel.IsExistingMatchingCard(scard.damfilter,tp,0,PM_LOCATION_IN_PLAY,1,nil) then dam=dam+30 end
+	if dam>30 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
+	Duel.AttackDamage(dam)
 end
