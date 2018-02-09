@@ -21,7 +21,6 @@ function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	if dam>30 then dam=30 end
 	if dam>10 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
 	Duel.AttackDamage(dam)
-
 end
 --confused
 function scard.conop(e,tp,eg,ep,ev,re,r,rp)

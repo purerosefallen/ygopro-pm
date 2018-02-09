@@ -58,10 +58,10 @@ end
 --to lost
 function scard.tlop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ag=c:GetAttachmentGroup()
-	if ag:GetCount()>0 then
+	local g=c:GetAttachmentGroup()
+	if g:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOLZONE)
-		local sg=ag:FilterSelect(tp,Card.IsEnergy,2,2,nil)
+		local sg=g:FilterSelect(tp,Card.IsEnergy,2,2,nil)
 		if sg:GetCount()==0 then return end
 		Duel.SendtoLost(sg,POS_FACEUP,REASON_EFFECT)
 	end
@@ -77,5 +77,5 @@ function scard.tlop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(100)
 end
 function scard.retg(e,c)
-	return c:IsReason(PM_REASON_ATTACK)	or c:IsLocation(PM_LOCATION_ATTACHED)
+	return c:IsReason(PM_REASON_ATTACK) or c:IsLocation(PM_LOCATION_ATTACHED)
 end
