@@ -72,6 +72,18 @@ function Auxiliary.GetID()
 end
 --include this code on each script: local scard,sid=pm.GetID()
 
+--========== Lua ==========
+--get the value type of the variable
+local lua_type=type
+function type(o)
+	local m=getmetatable(o)
+	local t=m and m.__type or nil
+	if t then return t
+	elseif lua_type(o)~="userdata" then return lua_type(o)
+	elseif o.GetOriginalCode then return "Card"
+	elseif o.KeepAlive and o.IsContains then return "Group"
+	elseif o.SetLabelObject then return "Effect" end
+end
 --========== Card ==========
 --check if a card is a Pokémon
 function Card.IsPokemon(c)
@@ -558,11 +570,10 @@ end
 function Duel.SendtoPrize(e,targets,player,reason)
 	local tp=e:GetHandlerPlayer()
 	local tc=nil
-	local typ=Auxiliary.GetValueType(targets)
-	if typ=="Card" then
+	if type(targets)=="Card" then
 		targets=Group.FromCards(targets)
 		tc=targets:GetFirst()
-	elseif typ=="Group" then
+	elseif type(targets)=="Group" then
 		tc=targets:GetFirst()
 	end
 	for tc in aux.Next(targets) do
@@ -593,9 +604,9 @@ end
 function Duel.AttackDamage(count,targets,weak,resist,effect)
 	--count: attack damage
 	--targets: the target for the pokémon attack
-	--weak: false to not apply weakness to the defending pokémon
-	--resist: false to not apply resistance to the defending pokémon
-	--effect: false to not apply effects on the defending pokémon
+	--weak: false to not apply weakness for the defending pokémon
+	--resist: false to not apply resistance for the defending pokémon
+	--effect: false to not apply damage effects by the defending pokémon
 	local count=count/10
 	local d=Duel.GetDefendingPokemon()
 	local targets=targets or d
@@ -606,11 +617,10 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 	--active pokémon attacks defending pokémon
 	Duel.PokemonAttack(a,d)
 	local tc=nil
-	local typ=Auxiliary.GetValueType(targets)
-	if typ=="Card" then
+	if type(targets)=="Card" then
 		targets=Group.FromCards(targets)
 		tc=targets:GetFirst()
-	elseif typ=="Group" then
+	elseif type(targets)=="Group" then
 		tc=targets:GetFirst()
 	end
 	local ct=count
@@ -620,7 +630,7 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 		if tc:IsHasEffect(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED) and not a:IsEvolved() then return end
 	end
 	--apply effects before weakness & resistance
-	if a:IsHasEffect(PM_EFFECT_DAMAGE_ATTACK_REDUCE_30) then ct=count-3 end --e.g. "Mewtwo-EX BKT 61"
+	if a:IsHasEffect(PM_EFFECT_DAMAGE_ATTACK_REDUCE_30) then ct=ct-3 end --e.g. "Mewtwo-EX BKT 61"
 	local energy=a:GetPokemonType()
 	local energy1=nil
 	local energy2=nil
@@ -640,30 +650,31 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 	local weakness_40=d.weakness_40==energy
 	--apply weakness
 	if weak then
-		if dual_weakness1_x2 and dual_weakness2_x2 then ct=count*4
-		elseif weakness_x2 or dual_weakness1_x2 or dual_weakness2_x2 then ct=count*2
-		elseif weakness_10 then ct=count+1
-		elseif weakness_20 then ct=count+2
-		elseif weakness_30 then ct=count+3
-		elseif weakness_40 then ct=count+4 end
+		if dual_weakness1_x2 and dual_weakness2_x2 then ct=ct*4
+		elseif weakness_x2 or dual_weakness1_x2 or dual_weakness2_x2 then ct=ct*2
+		elseif weakness_10 then ct=ct+1
+		elseif weakness_20 then ct=ct+2
+		elseif weakness_30 then ct=ct+3
+		elseif weakness_40 then ct=ct+4 end
 	end
 	local resistance_20=d.resistance_20==energy
 	local resistance_30=d.resistance_30==energy
 	--apply resistance
 	if resist then
-		if resistance_20 then ct=count-2
-		elseif resistance_30 then ct=count-3 end
+		if resistance_20 then ct=ct-2
+		elseif resistance_30 then ct=ct-3 end
 	end
 	--apply effects after weakness & resistance
-	for tc in aux.Next(targets) do
-		if tc:IsHasEffect(PM_EFFECT_DAMAGE_ATTACK_REDUCE_20) then ct=count-2 end --e.g. "Chesnaught BKT 11"
+	if effect then
+		for tc in aux.Next(targets) do
+			if tc:IsHasEffect(PM_EFFECT_DAMAGE_ATTACK_REDUCE_20) then ct=ct-2 end --e.g. "Chesnaught BKT 11"
+		end
 	end
 	local turnp=Duel.GetTurnPlayer()
-	if ct<=0 then return end
+	if ct<=0 then return Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
 	if ct>count and tc==d then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_INCREASE)
 	elseif ct<count and tc==d then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
 	for tc in aux.Next(targets) do
-		if tc~=d then ct=count end
 		tc:AddCounter(PM_DAMAGE_COUNTER,ct,PM_REASON_ATTACK)
 	end
 	--knock out
@@ -676,8 +687,8 @@ function Duel.EffectDamage(count,c1,c2,weak,resist)
 	--count: the number of damage
 	--c1: the pokémon that does damage
 	--c2: the pokémon that receives the damage
-	--weak: false to not apply weakness to c2
-	--resist: false to not apply resistance c2
+	--weak: false to not apply weakness for c2
+	--resist: false to not apply resistance for c2
 	local count=count/10
 	local c1=c1 or Duel.GetAttackingPokemon()
 	local d=Duel.GetDefendingPokemon()
@@ -698,23 +709,23 @@ function Duel.EffectDamage(count,c1,c2,weak,resist)
 	local weakness_40=c2.weakness_40==energy
 	--apply weakness
 	if weak and c2==d then
-		if weakness_x2 then ct=count*2
-		elseif weakness_10 then ct=count+1
-		elseif weakness_20 then ct=count+2
-		elseif weakness_30 then ct=count+3
-		elseif weakness_40 then ct=count+4 end
+		if weakness_x2 then ct=ct*2
+		elseif weakness_10 then ct=ct+1
+		elseif weakness_20 then ct=ct+2
+		elseif weakness_30 then ct=ct+3
+		elseif weakness_40 then ct=ct+4 end
 	end
 	local resistance_20=c2.resistance_20==energy
 	local resistance_30=c2.resistance_30==energy
 	--apply resistance
 	if resist and c2==d then
-		if resistance_20 then ct=count-2
-		elseif resistance_30 then ct=count-3 end
+		if resistance_20 then ct=ct-2
+		elseif resistance_30 then ct=ct-3 end
 	end
 	--apply effects after weakness & resistance
 	--reserved
 	local turnp=Duel.GetTurnPlayer()
-	if ct<=0 then return end
+	if ct<=0 then return Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
 	if ct>count and c2==d then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_INCREASE)
 	elseif ct<count and c2==d then Duel.Hint(HINT_OPSELECTED,1-turnp,PM_DESC_DAMAGE_DECREASE) end
 	c2:AddCounter(PM_DAMAGE_COUNTER,ct)
@@ -892,18 +903,7 @@ function Duel.MoveEnergy(e,g1,g2,min,max,ener)
 	Duel.HintSelection(sg2)
 	Duel.Attach(sg2:GetFirst(),sg1)
 end
-
 --========== Auxiliary ==========
---return the value of the datatype
-function Auxiliary.GetValueType(val)
-	local t=type(val)
-	if t=="userdata" then
-		local mt=getmetatable(val)
-		if mt==Group then return "Group"
-		elseif mt==Effect then return "Effect"
-		else return "Card" end
-	else return t end
-end
 --show a player their deck when they search it for a card
 function Auxiliary.ConfirmDeck(tp,player)
 	local g=Duel.GetFieldGroup(player,LOCATION_DECK,0)
