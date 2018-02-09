@@ -34,9 +34,9 @@ function scard.typeop(e,tp,eg,ep,ev,re,r,rp)
 		table.insert(option_list,pm.select_list[v])
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_ENERGYTYPE)
-	local op=available_list[Duel.SelectOption(tp,table.unpack(option_list))+1]
-	local desc=aux.Stringid(sid,op)
-	local val=pm.energy_list[op]
+	local opt=available_list[Duel.SelectOption(tp,table.unpack(option_list))+1]
+	local desc=aux.Stringid(sid,opt)
+	local val=pm.energy_list[opt]
 	--add counter
 	if tc:GetCounter(PM_COLORING_COUNTER)>0 then
 		tc:RemoveCounter(tp,PM_COLORING_COUNTER,1,REASON_EFFECT)

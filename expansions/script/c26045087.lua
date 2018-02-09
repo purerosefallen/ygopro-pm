@@ -21,10 +21,10 @@ function scard.ddop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.DiscardDeck(1-tp,5,REASON_EFFECT)
 	local dam=Duel.GetOperatedGroup():FilterCount(Card.IsEnergy,nil)
 	if dam==0 then return end
-	local dg=Duel.GetMatchingGroup(pm.BenchPokemonFilter,tp,0,PM_LOCATION_IN_PLAY,nil)
-	if dg:GetCount()==0 then return end
-	local tc=dg:GetFirst()
-	for tc in aux.Next(dg) do
+	local g=Duel.GetMatchingGroup(pm.BenchPokemonFilter,tp,0,PM_LOCATION_IN_PLAY,nil)
+	if g:GetCount()==0 then return end
+	local tc=g:GetFirst()
+	for tc in aux.Next(g) do
 		Duel.EffectDamage(30*dam,c,tc,false,false)
 	end
 end

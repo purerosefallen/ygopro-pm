@@ -18,11 +18,11 @@ end
 function scard.thop(e,tp,eg,ep,ev,re,r,rp)
 	pm.ConfirmDeck(tp,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOHAND)
-	local sg1=Duel.SelectMatchingCard(tp,scard.thfilter1,tp,LOCATION_DECK,0,1,1,nil)
+	local g1=Duel.SelectMatchingCard(tp,scard.thfilter1,tp,LOCATION_DECK,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOHAND)
-	local sg2=Duel.SelectMatchingCard(tp,scard.thfilter2,tp,LOCATION_DECK,0,1,1,nil)
-	if sg1:GetCount()==0 and sg2:GetCount()==0 then return pm.SearchFailed(tp,tp) end
-	sg1:Merge(sg2)
-	Duel.SendtoHand(sg1,PLAYER_OWNER,REASON_EFFECT)
-	Duel.ConfirmCards(1-tp,sg1)
+	local g2=Duel.SelectMatchingCard(tp,scard.thfilter2,tp,LOCATION_DECK,0,1,1,nil)
+	if g1:GetCount()==0 and g2:GetCount()==0 then return pm.SearchFailed(tp,tp) end
+	g2:Merge(g2)
+	Duel.SendtoHand(g1,PLAYER_OWNER,REASON_EFFECT)
+	Duel.ConfirmCards(1-tp,g1)
 end

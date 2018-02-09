@@ -15,9 +15,9 @@ function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(tp,g)
 		Duel.ShuffleHand(1-tp)
 	end
-	local ft=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
-	if ft<=0 then return end
-	local ct=Duel.DiscardHand(tp,nil,1,ft,REASON_EFFECT+REASON_DISCARD)
+	local max=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
+	if max<=0 then return end
+	local ct=Duel.DiscardHand(tp,nil,1,max,REASON_EFFECT+REASON_DISCARD)
 	Duel.BreakEffect()
 	Duel.Draw(tp,ct,REASON_EFFECT)
 end

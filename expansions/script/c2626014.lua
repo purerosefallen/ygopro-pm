@@ -17,11 +17,11 @@ scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost1=pm.econ2(CARD_FIGHTING_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 scard.attack_cost2=pm.econ2(CARD_FIGHTING_ENERGY,3,CARD_COLORLESS_ENERGY,1)
 function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
-	local ag=Duel.GetAttachmentGroup(tp,1,0)
-	local max=ag:FilterCount(Card.IsEnergy,nil,CARD_FIGHTING_ENERGY)
+	local g=Duel.GetAttachmentGroup(tp,1,0)
+	local max=g:FilterCount(Card.IsEnergy,nil,CARD_FIGHTING_ENERGY)
 	if max==0 then return Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon()) end
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
-	local sg=ag:FilterSelect(tp,Card.IsEnergy,1,max,nil,CARD_FIGHTING_ENERGY)
+	local sg=g:FilterSelect(tp,Card.IsEnergy,1,max,nil,CARD_FIGHTING_ENERGY)
 	local dam=Duel.SendtoDPile(sg,REASON_EFFECT+REASON_DISCARD)
 	Duel.AttackDamage(40*dam)
 end

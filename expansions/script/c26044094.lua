@@ -19,19 +19,19 @@ scard.attack_cost2=pm.econ2(CARD_FIRE_ENERGY,1,CARD_COLORLESS_ENERGY,2)
 function scard.retop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.PokemonAttack(c,Duel.GetDefendingPokemon())
-	local ag=c:GetAttachmentGroup()
-	if ag:GetCount()>0 then
+	local g=c:GetAttachmentGroup()
+	if g:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOHAND)
-		local sg=ag:FilterSelect(tp,Card.IsEnergy,2,2,nil,CARD_WATER_ENERGY)
-		if sg:GetCount()==0 then return end
-		Duel.SendtoHand(sg,PLAYER_OWNER,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sg)
+		local sg1=g:FilterSelect(tp,Card.IsEnergy,2,2,nil,CARD_WATER_ENERGY)
+		if sg1:GetCount()==0 then return end
+		Duel.SendtoHand(sg1,PLAYER_OWNER,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,sg1)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DAMAGE)
-	local dg=Duel.SelectMatchingCard(tp,pm.BenchPokemonFilter,tp,0,PM_LOCATION_IN_PLAY,1,1,nil)
-	if dg:GetCount()==0 then return end
-	Duel.HintSelection(dg)
-	Duel.EffectDamage(100,c,dg:GetFirst(),false,false)
+	local sg2=Duel.SelectMatchingCard(tp,pm.BenchPokemonFilter,tp,0,PM_LOCATION_IN_PLAY,1,1,nil)
+	if sg2:GetCount()==0 then return end
+	Duel.HintSelection(sg2)
+	Duel.EffectDamage(100,c,sg2:GetFirst(),false,false)
 end
 --burned
 function scard.burop(e,tp,eg,ep,ev,re,r,rp)

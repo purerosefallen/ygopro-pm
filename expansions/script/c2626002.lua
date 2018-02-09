@@ -39,13 +39,13 @@ end
 --move energy
 function scard.meop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(60)
-	local ag=e:GetHandler():GetAttachmentGroup()
-	local mg=Duel.GetMatchingGroup(pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,nil)
-	if ag:FilterCount(Card.IsEnergy,nil)==0 or mg:GetCount()==0 then return end
+	local g1=e:GetHandler():GetAttachmentGroup()
+	local g2=Duel.GetMatchingGroup(pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,nil)
+	if g1:FilterCount(Card.IsEnergy,nil)==0 or g2:GetCount()==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_BASICENERGY)
-	local sg1=ag:FilterSelect(tp,Card.IsBasicEnergy,1,1,nil)
+	local sg1=g1:FilterSelect(tp,Card.IsBasicEnergy,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_MOVEENERGY)
-	local sg2=mg:Select(tp,1,1,nil)
+	local sg2=g2:Select(tp,1,1,nil)
 	Duel.HintSelection(sg2)
 	Duel.Attach(sg2:GetFirst(),sg1)
 end
