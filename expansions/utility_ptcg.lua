@@ -632,8 +632,8 @@ function Duel.AttackDamage(count,targets,weak,resist,effect)
 	elseif energy==PM_ENERGY_FIGHTING+PM_ENERGY_LIGHTNING then energy1=PM_ENERGY_FIGHTING energy2=PM_ENERGY_LIGHTNING
 	elseif energy==PM_ENERGY_PSYCHIC+PM_ENERGY_COLORLESS then energy1=PM_ENERGY_PSYCHIC energy2=PM_ENERGY_COLORLESS end
 	local weakness_x2=d.weakness_x2==energy
-	local dual_weakness1_x2=d.dual_weakness_x2[1]==energy1
-	local dual_weakness2_x2=d.dual_weakness_x2[2]==energy2
+	local dual_weakness1_x2=d.dual_weakness_x2 and d.dual_weakness_x2[1]==energy1
+	local dual_weakness2_x2=d.dual_weakness_x2 and d.dual_weakness_x2[2]==energy2
 	local weakness_10=d.weakness_10==energy
 	local weakness_20=d.weakness_20==energy
 	local weakness_30=d.weakness_30==energy
@@ -2145,6 +2145,7 @@ function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq,ignore_cannot_
 				end
 				if dest_loc==LOCATION_HAND then
 					Duel.SendtoHand(g1,PLAYER_OWNER,REASON_EFFECT)
+					Duel.ConfirmCards(1-tp,g1)
 				elseif dest_loc==LOCATION_DECK then
 					Duel.SendtoDeck(g1,PLAYER_OWNER,deck_seq,REASON_EFFECT)
 				elseif dest_loc==PM_LOCATION_DPILE then
