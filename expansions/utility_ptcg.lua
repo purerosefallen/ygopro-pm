@@ -776,6 +776,60 @@ function Duel.SwitchPokemon(e,switch_player,target_player)
 	if prim2>0 then tc2:AddMarker(PM_IMPRISON_MARKER,prim2) end
 	if shom2>0 then tc2:AddMarker(PM_SHOCKWAVE_MARKER,shom2) end
 end
+--switch a pokémon in play with a pokémon that is not in play
+--not fully implemented: retain abilities onto new pokémon
+function Duel.SwitchPokemonOffField(e,c1,c2,dest_loc)
+	--dest_loc: off-field destination location
+	local tp=e:GetHandlerPlayer()
+	if not (c1 and c2) then return end
+	--register sequence
+	local seq=c1:GetSequence()
+	--register counters
+	local damc=c1:GetCounter(PM_DAMAGE_COUNTER)
+	local colc=c1:GetCounter(PM_COLORING_COUNTER)
+	local chac=c1:GetCounter(PM_CHAR_COUNTER)
+	--register markers
+	local burm=c1:GetMarker(PM_BURN_MARKER)
+	local poim=c1:GetMarker(PM_POISON_MARKER)
+	local rodm=c1:GetMarker(PM_LIGHTNING_ROD_MARKER)
+	local ivym=c1:GetMarker(PM_DARK_IVYSAUR_MARKER)
+	local prim=c1:GetMarker(PM_IMPRISON_MARKER)
+	local shom=c1:GetMarker(PM_SHOCKWAVE_MARKER)
+	--register attached cards
+	local g3=Group.CreateGroup()
+	local ag=c1:GetAttachmentGroup()
+	local ac=ag:GetFirst()
+	for ac in aux.Next(ag) do
+		g3:AddCard(ac)
+	end
+	if dest_loc==LOCATION_HAND then
+		Duel.SendtoHand(c1,PLAYER_OWNER,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,c1)
+	elseif dest_loc==LOCATION_DECK then
+		Duel.SendtoDeck(c1,PLAYER_OWNER,DECK_ORDER_SHUFFLE,REASON_EFFECT)
+	elseif dest_loc==PM_LOCATION_DPILE then
+		Duel.SendtoDPile(c1,REASON_EFFECT)
+	elseif dest_loc==PM_LOCATION_LOST then
+		Duel.SendtoLost(c1,POS_FACEUP,REASON_EFFECT)
+	end
+	Duel.MoveToField(c2,tp,tp,LOCATION_MZONE,PM_POS_FACEUP_UPSIDE,true)
+	--retain attached cards and sequence
+	g3:RemoveCard(c2)
+	if c2:GetSequence()~=seq then Duel.MoveSequence(c2,seq) end
+	if g3:GetCount()>0 then Duel.Attach(c2,g3) end
+	--retain counters
+	if damc>0 then c2:AddCounter(PM_DAMAGE_COUNTER,damc) end
+	if colc>0 then c2:AddCounter(PM_COLORING_COUNTER,colc) end
+	if chac>0 then c2:AddCounter(PM_CHAR_COUNTER,chac) end
+	--retain markers
+	if burm>0 then c2:AddCounter(PM_BURN_MARKER,burm) end
+	if poim>0 then c2:AddCounter(PM_POISON_MARKER,poim) end
+	if rodm>0 then c2:AddCounter(PM_LIGHTNING_ROD_MARKER,rodm) end
+	if ivym>0 then c2:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
+	if prim>0 then c2:AddCounter(PM_IMPRISON_MARKER,prim) end
+	if shom>0 then c2:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
+	--not yet implemented: retain abilities
+end
 --remove a special condition affecting a pokémon
 function Duel.RemoveSpecialCondition(c,code)
 	--code: PM_EFFECT_ASLEEP, PM_EFFECT_BURNED, PM_EFFECT_CONFUSED, PM_EFFECT_PARALYZED or PM_EFFECT_POISONED
@@ -903,7 +957,7 @@ Duel.GetAttachmentGroup=Duel.GetOverlayGroup
 --check if a player can put a pokémon in play
 Duel.IsPlayerCanPutPokemonInPlay=Duel.IsPlayerCanSpecialSummonMonster
 --========== Auxiliary ==========
---show a player their deck when they search it for a card
+--show a player their deck when they search it
 function Auxiliary.ConfirmDeck(tp,player)
 	local g=Duel.GetFieldGroup(player,LOCATION_DECK,0)
 	if g:GetCount()<=0 then return end
