@@ -3,8 +3,6 @@ local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
-	--star
-	pm.EnableDeckRestriction(c,PM_EFFECT_RESTRICT_POKEMON_STAR)
 	--discard energy
 	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.deop)
 	--asleep

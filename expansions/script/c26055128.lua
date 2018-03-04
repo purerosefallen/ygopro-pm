@@ -2,8 +2,6 @@
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
-	--ace spec
-	pm.EnableDeckRestriction(c,PM_EFFECT_RESTRICT_ACE_SPEC)
 	--to hand
 	pm.EnableTrainerPlay(c,PM_CATEGORY_TOHAND,scard.thtg,scard.thop,nil,pm.dhcost(2))
 end

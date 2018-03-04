@@ -308,23 +308,8 @@ function Card.IsDoubleColorlessEnergy(c)
 end
 --check if a card can only have one copy of itself in a player's deck
 function Card.IsHasDeckRestriction(c)
-	return c:IsHasEffect(PM_EFFECT_RESTRICT_MIRACLE_ENERGY) or c:IsHasEffect(PM_EFFECT_RESTRICT_POKEMON_STAR)
-		or c:IsHasEffect(PM_EFFECT_RESTRICT_ACE_SPEC)--update with new effects here
+	return c:IsCode(CARD_MIRACLE_ENERGY) or c:IsPokemonStar() or c:IsACESPEC() --update with new restricts here
 end
---get the cards attached to a card
-Card.GetAttachmentGroup=Card.GetOverlayGroup
---get the number of cards attached to a card
-Card.GetAttachmentCount=Card.GetOverlayCount
---get the card the attached cards are attached to
-Card.GetAttachmentTarget=Card.GetOverlayTarget
---get a pokémon's CURRENT type (color)
-Card.GetPokemonType=Card.GetAttribute
---get a pokémon's ORIGINAL type (color)
-Card.GetOriginalPokemonType=Card.GetOriginalAttribute
---get the type (color) a pokémon had when it was on the field
-Card.GetPreviousPokemonType=Card.GetPreviousAttributeOnField
---check what a pokémon's current type (color) is
-Card.IsPokemonType=Card.IsAttribute
 --check if a pokémon is a dual-type card
 --reserved
 function Card.IsDualType(c)
@@ -343,72 +328,6 @@ function Card.IsBench(c)
 		--extend bench by "Sky Field ROS 89"
 		or (c:IsLocation(LOCATION_SZONE) and c:GetSequence()~=SEQUENCE_FIELD_ZONE)
 end
---check if a card is vertical
-Card.IsUpside=Card.IsAttackPos
-Card.IsFaceupUpside=aux.AND(Card.IsFaceup,Card.IsAttackPos)
-Card.IsFacedownUpside=aux.AND(Card.IsFacedown,Card.IsAttackPos)
---check if a card is clockwise
-Card.IsClockwise=Card.IsDefensePos
-Card.IsFaceupClockwise=aux.AND(Card.IsFaceup,Card.IsDefensePos)
-Card.IsFacedownClockwise=aux.AND(Card.IsFacedown,Card.IsDefensePos)
---check if a card is counter-clockwise
-Card.IsCounterclockwise=Card.IsDefensePos
-Card.IsFaceupCounterclockwise=aux.AND(Card.IsFaceup,Card.IsDefensePos)
-Card.IsFacedownCounterclockwise=aux.AND(Card.IsFacedown,Card.IsDefensePos)
---check if a pokémon's retreat cost is n or less
-Card.IsRetreatCostBelow=Card.IsLevelBelow
---check if a pokémon's retreat cost is n or more
-Card.IsRetreatCostAbove=Card.IsLevelAbove
---get a pokémon's CURRENT retreat cost
-Card.GetRetreatCost=Card.GetLevel
---get a pokémon's ORIGINAL retreat cost
-Card.GetOriginalRetreatCost=Card.GetOriginalLevel
---get the retreat cost a pokémon had when it was on the field
-Card.GetPreviousRetreatCostOnField=Card.GetPreviousLevelOnField
---get a card's CURRENT hit points
-Card.GetHP=Card.GetAttack
---get a card's ORIGINAL hit points
-Card.GetBaseHP=Card.GetBaseAttack
---get the hit points printed on a card
-Card.GetTextHP=Card.GetTextAttack
---get the hit points a card had when it was on the field
-Card.GetPreviousHPOnField=Card.GetPreviousAttackOnField
---check if a card's hit points is n or less
-Card.IsHPBelow=Card.IsAttackBelow
---check if a card's hit points is n or more
-Card.IsHPAbove=Card.IsAttackAbove
---put a marker on a card
-Card.AddMarker=Card.AddCounter
---remove a marker from a card
-Card.RemoveMarker=Card.RemoveCounter
---check if a card has a marker on it
-Card.GetMarker=Card.GetCounter
---allow a card to have a marker put on it
-Card.EnableMarkerPermit=Card.EnableCounterPermit
---limit the number of markers that can be put on a card
-Card.SetMarkerLimit=Card.SetCounterLimit
---check if a marker can be put on a card
-Card.IsCanAddMarker=Card.IsCanAddCounter
---check if a marker can be removed from a card
-Card.IsCanRemoveMarker=Card.IsCanRemoveCounter
---get the player who put the pokémon in play
-Card.GetPlayPlayer=Card.GetSummonPlayer
---check if a pokémon can be put in play
-Card.IsCanBePutInPlay=Card.IsCanBeSpecialSummoned
---set the group underneath a card as attachments that belong to it
-Card.SetAttachment=Card.SetMaterial
---check if a card can be put in the discard pile
-Card.IsAbleToDiscardPile=Card.IsAbleToGrave
-Card.IsAbleToDPile=Card.IsAbleToDiscardPile
---check if a card can be put in the discard pile as a cost
-Card.IsAbleToDiscardPileAsCost=Card.IsAbleToGraveAsCost
-Card.IsAbleToDPileAsCost=Card.IsAbleToDiscardPileAsCost
---prevent a card from being sent to the discard pile when it resolves
-Card.CancelToDiscardPile=Card.CancelToGrave
-Card.CancelToDPile=Card.CancelToDiscardPile
---add the pokémon value to the non-pokémon card
-Card.AddPokemonAttribute=Card.AddMonsterAttribute
-Card.AddPokemonAttributeComplete=Card.AddMonsterAttributeComplete
 --check if a pokémon is asleep
 function Card.IsAsleep(c)
 	return c:GetFlagEffect(PM_EFFECT_ASLEEP)~=0 and c:IsPosition(PM_POS_FACEUP_COUNTERCLOCKWISE)
@@ -505,6 +424,86 @@ function Card.IsImmuneToDamage(c)
 	if c:IsHasEffect(PM_EFFECT_IMMUNE_DAMAGE) then return true end
 	return false
 end
+--get a pokémon's CURRENT retreat cost
+Card.GetRetreatCost=Card.GetLevel
+--get a pokémon's ORIGINAL retreat cost
+Card.GetOriginalRetreatCost=Card.GetOriginalLevel
+--get the retreat cost a pokémon had when it was on the field
+Card.GetPreviousRetreatCostOnField=Card.GetPreviousLevelOnField
+--check if a pokémon's retreat cost is n or less
+Card.IsRetreatCostBelow=Card.IsLevelBelow
+--check if a pokémon's retreat cost is n or more
+Card.IsRetreatCostAbove=Card.IsLevelAbove
+--get a pokémon's CURRENT type (color)
+Card.GetPokemonType=Card.GetAttribute
+--get a pokémon's ORIGINAL type (color)
+Card.GetOriginalPokemonType=Card.GetOriginalAttribute
+--get the type (color) a pokémon had when it was on the field
+Card.GetPreviousPokemonType=Card.GetPreviousAttributeOnField
+--check what a pokémon's current type (color) is
+Card.IsPokemonType=Card.IsAttribute
+--get a card's CURRENT hit points
+Card.GetHP=Card.GetAttack
+--get a card's ORIGINAL hit points
+Card.GetBaseHP=Card.GetBaseAttack
+--get the hit points printed on a card
+Card.GetTextHP=Card.GetTextAttack
+--get the hit points a card had when it was on the field
+Card.GetPreviousHPOnField=Card.GetPreviousAttackOnField
+--check if a card's hit points is n or less
+Card.IsHPBelow=Card.IsAttackBelow
+--check if a card's hit points is n or more
+Card.IsHPAbove=Card.IsAttackAbove
+--get the player who put the pokémon in play
+Card.GetPlayPlayer=Card.GetSummonPlayer
+--check if a pokémon can be put in play
+Card.IsCanBePutInPlay=Card.IsCanBeSpecialSummoned
+--set the group of cards underneath a card as attachments that belong to it
+Card.SetAttachment=Card.SetMaterial
+--get the card the attached cards are attached to
+Card.GetAttachmentTarget=Card.GetOverlayTarget
+--get the cards attached to a card
+Card.GetAttachmentGroup=Card.GetOverlayGroup
+--get the number of cards attached to a card
+Card.GetAttachmentCount=Card.GetOverlayCount
+--check if a card can be put in the discard pile
+Card.IsAbleToDiscardPile=Card.IsAbleToGrave
+Card.IsAbleToDPile=Card.IsAbleToDiscardPile
+--check if a card can be put in the discard pile as a cost
+Card.IsAbleToDiscardPileAsCost=Card.IsAbleToGraveAsCost
+Card.IsAbleToDPileAsCost=Card.IsAbleToDiscardPileAsCost
+--check if a card is vertical
+Card.IsUpside=Card.IsAttackPos
+Card.IsFaceupUpside=aux.AND(Card.IsFaceup,Card.IsAttackPos)
+Card.IsFacedownUpside=aux.AND(Card.IsFacedown,Card.IsAttackPos)
+--check if a card is clockwise
+Card.IsClockwise=Card.IsDefensePos
+Card.IsFaceupClockwise=aux.AND(Card.IsFaceup,Card.IsDefensePos)
+Card.IsFacedownClockwise=aux.AND(Card.IsFacedown,Card.IsDefensePos)
+--check if a card is counter-clockwise
+Card.IsCounterclockwise=Card.IsDefensePos
+Card.IsFaceupCounterclockwise=aux.AND(Card.IsFaceup,Card.IsDefensePos)
+Card.IsFacedownCounterclockwise=aux.AND(Card.IsFacedown,Card.IsDefensePos)
+--put a marker on a card
+Card.AddMarker=Card.AddCounter
+--remove a marker from a card
+Card.RemoveMarker=Card.RemoveCounter
+--check if a card has a marker on it
+Card.GetMarker=Card.GetCounter
+--allow a card to have a marker put on it
+Card.EnableMarkerPermit=Card.EnableCounterPermit
+--limit the number of markers that can be put on a card
+Card.SetMarkerLimit=Card.SetCounterLimit
+--check if a marker can be put on a card
+Card.IsCanAddMarker=Card.IsCanAddCounter
+--check if a marker can be removed from a card
+Card.IsCanRemoveMarker=Card.IsCanRemoveCounter
+--add the pokémon value to the non-pokémon card
+Card.AddPokemonAttribute=Card.AddMonsterAttribute
+Card.AddPokemonAttributeComplete=Card.AddMonsterAttributeComplete
+--prevent a card from being sent to the discard pile when it resolves
+Card.CancelToDiscardPile=Card.CancelToGrave
+Card.CancelToDPile=Card.CancelToDiscardPile
 --========== Duel ==========
 --let a player draw cards equal to or less than count with a reason and return the number of cards drawn
 local duel_draw=Duel.Draw
@@ -523,43 +522,6 @@ function Duel.IsPlayerCanDraw(player,count)
 	if count>ct then count=ct end
 	return duel_is_player_can_draw(player,count)
 end
---set aside a card face-down
-Duel.SetAside=Duel.Remove
---put a card in the lost zone
-Duel.SendtoLost=Duel.Remove
---knock out a pokémon
-Duel.KnockOut=Duel.Destroy
---get all attached cards in a specified location
-Duel.GetAttachmentGroup=Duel.GetOverlayGroup
---get a player's stadium card
-Duel.GetStadiumCard=Duel.GetFieldCard
---place a card in the discard pile (discard a card)
-Duel.SendtoDiscardPile=Duel.SendtoGrave
-Duel.SendtoDPile=Duel.SendtoDiscardPile
---check if a player can put a marker on a card
-Duel.IsCanAddMarker=Duel.IsCanAddCounter
---a player removes a marker from cards in play
-Duel.RemoveMarker=Duel.RemoveCounter
---check if a player can remove a marker from cards in play
-Duel.IsCanRemoveMarker=Duel.IsCanRemoveCounter
---get the number of markers that are on cards in play
-Duel.GetMarker=Duel.GetCounter
---evolve a pokémon by playing it on top of another pokémon
-Duel.Evolve=Duel.Overlay
---level up a pokémon by putting it on top of the active pokémon
-Duel.LevelUp=Duel.Overlay
---attach a card to another card
-Duel.Attach=Duel.Overlay
---a player puts a pokémon in play
-Duel.PutInPlay=Duel.SpecialSummon
-Duel.PutInPlayStep=Duel.SpecialSummonStep
-Duel.PutInPlayComplete=Duel.SpecialSummonComplete
---check if a player can put a pokémon in play
-Duel.IsPlayerCanPutPokemonInPlay=Duel.IsPlayerCanSpecialSummonMonster
---a player's active pokémon attacks the opponent's defending pokémon
-Duel.PokemonAttack=Duel.CalculateDamage
---negate a pokémon's attack
-Duel.NegatePokemonAttack=Duel.NegateActivation
 --check if it is the first turn of the game
 function Duel.IsFirstTurn()
 	return Duel.GetTurnCount()==1
@@ -903,6 +865,43 @@ function Duel.MoveEnergy(e,g1,g2,min,max,ener)
 	Duel.HintSelection(sg2)
 	Duel.Attach(sg2:GetFirst(),sg1)
 end
+--knock out a pokémon
+Duel.KnockOut=Duel.Destroy
+--set aside a card face-down
+Duel.SetAside=Duel.Remove
+--put a card in the lost zone
+Duel.SendtoLost=Duel.Remove
+--place a card in the discard pile (discard a card)
+Duel.SendtoDiscardPile=Duel.SendtoGrave
+Duel.SendtoDPile=Duel.SendtoDiscardPile
+--check if a player can put a marker on a card
+Duel.IsCanAddMarker=Duel.IsCanAddCounter
+--a player removes a marker from cards in play
+Duel.RemoveMarker=Duel.RemoveCounter
+--check if a player can remove a marker from cards in play
+Duel.IsCanRemoveMarker=Duel.IsCanRemoveCounter
+--get the number of markers that are on cards in play
+Duel.GetMarker=Duel.GetCounter
+--a player puts a pokémon in play
+Duel.PutInPlay=Duel.SpecialSummon
+Duel.PutInPlayStep=Duel.SpecialSummonStep
+Duel.PutInPlayComplete=Duel.SpecialSummonComplete
+--a player's active pokémon attacks the opponent's defending pokémon
+Duel.PokemonAttack=Duel.CalculateDamage
+--negate a pokémon's attack
+Duel.NegatePokemonAttack=Duel.NegateActivation
+--get a player's stadium card
+Duel.GetStadiumCard=Duel.GetFieldCard
+--evolve a pokémon by playing it on top of another pokémon
+Duel.Evolve=Duel.Overlay
+--level up a pokémon by putting it on top of the active pokémon
+Duel.LevelUp=Duel.Overlay
+--attach a card to another card
+Duel.Attach=Duel.Overlay
+--get all attached cards in a specified location
+Duel.GetAttachmentGroup=Duel.GetOverlayGroup
+--check if a player can put a pokémon in play
+Duel.IsPlayerCanPutPokemonInPlay=Duel.IsPlayerCanSpecialSummonMonster
 --========== Auxiliary ==========
 --show a player their deck when they search it for a card
 function Auxiliary.ConfirmDeck(tp,player)
@@ -2009,16 +2008,6 @@ function Auxiliary.EnableDoubleEnergy(c,val)
 		ge1:SetValue(val)
 		Duel.RegisterEffect(ge1,0)
 	end
-end
---"You can't have more than 1 ... card in your deck." (e.g. "Miracle Energy N4 16")
-function Auxiliary.EnableDeckRestriction(c,code,con_func)
-	--code: PM_EFFECT_RESTRICT_MIRACLE_ENERGY, PM_EFFECT_RESTRICT_ACE_SPEC or PM_EFFECT_RESTRICT_POKEMON_STAR
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(code)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	if con_func then e1:SetCondition(con_func) end
-	c:RegisterEffect(e1)
 end
 --"Draw N cards." (e.g. "Bill BS 91")
 function Auxiliary.DrawTarget(p,ct)
