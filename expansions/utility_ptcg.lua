@@ -2760,6 +2760,11 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 			end
 end
 Auxiliary.econ5=Auxiliary.AttackCostCondition5
+--condition for a pokémon to not be affected by a special condition
+function Auxiliary.NotAffectedBySpecialCondition(e,tp,eg,ep,ev,re,r,rp)
+	return not e:GetHandler():IsAffectedBySpecialCondition()
+end
+Auxiliary.nspcon=Auxiliary.NotAffectedBySpecialCondition
 --condition to omit the first turn (e.g. "Rare Candy SS 88")
 function Auxiliary.NotFirstTurnCondition()
 	return not Duel.IsFirstTurn()

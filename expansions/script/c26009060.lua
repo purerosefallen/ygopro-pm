@@ -11,7 +11,7 @@ function scard.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
 	e1:SetCountLimit(1)
-	e1:SetCondition(scard.tbcon)
+	e1:SetCondition(pm.nspcon)
 	e1:SetTarget(scard.tbtg)
 	e1:SetOperation(scard.tbop)
 	c:RegisterEffect(e1)
@@ -24,9 +24,6 @@ scard.devolve_list={[1]=CARD_MYSTERIOUS_FOSSIL}
 scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost=pm.econ1(PM_ENERGY_WATER,1)
 --to bench
-function scard.tbcon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsAffectedBySpecialCondition()
-end
 function scard.tbtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
