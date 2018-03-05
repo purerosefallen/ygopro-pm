@@ -39,7 +39,6 @@ function scard.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=g:Select(tp,1,1,nil)
 	local tc=sg:GetFirst()
 	Duel.HintSelection(sg)
-	g:RemoveCard(tc)
 	tc:RemoveCounter(tp,PM_DAMAGE_COUNTER,1,REASON_EFFECT)
 	c:AddCounter(PM_DAMAGE_COUNTER,1,REASON_EFFECT)
 end
