@@ -2063,7 +2063,7 @@ function Auxiliary.EnableDoubleEnergy(c,val)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
---"Draw N cards." (e.g. "Bill BS 91")
+--"Draw N cards" (e.g. "Bill BS 91")
 function Auxiliary.DrawTarget(p,ct)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
 				local player=nil
@@ -2801,7 +2801,7 @@ function Auxiliary.SendToDeckCost(loc,min,max,seq)
 			end
 end
 Auxiliary.tdcost=Auxiliary.SendToDeckCost
---cost for discarding Energy to a pokémon
+--cost for discarding Energy attached to a pokémon
 function Auxiliary.DiscardEnergyCost(c,min,max,energy)
 	--energy: CARD_GRASS_ENERGY for [G], CARD_FIRE_ENERGY for [R], CARD_WATER_ENERGY for [W], etc.
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -2849,6 +2849,13 @@ end
 --filter for pokémon on the bench + PM_LOCATION_BENCH
 function Auxiliary.BenchPokemonFilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:IsBench()
+end
+--filter for the lost zone
+function Auxiliary.LostZoneFilter(f)
+	--PM_LOCATION_LOST + f: Card.IsAbleTo... or Card.IsType or filter, etc.
+	return	function(target,...)
+				return f(target,...) and target:IsFaceup()
+			end
 end
 
 --==========[+Lists]==========
