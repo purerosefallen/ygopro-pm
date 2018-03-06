@@ -36,7 +36,6 @@ end
 function scard.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.PokemonAttack(c,Duel.GetDefendingPokemon())
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(sid,2))
 	local count=3
 	repeat
 		Duel.Hint(HINT_SELECTMSG,1-tp,aux.Stringid(sid,2))

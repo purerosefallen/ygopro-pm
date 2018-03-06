@@ -385,7 +385,7 @@ end
 function Card.IsCanAttack(c,e)
 	if c:IsAsleep() and e:IsHasCategory(PM_CATEGORY_ASLEEP_ATTACK) then return true end
 	return not (Duel.IsFirstTurn() or c:IsAsleep() or c:IsParalyzed() or c:IsHasEffect(PM_EFFECT_CANNOT_ATTACK))
-		or Duel.GetDefendingPokemon():IsCanBeAttacked()
+		and Duel.GetDefendingPokemon():IsCanBeAttacked()
 end
 --check if an active pokémon can be retreated to the bench
 function Card.IsCanRetreat(c)
