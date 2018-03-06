@@ -2,6 +2,7 @@
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
+	c:SetStatus(PM_STATUS_NO_RETREAT_COST,true)
 	pm.EnablePokemonAttribute(c)
 	--baby
 	pm.EnableBabyAttribute(c)
