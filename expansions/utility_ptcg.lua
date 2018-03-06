@@ -377,10 +377,15 @@ end
 function Card.IsCanBeAffectedBySpecialCondition(c)
 	return c:IsCanBeAsleep() and c:IsCanBeBurned() and c:IsCanBeConfused() and c:IsCanBeParalyzed() and c:IsCanBePoisoned()
 end
+--check if a pokémon can be attacked
+function Card.IsCanBeAttacked(c)
+	return not c:IsHasEffect(PM_EFFECT_CANNOT_BE_ATTACKED)
+end
 --check if a pokémon can attack
 function Card.IsCanAttack(c,e)
 	if c:IsAsleep() and e:IsHasCategory(PM_CATEGORY_ASLEEP_ATTACK) then return true end
 	return not (Duel.IsFirstTurn() or c:IsAsleep() or c:IsParalyzed() or c:IsHasEffect(PM_EFFECT_CANNOT_ATTACK))
+		or Duel.GetDefendingPokemon():IsCanBeAttacked()
 end
 --check if an active pokémon can be retreated to the bench
 function Card.IsCanRetreat(c)
@@ -541,7 +546,7 @@ function Duel.SendtoPrize(e,targets,player,reason)
 	for tc in aux.Next(targets) do
 		if tc:IsLocation(LOCATION_DECK) then Duel.DisableShuffleCheck() end
 		Duel.SetAside(tc,POS_FACEDOWN,reason)
-		tc:RegisterFlagEffect(PM_EFFECT_PRIZE_CARD,0,0,0)
+		tc:RegisterFlagEffect(PM_EFFECT_PRIZE_CARD,RESET_EVENT+RESETS_STANDARD,0,0)
 	end
 	local ct=Duel.GetPrizeGroupCount(tp,player)
 	Duel.SetLP(player,ct)
@@ -1339,17 +1344,21 @@ function Auxiliary.RetreatCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function Auxiliary.RetreatOperation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local g=e:GetLabelObject()
 	if g:GetCount()==0 then return end
 	--Not fully implemented: Duel.SwapSequence doesn't work when promoting Pokémon in LOCATION_SZONE
-	Duel.SwapSequence(e:GetHandler(),g:GetFirst())
+	Duel.SwapSequence(c,g:GetFirst())
 	Duel.RegisterFlagEffect(tp,PM_EFFECT_RETREAT,RESET_PHASE+PHASE_END,0,1)
+	--raise event for "when this Pokémon retreats"
+	Duel.RaiseSingleEvent(c,EVENT_CUSTOM+PM_EVENT_RETREAT,e,0,0,0,0)
 end
 function Auxiliary.RemoveEffectsCondition(e)
 	return e:GetHandler():IsBench() and e:GetHandler():IsAffectedBySpecialCondition()
 end
 function Auxiliary.RemoveEffectsOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RemoveSpecialCondition(e:GetHandler())
+	--not yet implemented: remove other effects affecting the pokémon
 end
 
 --==========[+Evolution]==========
@@ -2760,6 +2769,11 @@ function Auxiliary.AttackCostCondition5(ener1,count1,ener2,count2,ener3,count3,e
 			end
 end
 Auxiliary.econ5=Auxiliary.AttackCostCondition5
+--condition for while a pokémon is the active pokémon
+function Auxiliary.SelfActiveCondition(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsActive()
+end
+Auxiliary.activecon=Auxiliary.SelfActiveCondition
 --condition for a pokémon to not be affected by a special condition
 function Auxiliary.NotAffectedBySpecialCondition(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsAffectedBySpecialCondition()
