@@ -33,5 +33,6 @@ end
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	local dam=10
 	if Duel.GetDefendingPokemon():GetMarker(PM_LIGHTNING_ROD_MARKER)>0 then dam=dam+20 end
+	if dam>10 then Duel.Hint(HINT_OPSELECTED,1-tp,PM_DESC_DAMAGE_INCREASE) end
 	Duel.AttackDamage(dam)
 end
