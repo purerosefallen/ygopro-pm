@@ -25,7 +25,7 @@ function scard.ddop1(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	local tc=g:GetFirst()
 	for tc in aux.Next(g) do
-		Duel.EffectDamage(30*dam,c,tc,false,false)
+		Duel.EffectDamage(30*dam,c,tc)
 	end
 end
 function scard.ddop2(e,tp,eg,ep,ev,re,r,rp)

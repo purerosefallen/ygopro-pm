@@ -20,7 +20,7 @@ function scard.damop1(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	local tc=g:GetFirst()
 	for tc in aux.Next(g) do
-		Duel.EffectDamage(10,e:GetHandler(),tc,false,false)
+		Duel.EffectDamage(10,e:GetHandler(),tc)
 	end
 end
 function scard.damop2(e,tp,eg,ep,ev,re,r,rp)

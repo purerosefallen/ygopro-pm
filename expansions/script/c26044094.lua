@@ -31,7 +31,7 @@ function scard.retop(e,tp,eg,ep,ev,re,r,rp)
 	local sg2=Duel.SelectMatchingCard(tp,pm.BenchPokemonFilter,tp,0,PM_LOCATION_IN_PLAY,1,1,nil)
 	if sg2:GetCount()==0 then return end
 	Duel.HintSelection(sg2)
-	Duel.EffectDamage(100,c,sg2:GetFirst(),false,false)
+	Duel.EffectDamage(100,c,sg2:GetFirst())
 end
 --burned
 function scard.burop(e,tp,eg,ep,ev,re,r,rp)

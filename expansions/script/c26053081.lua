@@ -26,9 +26,7 @@ function scard.damop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	Duel.HintSelection(g)
 	for tc in aux.Next(g) do
-		if tc:IsBench() then
-			Duel.EffectDamage(30,c,tc,false,false)
-		else Duel.EffectDamage(30,c,tc) end
+		Duel.EffectDamage(30,c,tc)
 	end
 end
 --damage reduce
