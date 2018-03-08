@@ -21,12 +21,12 @@ end
 function scard.atop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.PokemonAttack(c,Duel.GetDefendingPokemon())
-	local g1=Duel.GetMatchingGroup(scard.cfilter,tp,PM_LOCATION_ACTIVE,0,nil)
-	local g2=Duel.GetMatchingGroup(Card.IsEnergy,tp,LOCATION_DECK,0,nil,CARD_LIGHTNING_ENERGY)
+	local ct=Duel.GetMatchingGroupCount(scard.cfilter,tp,PM_LOCATION_ACTIVE,0,nil)
+	local g=Duel.GetMatchingGroup(Card.IsEnergy,tp,LOCATION_DECK,0,nil,CARD_LIGHTNING_ENERGY)
 	pm.ConfirmDeck(tp,tp)
-	if g2:GetCount()==0 then return pm.SearchFailed(tp,tp) end
+	if g:GetCount()==0 then return pm.SearchFailed(tp,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_LENERGY)
-	local sg=g2:Select(tp,ct,ct,nil)
+	local sg=g:Select(tp,ct,ct,nil)
 	Duel.Attach(c,sg)
 end
 --paralyzed
