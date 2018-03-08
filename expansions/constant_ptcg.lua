@@ -161,6 +161,8 @@ CARD_KYOGRE_AND_GROUDON_LEGEND		=26045087	--"Kyogre & Groudon LEGEND" (Undaunted
 CARD_RAYQUAZA_AND_DEOXYS_LEGEND		=26045089	--"Rayquaza & Deoxys LEGEND" (Undaunted 89/90) & (Undaunted 90/90)
 CARD_DARKRAI_AND_CRESSELIA_LEGEND	=26046099	--"Darkrai & Cresselia LEGEND" (Triumphant 99/102) & (Triumphant 100/102)
 CARD_PALKIA_AND_DIALGA_LEGEND		=26046101	--"Palkia & Dialga LEGEND" (Triumphant 101/102) & (Triumphant 102/102)
+--↑Pokémon EX
+CARD_VICTINI_EX						=26055018	--"Victory Piece" (Plasma Storm 130/135)
 --↑Pokémon GX
 CARD_SNORLAX_GX						=2629005	--"Pokemon Rules"
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
@@ -312,6 +314,7 @@ RESETS_STANDARD_DISCONTROL			=0x3ff0000	--0x1ff0000+RESET_CONTROL
 --Types
 PM_EFFECT_TYPE_PLAY					=EFFECT_TYPE_ACTIVATE		--Trainer cards that a player can play each turn
 PM_EFFECT_TYPE_ATTACHED_TRAINER		=EFFECT_TYPE_XMATERIAL		--Trainer cards that give Pokémon attacks or effects
+PM_EFFECT_TYPE_POKEMON_TOOL			=EFFECT_TYPE_XMATERIAL		--Pokémon Tool cards that give Pokémon attacks or effects
 --Flags
 PM_EFFECT_FLAG_BENCH_PARAM			=EFFECT_FLAG_SPSUM_PARAM	--Included on all Pokémon that can be put onto the Bench
 PM_EFFECT_FLAG_POKEMON_ATTACK		=0x10000000					--Included on all Pokémon attacks
@@ -452,10 +455,11 @@ PM_EFFECT_IMMUNE_ATTACK_POKEMONLVX	=725	--"Arceus" (Arceus AR9)
 PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED	=726	--"Mewtwo LV.X" (Legends Awakened 144/146)
 PM_EFFECT_EXTRA_PRIZE_KNOCKED_OUT	=727	--"Rayquaza & Deoxys LEGEND" (Undaunted 89/90)
 PM_EFFECT_CANNOT_ATTACK				=728	--"Haxorus" (Noble Victories 88/101)
-PM_EFFECT_EXTEND_BENCH_8			=729	--"Sky Field" (Roaring Skies 89/108)
-PM_EFFECT_DAMAGE_ATTACK_REDUCE_20	=730	--"Chesnaught" (BREAKthrough 11/162)
-PM_EFFECT_DAMAGE_ATTACK_REDUCE_30	=731	--"Mewtwo-EX" (BREAKthrough 61/162)
-PM_EFFECT_ASLEEP_TOSS_2_COIN		=732	--"Darkrai Prism Star" (Ultra Prism 77/156)
+PM_EFFECT_IGNORE_ENERGY				=729	--"Victory Piece" (Plasma Storm 130/135)
+PM_EFFECT_EXTEND_BENCH_8			=730	--"Sky Field" (Roaring Skies 89/108)
+PM_EFFECT_DAMAGE_ATTACK_REDUCE_20	=731	--"Chesnaught" (BREAKthrough 11/162)
+PM_EFFECT_DAMAGE_ATTACK_REDUCE_30	=732	--"Mewtwo-EX" (BREAKthrough 61/162)
+PM_EFFECT_ASLEEP_TOSS_2_COIN		=733	--"Darkrai Prism Star" (Ultra Prism 77/156)
 --Abilities that activate or actions that occur at the appropriate event
 PM_EVENT_TO_DISCARDPILE				=EVENT_TO_GRAVE			--When a card is put into the discard pile
 PM_EVENT_LEAVE_PLAY					=EVENT_LEAVE_FIELD		--When a card leaves play
