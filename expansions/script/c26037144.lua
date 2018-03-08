@@ -5,11 +5,12 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--level up
 	pm.EnableLevelUpAttribute(c)
-	--immune
+	--poké-body (immune)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(PM_EFFECT_IMMUNE_ATTACK_NONEVOLVED)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
+	e1:SetCondition(pm.pbodcon)
 	c:RegisterEffect(e1)
 	--discard energy
 	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost,pm.hinttg,scard.deop)

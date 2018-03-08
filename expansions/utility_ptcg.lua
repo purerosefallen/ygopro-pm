@@ -405,6 +405,14 @@ end
 function Card.IsCanEvolve(c)
 	return not c:IsHasEffect(PM_EFFECT_CANNOT_EVOLVE)
 end
+--check if a pokémon can use its poké-power
+function Card.IsCanUsePokePower(c)
+	return not c:IsHasEffect(PM_EFFECT_CANNOT_USE_POKEPOWER)
+end
+--check if a pokémon can use its poké-body
+function Card.IsCanUsePokeBody(c)
+	return not c:IsHasEffect(PM_EFFECT_CANNOT_USE_POKEBODY)
+end
 --check if a pokémon can have an attached energy card to it removed by an attack or trainer card
 function Card.IsAbleToRemoveEnergy(c)
 	return not c:IsHasEffect(PM_EFFECT_CANNOT_REMOVE_ENERGY_ATTACK_TRAINER)
@@ -2738,6 +2746,16 @@ function Auxiliary.SelfBenchCondition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsBench()
 end
 Auxiliary.benchcon=Auxiliary.SelfBenchCondition
+--condition for a pokémon to use its poké-power
+function Auxiliary.PokePowerCondition(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsCanUsePokePower()
+end
+Auxiliary.ppowcon=Auxiliary.PokePowerCondition
+--condition for a pokémon to use its poké-body
+function Auxiliary.PokeBodyCondition(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsCanUsePokeBody()
+end
+Auxiliary.pbodcon=Auxiliary.PokeBodyCondition
 --condition for a pokémon to not be affected by a special condition
 function Auxiliary.NotAffectedBySpecialCondition(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsAffectedBySpecialCondition()

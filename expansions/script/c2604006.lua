@@ -5,12 +5,12 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--evolve
 	pm.EnableEvolutionAttribute(c)
-	--switch
+	--poké-body (switch)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_CUSTOM+PM_EVENT_RETREAT)
-	e1:SetTarget(pm.hinttg)
+	e1:SetCondition(aux.AND(pm.turnpcon(PLAYER_PLAYER),pm.pbodcon))
 	e1:SetOperation(scard.swop)
 	c:RegisterEffect(e1)
 	--add marker
@@ -22,8 +22,10 @@ scard.evolve_list={[1]=CARD_VENUSAUR}
 scard.devolve_list={[1]=CARD_BULBASAUR}
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost=pm.econ1(CARD_GRASS_ENERGY,2)
---switch
+--poké-body (switch)
 function scard.swop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SwitchPokemon(e,tp,1-tp)
 end
 --add marker

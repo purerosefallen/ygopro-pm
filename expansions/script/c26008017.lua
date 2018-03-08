@@ -5,13 +5,13 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--evolve
 	pm.EnableEvolutionAttribute(c)
-	--attach
+	--poké-power (attach)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
 	e1:SetCountLimit(1)
-	e1:SetCondition(pm.nspcon)
+	e1:SetCondition(aux.AND(pm.ppowcon,pm.nspcon))
 	e1:SetTarget(scard.attg)
 	e1:SetOperation(scard.atop)
 	c:RegisterEffect(e1)
@@ -23,7 +23,7 @@ scard.length=5.70
 scard.devolve_list={[1]=CARD_QUILAVA,[2]=CARD_CYNDAQUIL}
 scard.weakness_x2=PM_ENERGY_WATER
 scard.attack_cost=pm.econ1(CARD_FIRE_ENERGY,4)
---attach
+--poké-power (attach)
 function scard.atfilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:IsPokemonType(PM_ENERGY_FIRE)
 end

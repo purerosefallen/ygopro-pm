@@ -5,12 +5,12 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--evolve
 	pm.EnableEvolutionAttribute(c)
-	--move energy
+	--poké-power (move energy)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
-	e1:SetCondition(pm.nspcon)
+	e1:SetCondition(aux.AND(pm.ppowcon,pm.nspcon))
 	e1:SetTarget(scard.metg)
 	e1:SetOperation(scard.meop)
 	c:RegisterEffect(e1)
@@ -21,7 +21,7 @@ scard.pokemon_card=true
 scard.devolve_list={[1]=CARD_HORSEA,[2]=CARD_SEADRA}
 scard.weakness_x2=PM_ENERGY_LIGHTNING
 scard.attack_cost=pm.econ2(CARD_WATER_ENERGY,2,CARD_COLORLESS_ENERGY,2)
---move energy
+--poké-power (move energy)
 function scard.mefilter(c)
 	return pm.ActivePokemonFilter(c) and c:GetAttachmentGroup():IsExists(Card.IsEnergy,1,nil,CARD_WATER_ENERGY)
 end

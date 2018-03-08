@@ -5,13 +5,13 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--evolve
 	pm.EnableEvolutionAttribute(c)
-	--to bench
+	--poké-power (to bench)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
 	e1:SetCountLimit(1)
-	e1:SetCondition(pm.nspcon)
+	e1:SetCondition(aux.AND(pm.ppowcon,pm.nspcon))
 	e1:SetTarget(scard.tbtg)
 	e1:SetOperation(scard.tbop)
 	c:RegisterEffect(e1)
@@ -23,7 +23,7 @@ scard.length=1.40
 scard.devolve_list={[1]=CARD_MYSTERIOUS_FOSSIL}
 scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost=pm.econ1(PM_ENERGY_WATER,1)
---to bench
+--poké-power (to bench)
 function scard.tbtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,PM_LOCATION_BENCH)>0
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end

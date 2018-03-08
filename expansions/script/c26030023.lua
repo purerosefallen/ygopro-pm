@@ -3,7 +3,7 @@ local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
-	--remove special condition/marker
+	--poké-power (remove special condition/marker)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -19,9 +19,9 @@ end
 scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_FIRE
 scard.attack_cost=pm.econ1(CARD_METAL_ENERGY,1)
---remove special condition/marker
+--poké-power (remove special condition/marker)
 function scard.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_HAND)
+	return pm.ppowcon(e,tp,eg,ep,ev,re,r,rp) and e:GetHandler():IsPreviousLocation(LOCATION_HAND)
 end
 function scard.spfilter(c)
 	return c:IsFaceup() and c:IsPokemon()

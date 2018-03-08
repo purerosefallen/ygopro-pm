@@ -5,12 +5,12 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--evolve
 	pm.EnableEvolutionAttribute(c)
-	--move counter
+	--poké-power (move counter)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
-	e1:SetCondition(pm.nspcon)
+	e1:SetCondition(aux.AND(pm.ppowcon,pm.nspcon))
 	e1:SetTarget(scard.cttg)
 	e1:SetOperation(scard.ctop)
 	c:RegisterEffect(e1)
@@ -22,7 +22,7 @@ scard.length=5.30
 scard.devolve_list={[1]=CARD_SLOWPOKE}
 scard.weakness_x2=PM_ENERGY_PSYCHIC
 scard.attack_cost=pm.econ1(CARD_PSYCHIC_ENERGY,2)
---move counter
+--poké-power (move counter)
 function scard.ctfilter(c)
 	return c:GetCounter(PM_DAMAGE_COUNTER)>0
 end

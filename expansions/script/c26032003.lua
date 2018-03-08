@@ -5,12 +5,12 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--evolve
 	pm.EnableEvolutionAttribute(c)
-	--move energy
+	--poké-power (move energy)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
-	e1:SetCondition(pm.nspcon)
+	e1:SetCondition(aux.AND(pm.ppowcon,pm.nspcon))
 	e1:SetTarget(scard.metg)
 	e1:SetOperation(scard.meop)
 	c:RegisterEffect(e1)
@@ -22,7 +22,7 @@ scard.height=5.11
 scard.devolve_list={[1]=CARD_ELECTABUZZ,[2]=CARD_ELEKID}
 scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.attack_cost=pm.econ2(CARD_LIGHTNING_ENERGY,3,CARD_COLORLESS_ENERGY,1)
---move energy
+--poké-power (move energy)
 function scard.mefilter(c)
 	return c:IsFaceup() and c:IsPokemon() and c:GetAttachmentGroup():IsExists(Card.IsEnergy,1,nil,CARD_LIGHTNING_ENERGY)
 end

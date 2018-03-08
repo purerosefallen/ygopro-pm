@@ -5,11 +5,12 @@ function scard.initial_effect(c)
 	pm.EnablePokemonAttribute(c)
 	--legend
 	pm.EnableLEGENDAttribute(c)
-	--increase prize
+	--poké-body (increase prize)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(PM_EFFECT_EXTRA_PRIZE_KNOCKED_OUT)
 	e1:SetRange(PM_LOCATION_IN_PLAY)
+	e1:SetCondition(pm.pbodcon)
 	c:RegisterEffect(e1)
 	--discard energy
 	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.deop)
