@@ -175,6 +175,8 @@ function scard.initial_effect(c)
 	e21:SetCondition(scard.wincon)
 	e21:SetOperation(scard.winop)
 	c:RegisterEffect(e21)
+	--activate quick-play
+	pm.RuleActivateQuickPlay(c)
 	--cannot bp
 	pm.RuleCannotBP(c)
 	--infinite hand
@@ -338,9 +340,9 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 	scard.draw_extra(e,tp,1-tp)
 end
 function scard.draw_starting_hand(e,tp,player)
-	local ft=Duel.GetFieldGroupCount(player,LOCATION_HAND,0)
-	if ft==7 then return end
-	Duel.Draw(player,7-ft,REASON_RULE)
+	local ct=Duel.GetFieldGroupCount(player,LOCATION_HAND,0)
+	if ct==7 then return end
+	Duel.Draw(player,7-ct,REASON_RULE)
 end
 function scard.play_active_pokemon(e,tp,player)
 	if Duel.GetLocationCount(player,PM_LOCATION_ACTIVE)<=0
@@ -456,7 +458,7 @@ function scard.priop(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttackingPokemon()
 	if ec:GetPreviousSequence()==SEQUENCE_EXTRA_MZONE and a:IsHasEffect(PM_EFFECT_EXTRA_PRIZE_KNOCKED_OUT) then ct=ct+1 end
 	local g=Duel.GetPrizeGroup(tp,tp):Filter(scard.thfilter,nil)
-	local sg=g:RandomSelect(tp,ct)
+	local sg=g:RandomSelect(tp,ct) --changed to random because face-down cards can be viewed
 	Duel.SendtoHand(sg,PLAYER_OWNER,REASON_RULE)
 	Duel.RegisterFlagEffect(tp,PM_EFFECT_PRIZE_CARD_CHECK,0,0,0)
 end

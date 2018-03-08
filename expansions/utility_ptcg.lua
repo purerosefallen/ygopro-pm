@@ -404,6 +404,7 @@ end
 --check if a pokémon can evolve
 function Card.IsCanEvolve(c)
 	return not c:IsHasEffect(PM_EFFECT_CANNOT_EVOLVE)
+		and (not c:IsStatus(PM_STATUS_PLAY_TURN) or c:IsHasEffect(PM_EFFECT_EVOLVE_TURN_PLAY))
 end
 --check if a pokémon can use its poké-power
 function Card.IsCanUsePokePower(c)
@@ -1106,6 +1107,16 @@ function Auxiliary.RuleRemoveType(c,val,range)
 	e1:SetValue(val)
 	c:RegisterEffect(e1)
 end
+--activate quick-play
+function Auxiliary.RuleActivateQuickPlay(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_QP_ACT_IN_NTPHAND)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(PM_LOCATION_RULES)
+	e1:SetTargetRange(LOCATION_HAND,0)
+	c:RegisterEffect(e1)
+end
 --cannot bp
 function Auxiliary.RuleCannotBP(c)
 	local e1=Effect.CreateEffect(c)
@@ -1389,7 +1400,7 @@ function Auxiliary.EnableEvolutionAttribute(c)
 end
 function Auxiliary.EvolvePokemonFilter(c,code1,code2)
 	return c:IsFaceup() and (c.evolve_list and (table.unpack(c.evolve_list)==code1 or c:GetOriginalCode()==code2))
-		and c:IsCanEvolve() and not c:IsStatus(PM_STATUS_PLAY_TURN)
+		and c:IsCanEvolve()
 end
 function Auxiliary.EvolvePokemonTarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -1417,6 +1428,10 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	--register markers
 	local burm=tc:GetMarker(PM_BURN_MARKER)
 	local poim=tc:GetMarker(PM_POISON_MARKER)
+	--register abilities
+	local retain_evolve_turn_play=false
+	if tc:IsHasEffect(PM_EFFECT_EVOLVE_TURN_PLAY) then retain_evolve_turn_play=true end
+	--register attached cards
 	local ag=tc:GetAttachmentGroup()
 	if tc:IsActive() then Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) end --workaround
 	--retain attached cards
@@ -1436,6 +1451,8 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	--retain markers
 	if burm>0 then c:AddCounter(PM_BURN_MARKER,burm) end
 	if poim>0 then c:AddCounter(PM_POISON_MARKER,poim) end
+	--retain abilities
+	if retain_evolve_turn_play then Auxiliary.EnableEvolveTurnPlayer(c) end
 	--pokémon break
 	if not c:IsPokemonBREAK() then return end
 	--retain attack & abilities
@@ -1618,6 +1635,7 @@ function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	--register markers
 	local burm=tc:GetMarker(PM_BURN_MARKER)
 	local poim=tc:GetMarker(PM_POISON_MARKER)
+	--register attached cards
 	local ag=tc:GetAttachmentGroup()
 	Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) --workaround
 	--retain attached cards
@@ -2063,6 +2081,16 @@ function Auxiliary.EnableDoubleEnergy(c,val)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
+--"You may evolve a Pokemon even if you just played or evolved it this turn." (e.g. "Giovanni G2 18")
+function Auxiliary.EnableEvolveTurnPlayer(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(CARD_GIOVANNI,1))
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(PM_EFFECT_EVOLVE_TURN_PLAY)
+	e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+	c:RegisterEffect(e1)
+end
 --"Draw N cards" (e.g. "Bill BS 91")
 function Auxiliary.DrawTarget(p,ct)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -2120,6 +2148,10 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				--register markers
 				local burm=tc1:GetMarker(PM_BURN_MARKER)
 				local poim=tc1:GetMarker(PM_POISON_MARKER)
+				--register abilities
+				local retain_evolve_turn_play=false
+				if tc1:IsHasEffect(PM_EFFECT_EVOLVE_TURN_PLAY) then retain_evolve_turn_play=true end
+				--register attached cards
 				local ag=tc1:GetAttachmentGroup()
 				if tc1:IsActive() then Duel.SendtoExtraP(tc2,PLAYER_OWNER,REASON_RULE) end --workaround
 				--retain attached cards
@@ -2137,6 +2169,8 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				--retain markers
 				if burm>0 then tc2:AddCounter(PM_BURN_MARKER,burm) end
 				if poim>0 then tc2:AddCounter(PM_POISON_MARKER,poim) end
+				--retain abilities
+				if retain_evolve_turn_play then Auxiliary.EnableEvolveTurnPlayer(tc2) end
 			end
 end
 Auxiliary.evoop=Auxiliary.EffectEvolveOperation
