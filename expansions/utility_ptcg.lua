@@ -1256,6 +1256,7 @@ end
 function Auxiliary.EnablePokemonAttribute(c)
 	c:SetMarkerLimit(PM_BURN_MARKER,1)
 	c:SetMarkerLimit(PM_POISON_MARKER,1)
+	c:SetMarkerLimit(PM_LIGHTNING_ROD_MARKER,1)
 	--bench
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -1378,20 +1379,26 @@ function Auxiliary.EnableEvolutionAttribute(c)
 	e1:SetOperation(Auxiliary.EvolvePokemonOperation)
 	c:RegisterEffect(e1)
 end
-function Auxiliary.EvolvePokemonFilter(c,tcode)
-	return c:IsFaceup() and c.evolve_list and table.unpack(c.evolve_list)==tcode
+function Auxiliary.EvolvePokemonFilter(c,code1,code2)
+	return c:IsFaceup() and (c.evolve_list and (table.unpack(c.evolve_list)==code1 or c:GetOriginalCode()==code2))
 		and c:IsCanEvolve() and not c:IsStatus(PM_STATUS_PLAY_TURN)
 end
 function Auxiliary.EvolvePokemonTarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
+	local code1=c:GetOriginalCode()
+	local class=_G["c"..code1]
+	local code2=table.unpack(class.devolve_list)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil,c:GetCode())
+		and Duel.IsExistingMatchingCard(Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,nil,code1,code2)
 		and c:IsCanBePutInPlay(e,PM_SUMMON_TYPE_EVOLVE,tp,false,false) end
 end
 function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local code1=c:GetOriginalCode()
+	local class=_G["c"..code1]
+	local code2=table.unpack(class.devolve_list)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_EVOLVE)
-	local g=Duel.SelectMatchingCard(tp,Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil,c:GetCode())
+	local g=Duel.SelectMatchingCard(tp,Auxiliary.EvolvePokemonFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil,code1,code2)
 	local tc=g:GetFirst()
 	if not tc then return end
 	Duel.HintSelection(g)
@@ -1399,15 +1406,9 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	local seq=tc:GetSequence()
 	--register counters
 	local damc=tc:GetCounter(PM_DAMAGE_COUNTER)
-	local colc=tc:GetCounter(PM_COLORING_COUNTER)
-	local chac=tc:GetCounter(PM_CHAR_COUNTER)
 	--register markers
 	local burm=tc:GetMarker(PM_BURN_MARKER)
 	local poim=tc:GetMarker(PM_POISON_MARKER)
-	local rodm=tc:GetMarker(PM_LIGHTNING_ROD_MARKER)
-	local ivym=tc:GetMarker(PM_DARK_IVYSAUR_MARKER)
-	local prim=tc:GetMarker(PM_IMPRISON_MARKER)
-	local shom=tc:GetMarker(PM_SHOCKWAVE_MARKER)
 	local ag=tc:GetAttachmentGroup()
 	if tc:IsActive() then Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) end --workaround
 	--retain attached cards
@@ -1424,15 +1425,9 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	if c:GetSequence()~=seq then Duel.MoveSequence(c,seq) end
 	--retain counters
 	if damc>0 then c:AddCounter(PM_DAMAGE_COUNTER,damc) end
-	if colc>0 then c:AddCounter(PM_COLORING_COUNTER,colc) end
-	if chac>0 then c:AddCounter(PM_CHAR_COUNTER,chac) end
 	--retain markers
 	if burm>0 then c:AddCounter(PM_BURN_MARKER,burm) end
 	if poim>0 then c:AddCounter(PM_POISON_MARKER,poim) end
-	if rodm>0 then c:AddCounter(PM_LIGHTNING_ROD_MARKER,rodm) end
-	if ivym>0 then c:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
-	if prim>0 then c:AddCounter(PM_IMPRISON_MARKER,prim) end
-	if shom>0 then c:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
 	--pokémon break
 	if not c:IsPokemonBREAK() then return end
 	--retain attack & abilities
@@ -1612,15 +1607,9 @@ function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	local seq=tc:GetSequence()
 	--register counters
 	local damc=tc:GetCounter(PM_DAMAGE_COUNTER)
-	local colc=tc:GetCounter(PM_COLORING_COUNTER)
-	local chac=tc:GetCounter(PM_CHAR_COUNTER)
 	--register markers
 	local burm=tc:GetMarker(PM_BURN_MARKER)
 	local poim=tc:GetMarker(PM_POISON_MARKER)
-	local rodm=tc:GetMarker(PM_LIGHTNING_ROD_MARKER)
-	local ivym=tc:GetMarker(PM_DARK_IVYSAUR_MARKER)
-	local prim=tc:GetMarker(PM_IMPRISON_MARKER)
-	local shom=tc:GetMarker(PM_SHOCKWAVE_MARKER)
 	local ag=tc:GetAttachmentGroup()
 	Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) --workaround
 	--retain attached cards
@@ -1634,15 +1623,9 @@ function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	if c:GetSequence()~=seq then Duel.MoveSequence(c,seq) end
 	--retain counters
 	if damc>0 then c:AddCounter(PM_DAMAGE_COUNTER,damc) end
-	if colc>0 then c:AddCounter(PM_COLORING_COUNTER,colc) end
-	if chac>0 then c:AddCounter(PM_CHAR_COUNTER,chac) end
 	--retain markers
 	if burm>0 then c:AddCounter(PM_BURN_MARKER,burm) end
 	if poim>0 then c:AddCounter(PM_POISON_MARKER,poim) end
-	if rodm>0 then c:AddCounter(PM_LIGHTNING_ROD_MARKER,rodm) end
-	if ivym>0 then c:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
-	if prim>0 then c:AddCounter(PM_IMPRISON_MARKER,prim) end
-	if shom>0 then c:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
 	--gain attack & effect
 	local code=tc:GetOriginalCode()
 	c:CopyEffect(code,RESET_EVENT+RESETS_STANDARD_DISABLE,1)
@@ -2126,15 +2109,9 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				local seq=tc1:GetSequence()
 				--register counters
 				local damc=tc1:GetCounter(PM_DAMAGE_COUNTER)
-				local colc=tc1:GetCounter(PM_COLORING_COUNTER)
-				local chac=tc1:GetCounter(PM_CHAR_COUNTER)
 				--register markers
 				local burm=tc1:GetMarker(PM_BURN_MARKER)
 				local poim=tc1:GetMarker(PM_POISON_MARKER)
-				local rodm=tc1:GetMarker(PM_LIGHTNING_ROD_MARKER)
-				local ivym=tc1:GetMarker(PM_DARK_IVYSAUR_MARKER)
-				local prim=tc1:GetMarker(PM_IMPRISON_MARKER)
-				local shom=tc1:GetMarker(PM_SHOCKWAVE_MARKER)
 				local ag=tc1:GetAttachmentGroup()
 				if tc1:IsActive() then Duel.SendtoExtraP(tc2,PLAYER_OWNER,REASON_RULE) end --workaround
 				--retain attached cards
@@ -2149,15 +2126,9 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				if tc2:GetSequence()~=seq then Duel.MoveSequence(tc2,seq) end
 				--retain counters
 				if damc>0 then tc2:AddCounter(PM_DAMAGE_COUNTER,damc) end
-				if colc>0 then tc2:AddCounter(PM_COLORING_COUNTER,colc) end
-				if chac>0 then tc2:AddCounter(PM_CHAR_COUNTER,chac) end
 				--retain markers
 				if burm>0 then tc2:AddCounter(PM_BURN_MARKER,burm) end
 				if poim>0 then tc2:AddCounter(PM_POISON_MARKER,poim) end
-				if rodm>0 then tc2:AddCounter(PM_LIGHTNING_ROD_MARKER,rodm) end
-				if ivym>0 then tc2:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
-				if prim>0 then tc2:AddCounter(PM_IMPRISON_MARKER,prim) end
-				if shom>0 then tc2:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
 			end
 end
 Auxiliary.evoop=Auxiliary.EffectEvolveOperation
@@ -2179,15 +2150,9 @@ function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq,ignore_cannot_
 				local seq=tc1:GetSequence()
 				--register counters
 				local damc=tc1:GetCounter(PM_DAMAGE_COUNTER)
-				local colc=tc1:GetCounter(PM_COLORING_COUNTER)
-				local chac=tc1:GetCounter(PM_CHAR_COUNTER)
 				--register markers
 				local burm=tc1:GetMarker(PM_BURN_MARKER)
 				local poim=tc1:GetMarker(PM_POISON_MARKER)
-				local rodm=tc1:GetMarker(PM_LIGHTNING_ROD_MARKER)
-				local ivym=tc1:GetMarker(PM_DARK_IVYSAUR_MARKER)
-				local prim=tc1:GetMarker(PM_IMPRISON_MARKER)
-				local shom=tc1:GetMarker(PM_SHOCKWAVE_MARKER)
 				--register attached cards
 				local g2=Group.CreateGroup()
 				local ag=tc1:GetAttachmentGroup()
@@ -2214,15 +2179,9 @@ function Auxiliary.EffectDevolveOperation(f,s,o,dest_loc,deck_seq,ignore_cannot_
 				if g2:GetCount()>0 then Duel.Attach(tc2,g2) end
 				--retain counters
 				if damc>0 then tc2:AddCounter(PM_DAMAGE_COUNTER,damc) end
-				if colc>0 then tc2:AddCounter(PM_COLORING_COUNTER,colc) end
-				if chac>0 then tc2:AddCounter(PM_CHAR_COUNTER,chac) end
 				--retain markers
 				if burm>0 then tc2:AddCounter(PM_BURN_MARKER,burm) end
 				if poim>0 then tc2:AddCounter(PM_POISON_MARKER,poim) end
-				if rodm>0 then tc2:AddCounter(PM_LIGHTNING_ROD_MARKER,rodm) end
-				if ivym>0 then tc2:AddCounter(PM_DARK_IVYSAUR_MARKER,ivym) end
-				if prim>0 then tc2:AddCounter(PM_IMPRISON_MARKER,prim) end
-				if shom>0 then tc2:AddCounter(PM_SHOCKWAVE_MARKER,shom) end
 				if ignore_cannot_evolve then return end
 				--cannot evolve
 				local e1=Effect.CreateEffect(e:GetHandler())
@@ -2774,6 +2733,11 @@ function Auxiliary.SelfActiveCondition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsActive()
 end
 Auxiliary.activecon=Auxiliary.SelfActiveCondition
+--condition for while a pokémon is on the bench
+function Auxiliary.SelfBenchCondition(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsBench()
+end
+Auxiliary.benchcon=Auxiliary.SelfBenchCondition
 --condition for a pokémon to not be affected by a special condition
 function Auxiliary.NotAffectedBySpecialCondition(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsAffectedBySpecialCondition()
