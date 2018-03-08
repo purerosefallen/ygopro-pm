@@ -21,19 +21,18 @@ function scard.cfilter(c)
 end
 function scard.atop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon())
-	local g1=Duel.GetMatchingGroup(Card.IsEnergy,tp,PM_LOCATION_DPILE,0,nil,CARD_PSYCHIC_ENERGY)
-	local g2=Duel.GetMatchingGroup(scard.cfilter,tp,PM_LOCATION_IN_PLAY,0,nil)
-	if g1:GetCount()==0 or g2:GetCount()==0 then return end
-	local ct=Duel.GetMatchingGroupCount(scard.cfilter,tp,0,PM_LOCATION_IN_PLAY,nil)
+	if Duel.GetMatchingGroupCount(Card.IsEnergy,tp,PM_LOCATION_DPILE,0,nil,CARD_PSYCHIC_ENERGY)==0
+		or Duel.GetMatchingGroupCount(scard.cfilter,tp,PM_LOCATION_IN_PLAY,0,nil)==0 then return end
+	local count=Duel.GetMatchingGroupCount(scard.cfilter,tp,0,PM_LOCATION_IN_PLAY,nil)
 	repeat
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_PENERGY)
-		local sg1=g1:Select(tp,1,1,nil)
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(sid,2))
-		local sg2=g2:Select(tp,1,1,nil)
-		Duel.HintSelection(sg2)
-		Duel.Attach(sg2:GetFirst(),sg1)
-		ct=ct-1
-	until sg1:GetCount()==0 or sg2:GetCount()==0 or ct==0
+		local g1=Duel.SelectMatchingCard(tp,Card.IsEnergy,tp,PM_LOCATION_DPILE,0,1,1,nil,CARD_PSYCHIC_ENERGY)
+		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_ATTACHENERGY)
+		local g2=Duel.SelectMatchingCard(tp,scard.cfilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
+		Duel.HintSelection(g2)
+		Duel.Attach(g2:GetFirst(),g1)
+		count=count-1
+	until g1:GetCount()==0 or g2:GetCount()==0 or count==0
 end
 --damage
 function scard.damop(e,tp,eg,ep,ev,re,r,rp)
