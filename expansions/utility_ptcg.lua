@@ -1433,7 +1433,7 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsHasEffect(PM_EFFECT_EVOLVE_TURN_PLAY) then retain_evolve_turn_play=true end
 	--register attached cards
 	local ag=tc:GetAttachmentGroup()
-	if tc:IsActive() then Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) end --workaround
+	if tc:IsActive() then Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) end --workaround to play in ex mzone
 	--retain attached cards
 	if ag:GetCount()~=0 then
 		Duel.Attach(c,ag)
@@ -1452,7 +1452,7 @@ function Auxiliary.EvolvePokemonOperation(e,tp,eg,ep,ev,re,r,rp)
 	if burm>0 then c:AddCounter(PM_BURN_MARKER,burm) end
 	if poim>0 then c:AddCounter(PM_POISON_MARKER,poim) end
 	--retain abilities
-	if retain_evolve_turn_play then Auxiliary.EnableEvolveTurnPlayer(c) end
+	if retain_evolve_turn_play then Auxiliary.EnableEvolveTurnPlay(c) end
 	--pokémon break
 	if not c:IsPokemonBREAK() then return end
 	--retain attack & abilities
@@ -1637,7 +1637,7 @@ function Auxiliary.LVXOperation(e,tp,eg,ep,ev,re,r,rp)
 	local poim=tc:GetMarker(PM_POISON_MARKER)
 	--register attached cards
 	local ag=tc:GetAttachmentGroup()
-	Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) --workaround
+	Duel.SendtoExtraP(c,PLAYER_OWNER,REASON_RULE) --workaround to play in ex mzone
 	--retain attached cards
 	if ag:GetCount()~=0 then
 		Duel.Attach(c,ag)
@@ -2081,8 +2081,8 @@ function Auxiliary.EnableDoubleEnergy(c,val)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
---"You may evolve a Pokemon even if you just played or evolved it this turn." (e.g. "Giovanni G2 18")
-function Auxiliary.EnableEvolveTurnPlayer(c)
+--"You may evolve a Pokémon even if you just played or evolved it this turn." (e.g. "Giovanni G2 18")
+function Auxiliary.EnableEvolveTurnPlay(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(CARD_GIOVANNI,1))
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -2153,7 +2153,7 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				if tc1:IsHasEffect(PM_EFFECT_EVOLVE_TURN_PLAY) then retain_evolve_turn_play=true end
 				--register attached cards
 				local ag=tc1:GetAttachmentGroup()
-				if tc1:IsActive() then Duel.SendtoExtraP(tc2,PLAYER_OWNER,REASON_RULE) end --workaround
+				if tc1:IsActive() then Duel.SendtoExtraP(tc2,PLAYER_OWNER,REASON_RULE) end --workaround to play in ex mzone
 				--retain attached cards
 				if ag:GetCount()~=0 then
 					Duel.Attach(tc2,ag)
@@ -2170,7 +2170,7 @@ function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
 				if burm>0 then tc2:AddCounter(PM_BURN_MARKER,burm) end
 				if poim>0 then tc2:AddCounter(PM_POISON_MARKER,poim) end
 				--retain abilities
-				if retain_evolve_turn_play then Auxiliary.EnableEvolveTurnPlayer(tc2) end
+				if retain_evolve_turn_play then Auxiliary.EnableEvolveTurnPlay(tc2) end
 			end
 end
 Auxiliary.evoop=Auxiliary.EffectEvolveOperation

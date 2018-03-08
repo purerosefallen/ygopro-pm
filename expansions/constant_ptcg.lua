@@ -52,6 +52,8 @@ CARD_ALAKAZAM						=26001001	--Abra → Kadabra → Alakazam (Base Set 1/102)
 CARD_BULBASAUR						=26001044	--Bulbasaur → Ivysaur → Venusaur (Base Set 44/102)
 CARD_IVYSAUR						=26001030	--Bulbasaur → Ivysaur → Venusaur (Base Set 30/102)
 CARD_VENUSAUR						=26001015	--Bulbasaur → Ivysaur → Venusaur (Base Set 15/102)
+CARD_GIOVANNIS_MEOWTH				=26007043	--Giovanni's Meowth → Giovanni's Persian (Gym Challenge 43/132)
+CARD_GIOVANNIS_PERSIAN				=26007008	--Giovanni's Meowth → Giovanni's Persian (Gym Challenge 8/132)
 CARD_ELEKID							=26008022	--Elekid → Electabuzz → Electivire (Neo Genesis 22/111)
 CARD_ELECTABUZZ						=26001020	--Elekid → Electabuzz → Electivire (Base Set 20/102)
 CARD_ELECTIVIRE						=26032003	--Elekid → Electabuzz → Electivire (Diamond & Pearl 3/130)
@@ -164,7 +166,7 @@ CARD_SNORLAX_GX						=2629005	--"Pokemon Rules"
 CARD_SILVALLY_GX					=26076090	--"Psychic Memory" (Crimson Invasion 94/111)
 --↑Trainer
 CARD_DEVOLUTION_SPRAY				=26001072	--"Devolution Spray" (Base Set 72/102)
-CARD_GIOVANNI						=26007018	--Retain description in Auxiliary.EvolvePokemonOperation and Auxiliary.EffectEvolveOperation
+CARD_GIOVANNI						=26007018	--"Giovanni's Persian" (Gym Challenge 8/132)
 CARD_BROCKS_PROTECTION				=26007101	--"Crushing Hammer" (Emerging Powers 92/98)
 CARD_PUZZLE_OF_TIME					=26067109	--"Puzzle of Time" (BREAKpoint 109/122)
 --↑EVENT_CUSTOM
