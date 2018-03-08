@@ -1,4 +1,4 @@
---Ampharos (Dragon Frontiers 1/101)
+--Ampharos (EX Dragon Frontiers 1/101)
 --Not fully implemented: c stack overflow error caused by e1
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
