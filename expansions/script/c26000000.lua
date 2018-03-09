@@ -579,16 +579,18 @@ end
 --end turn
 function scard.endcon1(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	return rc:IsActive() and rc:IsControler(tp) and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK)
+	local ecount=rc:GetEffectCount(PM_EFFECT_EXTRA_ATTACK)+1
+	local acount=rc:GetAttackedCount()
+	return rc:IsActive() and rc:IsControler(tp) and re:IsHasProperty(PM_EFFECT_FLAG_POKEMON_ATTACK) and ecount==acount
+end
+function scard.endop(e,tp,eg,ep,ev,re,r,rp)
+	pm.EndTurn(e)
 end
 function scard.endfilter(c,tp)
 	return c:IsMegaEvolution() and c:IsSummonType(PM_SUMMON_TYPE_EVOLVE) and c:IsControler(tp)
 end
 function scard.endcon2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(scard.endfilter,1,nil,tp)
-end
-function scard.endop(e,tp,eg,ep,ev,re,r,rp)
-	pm.EndTurn(e)
 end
 --gx attack
 function scard.gxcon(e,tp,eg,ep,ev,re,r,rp)
