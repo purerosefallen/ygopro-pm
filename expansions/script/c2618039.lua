@@ -1,4 +1,4 @@
---Battle City (Black & White Promo BW39)
+--Battle City (Black Star Promo BW39)
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)

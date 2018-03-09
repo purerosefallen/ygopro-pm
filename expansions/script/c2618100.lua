@@ -1,4 +1,4 @@
---N (Black & White Promo BW100)
+--N (Black Star Promo BW100)
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)

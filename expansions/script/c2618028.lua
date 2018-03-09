@@ -1,4 +1,4 @@
---Tropical Beach (Black & White Promo BW28)
+--Tropical Beach (Black Star Promo BW28)
 local pm=require "expansions.utility_ptcg"
 local scard,sid=pm.GetID()
 function scard.initial_effect(c)
