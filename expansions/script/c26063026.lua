@@ -9,7 +9,7 @@ function scard.initial_effect(c)
 	e1:SetCode(PM_EFFECT_EXTRA_ATTACK)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	--discard energy & draw
+	--draw
 	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost,pm.hinttg,scard.drop)
 	--damage
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost,pm.hinttg,scard.damop)
@@ -17,7 +17,7 @@ end
 scard.pokemon_card=true
 scard.weakness_x2=PM_ENERGY_WATER
 scard.attack_cost=pm.econ1(CARD_FIRE_ENERGY,1)
---discard energy & draw
+--draw
 function scard.drop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon())
 	if Duel.DiscardHand(tp,Card.IsEnergy,1,1,REASON_COST+REASON_DISCARD,nil,CARD_FIRE_ENERGY)==0 then return end
