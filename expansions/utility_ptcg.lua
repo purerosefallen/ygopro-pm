@@ -415,6 +415,11 @@ end
 function Card.IsCanUsePokeBody(c)
 	return not c:IsHasEffect(PM_EFFECT_CANNOT_USE_POKEBODY)
 end
+--check if a pokémon can have a pokémon tool card attached to it
+function Card.IsCanAttachPokemonTool(c)
+	local ct=c:GetAttachmentGroup():FilterCount(Card.IsPokemonTool,nil)
+	return ct==0 or (c:IsHasEffect(PM_EFFECT_DOUBLE_POKEMON_TOOL) and ct<=1)
+end
 --check if a pokémon can have an attached energy card to it removed by an attack or trainer card
 function Card.IsAbleToRemoveEnergy(c)
 	return not c:IsHasEffect(PM_EFFECT_CANNOT_REMOVE_ENERGY_ATTACK_TRAINER)
@@ -1945,7 +1950,7 @@ function Auxiliary.EnablePokemonToolAttribute(c,desc_id,con_func)
 	Auxiliary.AddAttachedDescription(c,desc_id,con_func)
 end
 function Auxiliary.PokemonToolFilter(c)
-	return c:IsFaceup() and c:IsPokemon() and not c:GetAttachmentGroup():IsExists(Card.IsPokemonTool,1,nil)
+	return c:IsFaceup() and c:IsPokemon() and c:IsCanAttachPokemonTool()
 end
 Auxiliary.toolfilter=Auxiliary.PokemonToolFilter
 function Auxiliary.PokemonToolTarget(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -2123,14 +2128,21 @@ function Auxiliary.EffectEvolveTarget(f,s,o)
 end
 Auxiliary.evotg=Auxiliary.EffectEvolveTarget
 function Auxiliary.EffectEvolveOperation(f1,s1,o1,f2,s2,o2)
+	--f1,s1,o1: nil if a pokémon evolves with its own ability
 	return	function(e,tp,eg,ep,ev,re,r,rp)
-				Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_EVOLVE)
-				local g1=Duel.SelectMatchingCard(tp,f1,tp,s1,o1,1,1,nil,e,tp)
-				local tc1=g1:GetFirst()
-				if not tc1 then return end
+				local tc1=e:GetHandler()
 				local code=tc1:GetOriginalCode()
 				local class=_G["c"..code]
-				Duel.HintSelection(g1)
+				local g1=Group.FromCards(tc1)
+				if f1 and s1 and o1 then
+					Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_EVOLVE)
+					g1=Duel.SelectMatchingCard(tp,f1,tp,s1,o1,1,1,nil,e,tp)
+					tc1=g1:GetFirst()
+					if not tc1 then return end
+					code=tc1:GetOriginalCode()
+					class=_G["c"..code]
+					Duel.HintSelection(g1)
+				end
 				if s2==LOCATION_DECK or o2==LOCATION_DECK then
 					Auxiliary.ConfirmDeck(tp,tp)
 				end

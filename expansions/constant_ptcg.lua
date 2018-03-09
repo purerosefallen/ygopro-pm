@@ -46,6 +46,8 @@ CARD_FAIRY_ENERGY					=26059140	--XY 140/146
 --↑Special Energy cards
 CARD_MIRACLE_ENERGY					=26011016	--Neo Destiny 16/105
 --↑Pokémon that are part of an evolutionary line
+CARD_MAGIKARP						=26001035	--Magikarp → Gyarados (Base Set 35/102)
+CARD_GYARADOS						=26001006	--Magikarp → Gyarados (Base Set 6/102)
 CARD_ABRA							=26001043	--Abra → Kadabra → Alakazam (Base Set 43/102)
 CARD_KADABRA						=26001032	--Abra → Kadabra → Alakazam (Base Set 32/102)
 CARD_ALAKAZAM						=26001001	--Abra → Kadabra → Alakazam (Base Set 1/102)
@@ -458,9 +460,10 @@ PM_EFFECT_EXTRA_PRIZE_KNOCKED_OUT	=727	--"Rayquaza & Deoxys LEGEND" (Undaunted 8
 PM_EFFECT_CANNOT_ATTACK				=728	--"Haxorus" (Noble Victories 88/101)
 PM_EFFECT_IGNORE_ENERGY				=729	--"Victory Piece" (Plasma Storm 130/135)
 PM_EFFECT_EXTEND_BENCH_8			=730	--"Sky Field" (Roaring Skies 89/108)
-PM_EFFECT_DAMAGE_ATTACK_REDUCE_20	=731	--"Chesnaught" (BREAKthrough 11/162)
-PM_EFFECT_DAMAGE_ATTACK_REDUCE_30	=732	--"Mewtwo-EX" (BREAKthrough 61/162)
-PM_EFFECT_ASLEEP_TOSS_2_COIN		=733	--"Darkrai Prism Star" (Ultra Prism 77/156)
+PM_EFFECT_DOUBLE_POKEMON_TOOL		=731	--"Gyarados" (Black Star Promo XY60)
+PM_EFFECT_DAMAGE_ATTACK_REDUCE_20	=732	--"Chesnaught" (BREAKthrough 11/162)
+PM_EFFECT_DAMAGE_ATTACK_REDUCE_30	=733	--"Mewtwo-EX" (BREAKthrough 61/162)
+PM_EFFECT_ASLEEP_TOSS_2_COIN		=734	--"Darkrai Prism Star" (Ultra Prism 77/156)
 --Abilities that activate or actions that occur at the appropriate event
 PM_EVENT_TO_DISCARDPILE				=EVENT_TO_GRAVE			--When a card is put into the discard pile
 PM_EVENT_LEAVE_PLAY					=EVENT_LEAVE_FIELD		--When a card leaves play
