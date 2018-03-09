@@ -588,6 +588,7 @@ function scard.endop(e,tp,eg,ep,ev,re,r,rp)
 end
 function scard.endfilter(c,tp)
 	return c:IsMegaEvolution() and c:IsSummonType(PM_SUMMON_TYPE_EVOLVE) and c:IsControler(tp)
+		and not c:IsHasEffect(PM_EFFECT_DONOT_END_TURN_MEGA)
 end
 function scard.endcon2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(scard.endfilter,1,nil,tp)

@@ -1737,8 +1737,11 @@ function Auxiliary.EnergyOperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_ATTACHENERGY)
 	local g=Duel.SelectMatchingCard(tp,Auxiliary.EnergyFilter,tp,PM_LOCATION_IN_PLAY,0,1,1,nil)
 	if g:GetCount()==0 then return end
+	local tc=g:GetFirst()
 	Duel.HintSelection(g)
-	Duel.Attach(g:GetFirst(),e:GetHandler())
+	Duel.Attach(tc,e:GetHandler())
+	--raise event for "When you attach an Energy card from your hand to this Pokémon"
+	Duel.RaiseSingleEvent(tc,EVENT_CUSTOM+PM_EVENT_ATTACH_ENERGY_FROM_HAND,e,0,0,0,0)
 end
 --Special Energy
 function Auxiliary.EnergyFilter2(c,setname)
