@@ -6,7 +6,7 @@ function scard.initial_effect(c)
 	--heal
 	pm.EnablePokemonAttack(c,0,nil,scard.attack_cost1,pm.hinttg,scard.healop)
 	--to hand
-	pm.EnablePokemonAttack(c,1,PM_CATEGORY_TOHAND,scard.attack_cost2,scard.thtg,scard.thop,pm.decost(c,1,1,CARD_PSYCHIC_ENERGY))
+	pm.EnablePokemonAttack(c,1,PM_CATEGORY_TOHAND,scard.attack_cost2,scard.thtg,scard.thop)
 end
 scard.pokemon_card=true
 scard.length=3.11
@@ -22,19 +22,24 @@ function scard.healop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.TossCoin(tp,1)==RESULT_HEADS then Duel.HealDamage(e,10,c) end
 end
 --to hand
-function scard.thfilter(c)
-	return c:IsItem() and c:IsAbleToHand()
-end
 function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SetOperationInfo(0,PM_CATEGORY_TOHAND,nil,1,tp,PM_LOCATION_DPILE)
 end
+function scard.thfilter(c)
+	return c:IsItem() and c:IsAbleToHand()
+end
 function scard.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.PokemonAttack(e:GetHandler(),Duel.GetDefendingPokemon())
+	local c=e:GetHandler()
+	Duel.PokemonAttack(c,Duel.GetDefendingPokemon())
+	local g1=c:GetAttachmentGroup()
+	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARDENERGY)
+	local sg=g1:FilterSelect(tp,Card.IsEnergy,1,1,CARD_PSYCHIC_ENERGY)
+	if Duel.SendtoDPile(sg,REASON_COST+REASON_DISCARD)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_TOHAND)
-	local g=Duel.SelectMatchingCard(tp,scard.thfilter,tp,PM_LOCATION_DPILE,0,1,1,nil)
-	if g:GetCount()==0 then return end
-	Duel.SendtoHand(g,PLAYER_OWNER,REASON_EFFECT)
-	Duel.ConfirmCards(1-tp,g)
+	local g2=Duel.SelectMatchingCard(tp,scard.thfilter,tp,PM_LOCATION_DPILE,0,1,1,nil)
+	if g2:GetCount()==0 then return end
+	Duel.SendtoHand(g2,PLAYER_OWNER,REASON_EFFECT)
+	Duel.ConfirmCards(1-tp,g2)
 end

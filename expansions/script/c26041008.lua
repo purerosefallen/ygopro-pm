@@ -20,7 +20,7 @@ function scard.dhop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(sid,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_DISCARD)
 		local sg=g:Select(tp,1,5,nil)
-		Duel.SendtoDPile(sg,REASON_EFFECT+REASON_DISCARD)
+		Duel.SendtoDPile(sg,REASON_COST+REASON_DISCARD)
 		local ct=sg:GetCount()*10
 		dam=dam+ct
 	end
