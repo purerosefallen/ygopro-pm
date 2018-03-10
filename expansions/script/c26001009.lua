@@ -16,7 +16,7 @@ scard.evolve_list={[1]=CARD_MAGNEZONE}
 scard.devolve_list={[1]=CARD_MAGNEMITE}
 scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.attack_cost1=pm.econ2(CARD_LIGHTNING_ENERGY,2,CARD_COLORLESS_ENERGY,1)
-scard.attack_cost1=pm.econ2(CARD_LIGHTNING_ENERGY,2,CARD_COLORLESS_ENERGY,2)
+scard.attack_cost2=pm.econ2(CARD_LIGHTNING_ENERGY,2,CARD_COLORLESS_ENERGY,2)
 --paralyzed
 function scard.parop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(30)

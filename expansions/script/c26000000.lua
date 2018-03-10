@@ -533,30 +533,32 @@ function scard.evolimit(e,re,tp)
 end
 --limit supporter
 function scard.supreg(e,tp,eg,ep,ev,re,r,rp)
-	if ep~=tp or not re:GetHandler():IsSupporter() or re:IsHasType(EFFECT_TYPE_ACTIVATE) then return end
-	e:GetHandler():RegisterFlagEffect(PM_EFFECT_LIMIT_SUPPORTER,RESET_EVENT+RESETS_STANDARD_DISCONTROL+RESET_PHASE+PHASE_END,0,1)
+	if ep~=tp or not (re:GetHandler():IsSupporter() and re:IsHasType(EFFECT_TYPE_ACTIVATE)) then return end
+	Duel.RegisterFlagEffect(tp,PM_EFFECT_LIMIT_SUPPORTER,RESET_PHASE+PHASE_END,0,1)
 end
 function scard.supreset(e,tp,eg,ep,ev,re,r,rp)
-	if ep~=tp or not re:GetHandler():IsSupporter() or re:IsHasType(EFFECT_TYPE_ACTIVATE) then return end
-	e:GetHandler():ResetFlagEffect(PM_EFFECT_LIMIT_SUPPORTER)
+	if ep~=tp or not (re:GetHandler():IsSupporter() and re:IsHasType(EFFECT_TYPE_ACTIVATE)) then return end
+	Duel.ResetFlagEffect(tp,PM_EFFECT_LIMIT_SUPPORTER)
 end
 function scard.supcon(e)
-	return e:GetHandler():GetFlagEffect(PM_EFFECT_LIMIT_SUPPORTER)~=0
+	local tp=e:GetHandlerPlayer()
+	return Duel.IsPlayerCanPlaySupporter(tp,tp)
 end
 function scard.suplimit(e,te,tp)
 	return te:GetHandler():IsSupporter()
 end
 --limit stadium
 function scard.stadreg(e,tp,eg,ep,ev,re,r,rp)
-	if ep~=tp or not re:GetHandler():IsStadium() or re:IsHasType(EFFECT_TYPE_ACTIVATE) then return end
-	e:GetHandler():RegisterFlagEffect(PM_EFFECT_LIMIT_STADIUM,RESET_EVENT+RESETS_STANDARD_DISCONTROL+RESET_PHASE+PHASE_END,0,1)
+	if ep~=tp or not (re:GetHandler():IsStadium() and re:IsHasType(EFFECT_TYPE_ACTIVATE)) then return end
+	Duel.RegisterFlagEffect(tp,PM_EFFECT_LIMIT_STADIUM,RESET_PHASE+PHASE_END,0,1)
 end
 function scard.stadreset(e,tp,eg,ep,ev,re,r,rp)
-	if ep~=tp or not re:GetHandler():IsStadium() or re:IsHasType(EFFECT_TYPE_ACTIVATE) then return end
-	e:GetHandler():ResetFlagEffect(PM_EFFECT_LIMIT_STADIUM)
+	if ep~=tp or not (re:GetHandler():IsStadium() and re:IsHasType(EFFECT_TYPE_ACTIVATE)) then return end
+	Duel.ResetFlagEffect(tp,PM_EFFECT_LIMIT_STADIUM)
 end
 function scard.stadcon(e)
-	return e:GetHandler():GetFlagEffect(PM_EFFECT_LIMIT_STADIUM)~=0
+	local tp=e:GetHandlerPlayer()
+	return Duel.IsPlayerCanPlayStadium(tp,tp)
 end
 function scard.stadlimit(e,te,tp)
 	return te:GetHandler():IsStadium()
@@ -564,14 +566,15 @@ end
 --limit energy
 function scard.enerreg(e,tp,eg,ep,ev,re,r,rp)
 	if ep~=tp or not re:GetHandler():IsEnergy() then return end
-	e:GetHandler():RegisterFlagEffect(PM_EFFECT_LIMIT_ENERGY,RESET_EVENT+RESETS_STANDARD_DISCONTROL+RESET_PHASE+PHASE_END,0,1)
+	Duel.RegisterFlagEffect(tp,PM_EFFECT_LIMIT_ENERGY,RESET_PHASE+PHASE_END,0,1)
 end
 function scard.enerreset(e,tp,eg,ep,ev,re,r,rp)
 	if ep~=tp or not re:GetHandler():IsEnergy() then return end
-	e:GetHandler():ResetFlagEffect(PM_EFFECT_LIMIT_ENERGY)
+	Duel.ResetFlagEffect(tp,PM_EFFECT_LIMIT_ENERGY)
 end
 function scard.enercon(e)
-	return e:GetHandler():GetFlagEffect(PM_EFFECT_LIMIT_ENERGY)~=0
+	local tp=e:GetHandlerPlayer()
+	return Duel.IsPlayerCanPlayEnergy(tp,tp)
 end
 function scard.enerlimit(e,te,tp)
 	return te:GetHandler():IsEnergy()

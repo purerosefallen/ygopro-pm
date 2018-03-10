@@ -13,7 +13,7 @@ scard.length=1.00
 scard.evolve_list={[1]=CARD_MAGNETON,[2]=CARD_MAGNEZONE}
 scard.weakness_x2=PM_ENERGY_FIGHTING
 scard.attack_cost1=pm.econ1(CARD_LIGHTNING_ENERGY,1)
-scard.attack_cost1=pm.econ2(CARD_LIGHTNING_ENERGY,1,CARD_COLORLESS_ENERGY,1)
+scard.attack_cost2=pm.econ2(CARD_LIGHTNING_ENERGY,1,CARD_COLORLESS_ENERGY,1)
 --paralyzed
 function scard.parop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.AttackDamage(10)
