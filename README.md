@@ -15,7 +15,7 @@
 ### How to Play
 In Yugioh terms:
 1. Start YGOPro.
-2. Optional: Disable `Auto chain order` in the Settings tab in Deck Editor. If the option is enabled, always choose the chain order from left to right.
+2. Optional: Disable `Auto chain order` in the Settings tab. If the option is enabled, always choose the chain order from left to right.
 3. Click on `Deck Edit` to build your deck. Remember to add 1 *Pokemon Rules* to your extra deck!<br>
 If you do not build your deck according to the following rules, you will lose the duel and have to rebuild your deck:<br>
 	-Your main deck must be exactly 60 cards.<br>
@@ -77,10 +77,10 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 - Psychic = `LIGHT Attribute`
 - Fighting = `DARK Attribute`
 - Darkness = `DIVINE Attribute`
-- Metal = `0x080` (unlisted in YGOPro's tabs)
-- Colorless = `0x100` (unlisted in YGOPro's tabs)
-- Fairy = `0x200` (unlisted in YGOPro's tabs)
-- Dragon = `0x400` (unlisted in YGOPro's tabs)
+- Metal = `0x080` (unlisted in YGOPro's interface)
+- Colorless = `0x100` (unlisted in YGOPro's interface)
+- Fairy = `0x200` (unlisted in YGOPro's interface)
+- Dragon = `0x400` (unlisted in YGOPro's interface)
 </details>
 <details>
 <summary>Location</summary>
@@ -98,17 +98,23 @@ If you do not have a "Basic Pokémon" monster in your hand, show your hand, shuf
 You can search for the following specific card information in YGOPro:
 - Attack Damage: Type `: N damage`
 - Card Type: Search by `Card Type`
+- Delta Species: Type `- Delta Species` or search by the `δ(Delta)` setcode
 - Dual-Type Energy Type (Pokémon Type): Type `(Dual-type)`
 - Energy Type (Pokémon Type): Search by `Attribute` (only until `Darkness`), or type `Pokemon Type: Energy`
 - Expansions (what set the card appears in): **N/A**
 - Format (what tournament format the card is legally playable in): **N/A**
 - HP (Hit Points): Search by `ATK`
-- Pokémon that have an Ability: Search by `Effect` or `Has Ability`
+- Level-Up: Type `Stage: Level-Up` or search by the `Pokémon LV.X(Level-Up)` setcode
+- Pokémon that have an Ability: Search by `Effect` or `Ability`
 - Pokémon Evolution: Type `Stage: Stage 1`, `Stage: Stage 2`, etc., or type `Evolves from Pokémon name`
+- Pokémon SP: Type `- Pokemon SP` or search by the `Pokémon SP` setcode
 - Rarity: **N/A**
 - Resistance: Type `Resistance: Energy -N`, or type `Resistance: none` for Pokémon that have no Resistance
+- Restored Pokémon: Type `Stage: Restored` or search by the `Restored Pokémon` setcode
 - Retreat Cost: Search by `Level/Rank`
-- Total Attack Cost: **N/A** (You can type `[ ]` for Pokémon that don't have an Attack Cost, `[P] ` for Pokémon attacks that require only 1 Psychic Energy, etc.)
+- Team Plasma: Type `- Team Plasma` or search by the `Team Plasma` setcode
+- Total Attack Cost: **N/A** (You can type `[-]` for Pokémon that don't have an Attack Cost, `[P] ` for Pokémon attacks that require only 1 Psychic Energy, etc.)
+- Ultra Beast: Type `- Ultra Beast`
 - Weakness: Type `Weakness: Energy x2`, `Weakness: Energy +N`, or type `Weakness: none` for Pokémon that have no Weakness
 
 Note - Energy. The following abbreviations are used for each Energy Type:<br>
@@ -136,7 +142,7 @@ Note - missing information. Text that appears on the card that is not essential 
 
 - Ability/Pokémon Power = [Monster effect](http://yugioh.wikia.com/wiki/Monster_effect)
 - Active Pokémon = `Monster in the Extra Monster Zone`
-- Ancient Trait = [Continuous effect](http://yugioh.wikia.com/wiki/Continuous_Effect) `[while that monster is in a Monster Zone or Spell & Trap Zone]`
+- Ancient Trait = [Continuous effect](http://yugioh.wikia.com/wiki/Continuous_Effect) `[applied while that monster is in a Monster Zone or Spell & Trap Zone]`
 - Attach = `Attach a card to a monster as a material`/`Stack a card on top of or underneath another card`
 - Attack = `During your Main Phase, if this card has [...] attached to it: You can activate this effect; (attack goes here)`
 - Benched Pokémon = `Monster in the Main Monster Zone [or card in the Spell & Trap Zone]`
@@ -216,7 +222,7 @@ Note - missing information. Text that appears on the card that is not essential 
 - `0x20	Return to Deck` = Put a card into a player's deck
 - `0x40	Destroy Hand` = Decrease the opponent's hand size
 - `0x80	Destroy Deck` = Decrease the opponent's deck size
-- `0x100	Increase Draw` = Put the top card of a player's deck into a player's hand
+- `0x100	Increase Draw` = Put the top or bottom card of a player's deck into a player's hand by drawing it
 - `0x200	Search Deck` = Look at a player's deck
 - `0x400	Recover from Graveyard` = Put a card from the discard pile into a player's hand or In Play
 - `0x800	Change Battle Position` = Switch an Active Pokémon with a Benched Pokémon or vice-versa
