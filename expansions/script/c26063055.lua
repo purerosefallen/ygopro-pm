@@ -10,7 +10,7 @@ function scard.initial_effect(c)
 	e1:SetDescription(aux.Stringid(sid,0))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_CUSTOM+PM_EVENT_ATTACH_ENERGY_FROM_HAND)
-	e1:SetOperation(scard.effop)
+	e1:SetOperation(scard.atop)
 	c:RegisterEffect(e1)
 	--move energy
 	pm.EnablePokemonAttack(c,1,nil,scard.attack_cost,pm.hinttg,scard.meop)
@@ -20,7 +20,7 @@ scard.devolve_list={[1]=CARD_KYOGRE_EX}
 scard.weakness_x2=PM_ENERGY_GRASS
 scard.attack_cost=pm.econ2(CARD_WATER_ENERGY,3,CARD_COLORLESS_ENERGY,1)
 --attach
-function scard.effop(e,tp,eg,ep,ev,re,r,rp)
+function scard.atop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(Card.IsEnergy,tp,LOCATION_HAND,0,nil)
 	if g:GetCount()==0 then return end
@@ -40,8 +40,8 @@ function scard.meop(e,tp,eg,ep,ev,re,r,rp)
 	local g1=c:GetAttachmentGroup()
 	local g2=Duel.GetMatchingGroup(pm.BenchPokemonFilter,tp,PM_LOCATION_IN_PLAY,0,nil)
 	if g1:FilterCount(Card.IsEnergy,nil)>0 and g2:GetCount()>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_BASICENERGY)
-		local sg1=g1:FilterSelect(tp,Card.IsBasicEnergy,2,2,nil)
+		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_ENERGY)
+		local sg1=g1:FilterSelect(tp,Card.IsEnergy,2,2,nil)
 		Duel.Hint(HINT_SELECTMSG,tp,PM_HINTMSG_MOVEENERGY)
 		local sg2=g2:Select(tp,1,1,nil)
 		Duel.HintSelection(sg2)
