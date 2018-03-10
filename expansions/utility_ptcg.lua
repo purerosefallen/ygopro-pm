@@ -405,7 +405,8 @@ end
 --check if a pokémon can evolve
 function Card.IsCanEvolve(c)
 	return not c:IsHasEffect(PM_EFFECT_CANNOT_EVOLVE)
-		and (not c:IsStatus(PM_STATUS_PLAY_TURN) or c:IsHasEffect(PM_EFFECT_EVOLVE_TURN_PLAY))
+		and (not c:IsStatus(PM_STATUS_PLAY_TURN) or c:IsHasEffect(PM_EFFECT_EVOLVE_TURN_PLAY)
+		or Duel.IsPlayerAffectedByEffect(c:GetControler(),PM_EFFECT_EVOLVE_TURN_PLAY))
 end
 --check if a pokémon can use its poké-power
 function Card.IsCanUsePokePower(c)
@@ -547,6 +548,20 @@ function Duel.IsFirstTurn()
 	return Duel.GetTurnCount()==1
 		or Duel.GetFlagEffect(0,PM_EFFECT_SUDDEN_DEATH_RESTART)~=0
 		or Duel.GetFlagEffect(1,PM_EFFECT_SUDDEN_DEATH_RESTART)~=0
+end
+--check if a player can play a supporter card
+function Duel.IsPlayerCanPlaySupporter(tp,player)
+	local ct=Duel.GetFlagEffect(player,PM_EFFECT_LIMIT_SUPPORTER)
+	if Duel.IsPlayerAffectedByEffect(tp,PM_EFFECT_DOUBLE_SUPPORTER) then return ct==2
+	else return ct~=0 end
+end
+--check if a player can play a stadium card
+function Duel.IsPlayerCanPlayStadium(tp,player)
+	return Duel.GetFlagEffect(player,PM_EFFECT_LIMIT_STADIUM)~=0
+end
+--check if a player can play an energy card
+function Duel.IsPlayerCanPlayEnergy(tp,player)
+	return Duel.GetFlagEffect(player,PM_EFFECT_LIMIT_ENERGY)~=0
 end
 --add a card to a player's prize cards
 function Duel.SendtoPrize(e,targets,player,reason)
@@ -2829,14 +2844,20 @@ Auxiliary.gxcon=Auxiliary.GXAttackCondition
 
 --==========[+Costs]==========
 --cost for discarding cards from the player's hand
-function Auxiliary.DiscardHandCost(min,max)
+function Auxiliary.DiscardHandCost(min,max,f,...)
+	local funs={...}
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
 				local max=max or min
-				if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,min,e:GetHandler()) end
-				Duel.DiscardHand(tp,Card.IsDiscardable,min,max,REASON_COST+REASON_DISCARD)
+				local c=e:GetHandler()
+				if chk==0 then return Duel.IsExistingMatchingCard(Auxiliary.dhfilter,tp,LOCATION_HAND,0,min,c,f,funs) end
+				Duel.DiscardHand(tp,Auxiliary.dhfilter,min,max,REASON_COST+REASON_DISCARD,c,f,funs)
 			end
 end
 Auxiliary.dhcost=Auxiliary.DiscardHandCost
+function Auxiliary.DiscardHandFilter(c,f,funs)
+	return c:IsDiscardable() and (not f or f(c,table.unpack(funs)))
+end
+Auxiliary.dhfilter=Auxiliary.DiscardHandFilter
 --cost for shuffling cards into the player's deck
 function Auxiliary.SendToDeckCost(loc,min,max,seq)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
