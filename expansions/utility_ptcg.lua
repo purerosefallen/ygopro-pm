@@ -80,9 +80,9 @@ function type(o)
 	local t=m and m.__type or nil
 	if t then return t
 	elseif lua_type(o)~="userdata" then return lua_type(o)
-	elseif o.GetOriginalCode then return "Card"
-	elseif o.KeepAlive and o.IsContains then return "Group"
-	elseif o.SetLabelObject then return "Effect" end
+	elseif m==Group then return "Group"
+	elseif m==Effect then return "Effect"
+	else m==Card end
 end
 --========== Card ==========
 --check if a card is a Pokémon
