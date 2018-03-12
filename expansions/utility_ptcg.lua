@@ -82,7 +82,7 @@ function type(o)
 	elseif lua_type(o)~="userdata" then return lua_type(o)
 	elseif m==Group then return "Group"
 	elseif m==Effect then return "Effect"
-	else m==Card end
+	else return Card end
 end
 --========== Card ==========
 --check if a card is a Pokémon
